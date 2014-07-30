@@ -14,7 +14,7 @@ public interface MassDataOpCode extends OpCode {
 	
 	/**
 	 * Executes the mass data opCode
-	 * @param cpu the {@link Intel80x86 Intel¨ 8086} instance
+	 * @param cpu the {@link Intel80x86 Intel 8086} instance
 	 * @param count the number of data elements to operate upon
 	 * @throws X86AssemblyException 
 	 */

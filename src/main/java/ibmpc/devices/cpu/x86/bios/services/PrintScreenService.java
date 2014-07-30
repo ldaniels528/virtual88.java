@@ -21,7 +21,7 @@ import ibmpc.exceptions.X86AssemblyException;
  *  The DOS Graphics command replaces this routine with one that will print
  *  screen graphics (dot patterns) on a few types of printer.
  *
- * CPU Exception Interrupt?ó
+ * CPU Exception Interrupt:
  *  286+ computers execute INT 05H when the BOUND opcode is executed and the
  *  parameters are found to be out of range.
  *  </pre>

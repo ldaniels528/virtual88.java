@@ -33,7 +33,7 @@ public class IRET extends AbstractOpCode {
 	
 	/**
 	 * Returns the singleton instance of this class
-	 * @param cpu the given {@link Intel80x86 Intel¨ 80x86 CPU}
+	 * @param cpu the given {@link Intel80x86 Intel 80x86 CPU}
 	 * @return the singleton instance of this class
 	 */
 	public static IRET getInstance( final Intel80x86 cpu ) {

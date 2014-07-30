@@ -10,7 +10,7 @@ public interface OpCode {
 
 	/**
 	 * Executes the opCode
-	 * @param cpu the {@link Intel80x86 Intel¨ 8086} instance
+	 * @param cpu the {@link Intel80x86 Intel 8086} instance
 	 * @throws X86AssemblyException 
 	 */
 	void execute( Intel80x86 cpu ) throws X86AssemblyException;

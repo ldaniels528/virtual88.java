@@ -13,7 +13,7 @@ import ibmpc.system.IbmPcSystem;
 import ibmpc.util.Logger;
 
 /**
- * Emulates an Intel¨ 80x86 16/32-bit microprocessor
+ * Emulates an Intel 80x86 16/32-bit microprocessor
  * @author lawrence.daniels@gmail.com
  */
 public class Intel80x86 extends X86RegisterSet {	

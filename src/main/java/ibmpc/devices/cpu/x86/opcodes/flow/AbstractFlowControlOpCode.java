@@ -43,7 +43,7 @@ public abstract class AbstractFlowControlOpCode extends AbstractOpCode {
 	 * Indicates whether the result of the opCode
 	 * is "code fallthru" meaning no adjustment
 	 * is need to the queued opCodes.
-	 * @param cpu the given {@link Intel80x86 Intel¨ 8086 CPU}
+	 * @param cpu the given {@link Intel80x86 Intel 8086 CPU}
 	 * @return the result of evaluate the opCode's condition
 	 */
 	protected abstract boolean redirectsFlow( Intel80x86 cpu );
