@@ -17,7 +17,7 @@ javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.7",
 // General Dependencies
 libraryDependencies ++= Seq(
 	"org.slf4j" % "slf4j-api" % "1.7.6",
-	"org.scala-lang" % "scala-library" % "2.11.2",
+	"org.scala-lang" % "scala-library" % "2.11.2"
 )
 	
 // Testing Dependencies
