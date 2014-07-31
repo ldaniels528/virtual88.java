@@ -9,3 +9,8 @@ programming in the little language that could, and quite a few old programs that
 I started JBasic in 2004 (as a hobby project) to be able to run those old programs on via the JVM. This codebase is
 now defunct, as I'm not longer developing it (and haven't for almost 10 years), but I'm considering rekindling/rewritting the 
 project in Scala.
+
+### Build Requirements
+
+* Java SDK 1.5+
+* SBT 0.13.x
