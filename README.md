@@ -13,4 +13,16 @@ project in Scala.
 ### Build Requirements
 
 * Java SDK 1.5+
-* SBT 0.13.x
+* SBT 0.13.0+
+
+### Building the code
+
+    $ sbt clean package
+      
+### Running the tests
+
+    $ sbt test    
+
+### Run the application
+
+	$ java -jar jbasic.jar
