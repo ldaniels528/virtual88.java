@@ -46,7 +46,7 @@ import java.util.List;
  * @author lawrence.daniels@gmail.com
  */
 public class IbmPcDebugger {
-	private static final float VERSION = 0.02f;
+	private static final String VERSION = "0.431";
 	private final IbmPcRandomAccessMemory memory;
 	private final X86MemoryProxy proxy;
 	private final DebugDecoder decoder;
@@ -61,7 +61,7 @@ public class IbmPcDebugger {
 	 */
 	public IbmPcDebugger() {
 		// create the display frame and system
-		final IbmPcDisplayFrame frame = new IbmPcDisplayFrame( String.format( "JDebug v%f", VERSION ) );
+		final IbmPcDisplayFrame frame = new IbmPcDisplayFrame( String.format( "JDebug v%s", VERSION ) );
 		final IbmPcSystemXT system = new IbmPcSystemXT( frame );
 		
 		// get references to all devices

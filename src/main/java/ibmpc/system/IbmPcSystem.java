@@ -17,7 +17,7 @@ public interface IbmPcSystem {
 	/**
 	 * @return the Basic Input/Output System (BIOS)
 	 */
-	public IbmPcBIOS getBIOS();
+	IbmPcBIOS getBIOS();
 	
 	/**
 	 * @return the IBM PC-compatible central processing unit (CPU)

@@ -3,34 +3,29 @@
  */
 package ibmpc.instruction;
 
+import com.ldaniels528.tokenizer.TokenIterator;
+import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.instruction.element.X86DataElement;
+import ibmpc.instruction.exception.X86MalformedInstructionException;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static ibmpc.instruction.element.addressing.X86ReferencedAddressParser.isReference;
 import static ibmpc.instruction.element.addressing.X86ReferencedAddressParser.parseReference;
 import static ibmpc.instruction.element.registers.X86RegisterReferences.isRegister;
 import static ibmpc.instruction.element.registers.X86RegisterReferences.lookupRegister;
-import static ibmpc.instruction.element.values.X86Value.isNumeric;
-import static ibmpc.instruction.element.values.X86Value.isString;
-import static ibmpc.instruction.element.values.X86Value.parseValue;
+import static ibmpc.instruction.element.values.X86Value.*;
 import static ibmpc.util.X86CompilerUtil.mandateElement;
 import static ibmpc.util.X86CompilerUtil.nextElement;
-import ibmpc.exceptions.X86AssemblyException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import ibmpc.instruction.element.X86DataElement;
-import ibmpc.instruction.exception.X86MalformedInstructionException;
-
-import com.ldaniels528.tokenizer.TokenIterator;
+import static java.util.Arrays.asList;
 
 /**
  * Represents a 80x86 assembly language instruction parser
  * @author lawrence.daniels@gmail.com
  */
 public class X86InstructionParser {
-	private static final List<String> QUANTIFIERS = Arrays.asList( 
-			new String[] { "byte ptr", "word ptr", "word", "dword", "qword" }
-		);
+	private static final List<String> QUANTIFIERS = asList("byte ptr", "word ptr", "word", "dword", "qword");
 	
 	/**
 	 * Parses the given assembly code string into an x86 instruction object
