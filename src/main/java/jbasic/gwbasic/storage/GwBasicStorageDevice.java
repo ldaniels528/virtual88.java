@@ -102,7 +102,7 @@ public class GwBasicStorageDevice extends MsDosStorageSystem {
 	 * @return a trimmed version of the given string
 	 */
 	private String trim( final String s ) {
-		final StringBuffer sb = new StringBuffer( s.trim() );
+		final StringBuilder sb = new StringBuilder( s.trim() );
 		while( sb.length() > 0 && sb.charAt(0) == ' ' ) {
 			sb.deleteCharAt(0);
 		}

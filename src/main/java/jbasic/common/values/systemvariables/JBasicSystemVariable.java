@@ -65,7 +65,7 @@ public class JBasicSystemVariable implements Variable {
 	   * @return a string representation of this {@link Variable variable}
 	   */
 	  public String toString() {
-		  return new StringBuffer( name ).append( '=' ).append( value ).toString();
+		  return new StringBuilder( name ).append( '=' ).append( value ).toString();
 	  }
 	
 }

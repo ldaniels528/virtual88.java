@@ -1,12 +1,14 @@
 package jbasic.app.ide;
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.net.MalformedURLException;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import ibmpc.util.Logger;
+import static java.lang.String.format;
 
 /**
  * JBasic Image Management Services 
@@ -19,22 +21,24 @@ public class JBasicImageManager {
 	
 	// edit menu icons
 	public static final Icon CUT 			= getImage( "menu/Cut16.gif" );
-	public static final Icon COPY 		= getImage( "menu/Copy16.gif" );
-	public static final Icon PASTE 		= getImage( "menu/Paste16.gif" );
+	public static final Icon COPY 			= getImage( "menu/Copy16.gif" );
+	public static final Icon PASTE 			= getImage( "menu/Paste16.gif" );
 	
 	// file menu icons
 	public static final Icon NEW 			= getImage( "menu/New16.gif" );
-	public static final Icon OPEN 		= getImage( "menu/Open16.gif" );
-	public static final Icon SAVE 		= getImage( "menu/Save16.gif" );
+	public static final Icon OPEN 			= getImage( "menu/Open16.gif" );
+	public static final Icon SAVE 			= getImage( "menu/Save16.gif" );
 	public static final Icon SAVE_ALL		= getImage( "menu/SaveAll16.gif" );
 	public static final Icon SAVE_AS 		= getImage( "menu/SaveAs16.gif" );
 	
 	// program menu icons
 	public static final Icon COMPILE 		= getImage( "menu/Compile.png" );
-	public static final Icon DEBUG 		= getImage( "menu/Debug.png" );
+	public static final Icon DEBUG 			= getImage( "menu/Debug.png" );
 	public static final Icon RUN	 		= getImage( "menu/Run.png" );
 	public static final Icon STOP	 		= getImage( "menu/Stop16.gif" );
-	
+
+	private static final Logger logger = Logger.getLogger(JBasicImageManager.class);
+
 	/**
 	 * Loads an image from the file
 	 * @param imageName the name of the image
@@ -49,11 +53,10 @@ public class JBasicImageManager {
 										imageName );
 		try {
 			// load the image
-			final ImageIcon image = new ImageIcon( imageFile.toURL() );
-			return image;
+			return new ImageIcon( imageFile.toURI().toURL() );
 		}
 		catch( MalformedURLException e ) {
-			Logger.debug( "Couldn't load Loading %s\n...", imageFile.getAbsolutePath() );
+			logger.debug(format("Couldn't load Loading %s...", imageFile.getAbsolutePath()));
 			e.printStackTrace();
 			return null;
 		}

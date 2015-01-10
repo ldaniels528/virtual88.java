@@ -6,7 +6,8 @@ import ibmpc.devices.display.IbmPcColorSet;
 import ibmpc.devices.display.IbmPcDisplay;
 import ibmpc.devices.display.modes.IbmPcDisplayMode;
 import ibmpc.exceptions.X86AssemblyException;
-import ibmpc.util.Logger;
+import static java.lang.String.format;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,8 @@ import java.util.Map;
 public class VideoServices implements InterruptHandler {
 	private static final Map<Integer,IbmPcDisplayMode> AVAIL_DISPLAY_MODES = getAvailableDisplayModes();
 	private static final VideoServices instance = new VideoServices();
-	
+	private final Logger logger = Logger.getLogger(getClass());
+
 	/**
 	 * Private constructor
 	 */
@@ -97,7 +99,7 @@ public class VideoServices implements InterruptHandler {
 	 */
 	private void setCursorSizeAndShape( final IbmPcDisplay display, final Intel80x86 cpu ) 
 	throws X86AssemblyException {
-		Logger.info( "setCursorSizeAndShape is not yet implemented\n" );
+		logger.info(format("setCursorSizeAndShape is not yet implemented"));
 	}
 	
 	/**
@@ -109,7 +111,7 @@ public class VideoServices implements InterruptHandler {
 		// get video page
 		final int page = cpu.BH.get();
 		if( page != 0 ) {
-			Logger.debug( "Video page is %d\n", page );
+			logger.debug(format("Video page is %d", page));
 		}
 		
 		// get the row and column

@@ -1,6 +1,5 @@
 package msdos.services;
 
-
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.bios.IbmPcBIOS;
 import ibmpc.devices.cpu.x86.bios.services.InterruptHandler;
@@ -10,26 +9,24 @@ import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import ibmpc.exceptions.IbmPcException;
 import ibmpc.exceptions.X86AssemblyException;
 import ibmpc.system.IbmPcSystem;
-import ibmpc.util.Logger;
+import msdos.storage.*;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
 
-import msdos.storage.MsDosFileAccessMode;
-import msdos.storage.MsDosFileAttributes;
-import msdos.storage.MsDosFileControlBlock;
-import msdos.storage.MsDosFileHandle;
-import msdos.storage.MsDosStorageSystem;
+import static java.lang.String.format;
 
 /**
- * MSDOS System Services (INT 21h) Interrupt Processor
+ * MS-DOS System Services (INT 21h) Interrupt Processor
  * @author lawrence.daniels@gmail.com
  */
 public class MsDosSystemServices implements InterruptHandler {
 	private static final MsDosSystemServices instance = new MsDosSystemServices();
 	private static final int LAST_OFFSET = 0xFFFF;
+	private final Logger logger = Logger.getLogger(getClass());
 	
 	/**
 	 * Private constructor
@@ -47,8 +44,8 @@ public class MsDosSystemServices implements InterruptHandler {
 	}
 	
 	/**
-	 * Processes the MSDOS Services (INT 21h) Interrupt
-	 * @throws IbmPcException 
+	 * Processes the MS-DOS Services (INT 21h) Interrupt
+	 * @throws X86AssemblyException
 	 */
 	public void process( final Intel80x86 cpu ) 
 	throws X86AssemblyException {
@@ -492,8 +489,8 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void openFileUsingFCB( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "openFileUsingFCB: not yet implemented\n" );
-		cpu.AL.set( 0xFF );
+		logger.error("not yet implemented" );
+		cpu.AL.set(0xFF);
 	}
 	
 	/** 
@@ -513,7 +510,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void closeFileUsingFCB( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "closeFileUsingFCB: not yet implemented\n" );
+		logger.error( "closeFileUsingFCB: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -543,7 +540,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void searchForFirstEntryUsingFCB( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "searchForFirstEntryUsingFCB: not yet implemented\n" );
+		logger.error( "searchForFirstEntryUsingFCB: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -570,7 +567,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void searchForNextEntryUsingFCB( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "searchForFirstEntryUsingFCB: not yet implemented\n" );
+		logger.error( "searchForFirstEntryUsingFCB: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -593,7 +590,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void deleteFileUsingFCB( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "deleteFileUsingFCB: not yet implemented\n" );
+		logger.error( "deleteFileUsingFCB: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -617,7 +614,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void sequentialReadUsingFCB( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "sequentialReadUsingFCB: not yet implemented\n" );
+		logger.error( "sequentialReadUsingFCB: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -639,7 +636,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void sequentialWriteUsingFCB( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "sequentialWriteUsingFCB: not yet implemented\n" );
+		logger.error( "sequentialWriteUsingFCB: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -661,7 +658,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void createFileUsingFCB( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "createFileUsingFCB: not yet implemented\n" );
+		logger.error( "createFileUsingFCB: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -688,7 +685,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void renameFileUsingFCB( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "renameFileUsingFCB: not yet implemented\n" );
+		logger.error( "renameFileUsingFCB: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -711,7 +708,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void randomReadUsingFCB( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "randomReadUsingFCB: not yet implemented\n" );
+		logger.error( "randomReadUsingFCB: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -732,7 +729,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void randomWriteUsingFCB( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "randomWriteUsingFCB: not yet implemented\n" );
+		logger.error( "randomWriteUsingFCB: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -770,7 +767,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void getFileSizeUsingFCB( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "getFileSizeUsingFCB: not yet implemented\n" );
+		logger.error( "getFileSizeUsingFCB: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -787,7 +784,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void setRelativeRecordFieldInFCB( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "setRelativeRecordFieldInFCB: not yet implemented\n" );
+		logger.error( "setRelativeRecordFieldInFCB: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -826,7 +823,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void setDiskTransferArea( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "setDiskTransferArea: not yet implemented\n" );
+		logger.error( "setDiskTransferArea: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -848,7 +845,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void getAllocationTableInformation( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "getAllocationTableInformation: not yet implemented\n" );
+		logger.error( "getAllocationTableInformation: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -871,7 +868,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void getAllocationTableInfoForSpecifiedDrive( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "getAllocationTableInfoForSpecifiedDrive: not yet implemented\n" );
+		logger.error( "getAllocationTableInfoForSpecifiedDrive: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -890,7 +887,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void getPointerToCurrentDriveParameterTable( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "getPointerToCurrentDriveParameterTable: not yet implemented\n" );
+		logger.error( "getPointerToCurrentDriveParameterTable: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -994,7 +991,7 @@ public class MsDosSystemServices implements InterruptHandler {
 	 */
 	private void getDiskTransferArea( final MsDosStorageSystem disk, final Intel80x86 cpu ) {
 		// TODO Implement me!
-		Logger.error( "getDiskTransferArea: not yet implemented\n" );
+		logger.error( "getDiskTransferArea: not yet implemented" );
 		cpu.AL.set( 0xFF );
 	}
 	
@@ -1319,7 +1316,7 @@ public class MsDosSystemServices implements InterruptHandler {
 		// get the access mode
 		final MsDosFileAccessMode accessMode = MsDosFileAccessMode.decode( cpu.AL.get() );
 		
-		Logger.info( "openFileUsingHandle: DS:DX = [%04X:%04X], accessMode = %s, file = '%s'\n", cpu.DS.get(), cpu.DX.get(), accessMode, filename );
+		logger.info(format("openFileUsingHandle: DS:DX = [%04X:%04X], accessMode = %s, file = '%s'", cpu.DS.get(), cpu.DX.get(), accessMode, filename));
 		
 		try {
 			// open the file
@@ -1364,13 +1361,13 @@ public class MsDosSystemServices implements InterruptHandler {
 		// create a memory block
 		final byte[] block = new byte[ count ];
 		
-		Logger.info( "readFromFileOrDeviceUsingHandle: count = %d, handle = %d\n", count, handleID );
+		logger.info(format("readFromFileOrDeviceUsingHandle: count = %d, handle = %d", count, handleID));
 		
 		try {
 			// read the block from the file
 			final int bytesRead = disk.readFromDevice( handleID, block, count );
 			
-			Logger.info( "readFromFileOrDeviceUsingHandle: bytesRead = %d\n", bytesRead );
+			logger.info(format("readFromFileOrDeviceUsingHandle: bytesRead = %d", bytesRead));
 			
 			// put the block into memory
 			memory.setBytes( cpu.DS.get(), cpu.DX.get(), block, bytesRead );
@@ -1408,7 +1405,7 @@ public class MsDosSystemServices implements InterruptHandler {
 		// decode the file attributes
 		final MsDosFileAttributes fileAttributes = MsDosFileAttributes.decode( cpu.CX.get() );
 		
-		Logger.info( "createFileUsingHandle: fileAttrs = %s, filename = '%s'\n", fileAttributes, filename );
+		logger.info(format("createFileUsingHandle: fileAttrs = %s, filename = '%s'", fileAttributes, filename));
 
 		try {
 			// create the file

@@ -97,7 +97,7 @@ public class FilesOp extends GwBasicCommand {
 	 * @return a left justified file name
 	 */
 	private String padFileName( String name, int columnWidth ) {
-		final StringBuffer sb = new StringBuffer( columnWidth );
+		final StringBuilder sb = new StringBuilder( columnWidth );
 		sb.append( name );
 		while( sb.length() < columnWidth ) {
 			sb.append( ' ' );

@@ -36,7 +36,7 @@ public class TabFunction extends JBasicFunction {
 		final int count = objects[0].toInteger();
       
 		// build the string
-		final StringBuffer sb = new StringBuffer( count );
+		final StringBuilder sb = new StringBuilder( count );
 		for( int n = 0; n < count; n++ ) {
 			sb.append( '\t' );
 		}

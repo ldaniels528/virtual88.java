@@ -3,7 +3,9 @@ package ibmpc.devices.cpu.x86.bios.services;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.keyboard.IbmPcKeyboard;
 import ibmpc.exceptions.X86AssemblyException;
-import ibmpc.util.Logger;
+import org.apache.log4j.Logger;
+
+import static java.lang.String.format;
 
 /**
  * BIOS Keyboard Software Services Processor
@@ -11,7 +13,8 @@ import ibmpc.util.Logger;
  */
 public class KeyboardSoftwareServices implements InterruptHandler {
 	private static final KeyboardSoftwareServices instance = new KeyboardSoftwareServices();
-	
+	private final Logger logger = Logger.getLogger(getClass());
+
 	/**
 	 * Private constructor
 	 */
@@ -66,7 +69,7 @@ public class KeyboardSoftwareServices implements InterruptHandler {
 		if( s.length() != 0 ) {
 			final char ch = s.charAt( 0 );
 			final int keyFlags = keyboard.getKeyFlags();
-			Logger.info( "Get '%c' key [flags = %02X]\n", ch, keyFlags );
+			logger.info(format("Get '%c' key [flags = %02X]", ch, keyFlags));
 			cpu.AH.set( 0 );
 			cpu.AL.set( ch );
 		}

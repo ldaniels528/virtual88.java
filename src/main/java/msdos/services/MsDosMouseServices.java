@@ -8,7 +8,7 @@ import ibmpc.devices.mouse.IbmPcMouse;
 import ibmpc.exceptions.X86AssemblyException;
 
 /**
- * MSDOS Mouse Services
+ * MS-DOS Mouse Services
  * @author lawrence.daniels@gmail.com
  */
 public class MsDosMouseServices implements InterruptHandler {

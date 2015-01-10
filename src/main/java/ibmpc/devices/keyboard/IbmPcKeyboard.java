@@ -2,7 +2,9 @@ package ibmpc.devices.keyboard;
 
 import ibmpc.devices.display.IbmPcDisplay;
 import ibmpc.devices.display.IbmPcDisplayFrame;
-import ibmpc.util.Logger;
+import org.apache.log4j.Logger;
+
+import static java.lang.String.format;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -14,10 +16,11 @@ import java.util.LinkedList;
  * @author lawrence.daniels@gmail.com
  */
 public class IbmPcKeyboard implements KeyListener, IbmPcKeyConstants {
+	private final Logger logger = Logger.getLogger(getClass());
 	private static final int BUFFER_SIZE = 512;
 	private final Collection<IbmPcKeyEventListener> keyListeners;
 	private final IbmPcDisplay display;
-	private final StringBuffer buffer;
+	private final StringBuilder buffer;
 	private boolean complete;
 	private int keyFlags;
 	
@@ -31,7 +34,7 @@ public class IbmPcKeyboard implements KeyListener, IbmPcKeyConstants {
    */
   public IbmPcKeyboard( final IbmPcDisplay display ) {
     this.display		= display;
-    this.buffer       	= new StringBuffer( BUFFER_SIZE );
+    this.buffer       	= new StringBuilder( BUFFER_SIZE );
     this.keyListeners	= new LinkedList<IbmPcKeyEventListener>();
   }
   
@@ -89,7 +92,7 @@ public class IbmPcKeyboard implements KeyListener, IbmPcKeyConstants {
 			// set things up
 			complete = false;
 			
-	    	Logger.info( "buffer size = %d\n", buffer.length() );
+	    	logger.info(format("buffer size = %d", buffer.length()));
 	    	
 			// gather input until ENTER is pressed
 			while( buffer.length() < maxChars ) {
@@ -199,7 +202,6 @@ public class IbmPcKeyboard implements KeyListener, IbmPcKeyConstants {
    * Registers the given listener to handle the event generated when the 
    * key that corresponds to the given key code is pressed.
    * @param listener the given {@link IbmPcKeyEventListener listener}
-   * @param keyCode the given key code
    */
   public void register( final IbmPcKeyEventListener listener ) {
 	  keyListeners.add( listener );

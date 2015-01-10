@@ -21,7 +21,7 @@ import jbasic.gwbasic.values.GwBasicValues;
  * <br>Example: PRINT "My name is ", $NAME
  */
 public class PrintOp extends GwBasicCommand {  
-  private final StringBuffer buffer;
+  private final StringBuilder buffer;
   private final Value[] values;
 
   /**
@@ -30,7 +30,7 @@ public class PrintOp extends GwBasicCommand {
    * @throws JBasicException
    */
   public PrintOp( TokenIterator it ) throws JBasicException {	  
-	  this.buffer = new StringBuffer( 255 );	
+	  this.buffer = new StringBuilder( 255 );
 	  this.values = parse( it );
   }
 

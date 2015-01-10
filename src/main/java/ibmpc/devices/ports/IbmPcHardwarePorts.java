@@ -1,7 +1,9 @@
 package ibmpc.devices.ports;
 
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
-import ibmpc.util.Logger;
+import org.apache.log4j.Logger;
+
+import static java.lang.String.format;
 
 /**
  * Represents the hardware port interface for an IBM PC/XT/AT.
@@ -21,6 +23,7 @@ public class IbmPcHardwarePorts {
 	private static final int LPT1				= 0x378;
 	
 	// internal fields
+	private final Logger logger = Logger.getLogger(getClass());
 	private final IbmPcRandomAccessMemory memory;
 	
 	/**
@@ -68,7 +71,7 @@ public class IbmPcHardwarePorts {
 		
 		// get the port value
 		final int value0 = memory.getByte( DEFAULT_SEGMENT, offset );
-		Logger.info( "Changed value at port %04X from %04X to %04X\n", port, value0, value );
+		logger.info(format("Changed value at port %04X from %04X to %04X", port, value0, value));
 		
 		// set the new port value
 		memory.setByte( DEFAULT_SEGMENT, offset, value );
@@ -85,7 +88,7 @@ public class IbmPcHardwarePorts {
 		
 		// get the port value
 		final int value0 = memory.getWord( DEFAULT_SEGMENT, offset );
-		Logger.info( "Changed value at port %04X from %04X to %04X\n", port, value0, value );
+		logger.info(format("Changed value at port %04X from %04X to %04X", port, value0, value));
 		
 		// set the new port value
 		memory.setWord( DEFAULT_SEGMENT, offset, value );
@@ -102,7 +105,7 @@ public class IbmPcHardwarePorts {
 		
 		// get the port value
 		final int value0 = memory.getDoubleWord( DEFAULT_SEGMENT, offset );
-		Logger.info( "Changed value at port %04X from %04X to %04X\n", port, value0, value );
+		logger.info(format("Changed value at port %04X from %04X to %04X", port, value0, value));
 		
 		// set the new port value
 		memory.setDoubleWord( DEFAULT_SEGMENT, offset, value );

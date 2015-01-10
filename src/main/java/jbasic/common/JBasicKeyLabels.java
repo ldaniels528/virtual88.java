@@ -14,7 +14,6 @@ import java.util.List;
 public class JBasicKeyLabels implements IbmPcKeyConstants {
 	private final List<String> keyLabels;
 	private String labelText;
-	private String blankText;
 	private boolean active;
 	private int columns;
 	
@@ -23,7 +22,6 @@ public class JBasicKeyLabels implements IbmPcKeyConstants {
 	 */
 	public JBasicKeyLabels() {
 		this.keyLabels 	= getDefaultKeyLabels();
-		this.blankText	= ""; 
 		this.active	 	= true;
 	}
 	
@@ -54,15 +52,7 @@ public class JBasicKeyLabels implements IbmPcKeyConstants {
 			labelText = buildKeyLabelText();
 		return labelText;
 	}
-	
-	/**
-	 * Returns blank text
-	 * @return blank text
-	 */
-	public String getBlankText() {
-		return blankText;
-	}
-	
+
 	 /**
 	 * @return the active
 	 */
@@ -82,7 +72,6 @@ public class JBasicKeyLabels implements IbmPcKeyConstants {
 	 */
 	public void setColumns( final int columns ) {
 		this.columns 	= columns;
-		this.blankText	= createBlankString( columns );
 	}
 	
 	  ///////////////////////////////////////////////////////////////////
@@ -107,7 +96,7 @@ public class JBasicKeyLabels implements IbmPcKeyConstants {
 	   * @return a blank {@link String string}
 	   */
 	  private String createBlankString( final int length ) {
-		  final StringBuffer sb = new StringBuffer( length );
+		  final StringBuilder sb = new StringBuilder( length );
 		  for( int n = 0; n < length; n++ ) {
 			  sb.append( ' ' );
 		  }
@@ -115,13 +104,12 @@ public class JBasicKeyLabels implements IbmPcKeyConstants {
 	  }
 	  
 	  /**
-	   * Builds the key label text 
-	   * @param keyLabels the given key labels
+	   * Builds the key label text
 	   * @return the key label text
 	   */
 	  private String buildKeyLabelText() {
 		  // create a container for the text
-		  final StringBuffer sb = new StringBuffer( columns );
+		  final StringBuilder sb = new StringBuilder( columns );
 		  
 		  // calculate how much space each of the keys    
 		  final int maxKeys = ( columns / 8 ) + ( columns % 8 > 0 ? 1 : 0 );

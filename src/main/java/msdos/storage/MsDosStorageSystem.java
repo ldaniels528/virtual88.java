@@ -3,12 +3,14 @@ package msdos.storage;
 import ibmpc.devices.memory.MemoryObject;
 import ibmpc.devices.storage.IbmPcStorageSystem;
 import ibmpc.exceptions.IbmPcException;
-import ibmpc.util.Logger;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.lang.String.format;
 
 /**
  * IBM PC DOS Storage Device (Hard disk, floppy, etc.)
@@ -16,6 +18,7 @@ import java.util.Map;
  */
 public class MsDosStorageSystem implements IbmPcStorageSystem {
 	private static int HANDLE_GENERATOR = 0;
+	private final Logger logger = Logger.getLogger(getClass());
 	private final Map<Integer,MsDosFileHandle> handles;
 	private File workingDirectory;
 	private int defaultDrive;
@@ -205,8 +208,8 @@ public class MsDosStorageSystem implements IbmPcStorageSystem {
 		// lookup the file handle ID
 		final MsDosFileHandle handle = lookupHandle( handleID );
 		
-		Logger.info( "writeToDevice: Writing %d bytes to handle %04X (%s)\n", 
-				dataBlock.length, handleID, handle.getFile().getAbsolutePath() );
+		logger.info(format("writeToDevice: Writing %d bytes to handle %04X (%s)",
+				dataBlock.length, handleID, handle.getFile().getAbsolutePath()));
 		
 		// write the data block to the device
 		handle.write( dataBlock );	

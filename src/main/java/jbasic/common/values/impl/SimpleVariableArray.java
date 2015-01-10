@@ -136,7 +136,7 @@ public class SimpleVariableArray implements VariableArray {
 	 * @return a string representation of this array
 	 */
 	public String toString() {
-		return new StringBuffer( name )
+		return new StringBuilder( name )
 				.append( '(' )
 				.append( length )
 				.append( ')' )

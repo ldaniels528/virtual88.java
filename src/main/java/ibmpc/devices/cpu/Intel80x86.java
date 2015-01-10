@@ -1,6 +1,7 @@
 package ibmpc.devices.cpu;
 
 import static ibmpc.devices.cpu.operands.Operand.*;
+
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.operands.memory.MemoryAddressFAR32;
 import ibmpc.devices.cpu.x86.decoder.DecodeProcessor;
@@ -10,21 +11,26 @@ import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import ibmpc.devices.ports.IbmPcHardwarePorts;
 import ibmpc.exceptions.X86AssemblyException;
 import ibmpc.system.IbmPcSystem;
-import ibmpc.util.Logger;
+import org.apache.log4j.Logger;
+
+import static java.lang.String.format;
 
 /**
  * Emulates an Intel 80x86 16/32-bit microprocessor
  * @author lawrence.daniels@gmail.com
  */
-public class Intel80x86 extends X86RegisterSet {	
+public class Intel80x86 extends X86RegisterSet {
 	// CPU mode constants
 	public static final int REAL_MODE = 0; 		// [80286] 20 bit segmented memory address space 
 	public static final int PROTECTED_MODE = 1; // [80286] Enhances multitasking & system stability 
 	public static final int VIRTUAL_MODE = 2; 	// [80386] Allows the execution of real mode applications that violate the rules under the control of a protected mode operating system.
 	public static final int LONG_MODE = 3; 		// [AMD64] Provides an application access to 64-bit instructions and registers
+
 	// system timer frequency
 	private static final long SYSTEM_TIMER_FREQ = 1000 / 18; // 18 times/sec
+
 	// internal fields
+	private final Logger logger = Logger.getLogger(getClass());
 	private final IbmPcRandomAccessMemory memory;
 	private final DecodeProcessor decoder;
 	private final IbmPcHardwarePorts ports;
@@ -138,7 +144,7 @@ public class Intel80x86 extends X86RegisterSet {
 		updateSystemTimer();
 
 		// display the instruction information
-		Logger.info( "E [%04X:%04X] %10X[%d] %s\n", CS.get(), IP.get(), opCode.getInstructionCode(), opCode.getLength(), opCode );
+		logger.info(format("E [%04X:%04X] %10X[%d] %s", CS.get(), IP.get(), opCode.getInstructionCode(), opCode.getLength(), opCode));
 		
 		// execute the instruction
 		opCode.execute( this );
@@ -270,7 +276,7 @@ public class Intel80x86 extends X86RegisterSet {
 			case SIZE_32BIT:
 				// save this position?
 				if( savePoint ) {
-					Logger.info( "Storing CS:IP as %04X:%04X\n", CS.get(), IP.get() );
+					logger.info(format("Storing CS:IP as %04X:%04X", CS.get(), IP.get()));
 					stack.push( CS );
 					stack.pushValue( IP.get() + opCode.getLength() );
 				}
@@ -284,11 +290,11 @@ public class Intel80x86 extends X86RegisterSet {
 				IP.set( offset );
 				break;
 		
-			case SIZE_8BIT:;
+			case SIZE_8BIT:
 			case SIZE_16BIT:
 				// save this position?
 				if( savePoint ) {
-					Logger.info( "Storing IP as %04X\n", IP.get() );
+					logger.info(format("Storing IP as %04X", IP.get()));
 					stack.pushValue( IP.get() + opCode.getLength() );
 				}
 				
@@ -345,7 +351,7 @@ public class Intel80x86 extends X86RegisterSet {
 		// get the return offset
 		final int offset = stack.popValue();
 		
-		Logger.info( "Returning NEAR to %04X:%04X\n", CS.get(), offset );
+		logger.info(format("Returning NEAR to %04X:%04X", CS.get(), offset));
 		
 		// jump to the offset in memory
 		IP.set( offset );	
@@ -374,7 +380,7 @@ public class Intel80x86 extends X86RegisterSet {
 		final int offset = stack.popValue();
 		final int segment = stack.popValue();
 		
-		Logger.info( "Returning FAR to %04X:%04X\n", segment, offset );
+		logger.info(format("Returning FAR to %04X:%04X", segment, offset));
 		
 		// jump to the offset in memory
 		CS.set( segment );
@@ -392,7 +398,7 @@ public class Intel80x86 extends X86RegisterSet {
 		if( ( elapsedSinceUpdate >= SYSTEM_TIMER_FREQ ) && FLAGS.isIF() ) {
 			INT.SYSTIMR.execute( this );
 			lastTimerUpdate = System.currentTimeMillis();
-			Logger.info( "SYSTIMR timer last update %d msec ago\n", elapsedSinceUpdate );
+			logger.info(format("SYSTIMR timer last update %d msec ago", elapsedSinceUpdate));
 		}
 	}
 	

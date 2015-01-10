@@ -3,13 +3,16 @@ package ibmpc.devices.cpu;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import ibmpc.exceptions.X86StackException;
-import ibmpc.util.Logger;
+import org.apache.log4j.Logger;
+
+import static java.lang.String.format;
 
 /**
  * Represents an 80x86 program stack
  * @author lawrence.daniels@gmail.com
  */
 public class X86Stack implements Operand {
+	private final Logger logger = Logger.getLogger(getClass());
 	private final IbmPcRandomAccessMemory memory;
 	private final Intel80x86 cpu;
 	private int elements;
@@ -61,7 +64,7 @@ public class X86Stack implements Operand {
 	public int popValue() throws X86StackException {
 		// there must be an element in the stack
 		if( elements == 0 ) {
-			Logger.error( "Stack overflow (pointer = %d)", elements );
+			logger.warn(format("Stack overflow (pointer = %d)", elements));
 		}
 		
 		// pop the value from the stack
@@ -82,7 +85,7 @@ public class X86Stack implements Operand {
 	/**
 	 * Allows a peek at the a specific value on the stack
 	 * without {@link #popValue() POPing} the value
-	 * @param the given element number (e.g. '[SP-<i>element#<i>]')
+	 * @param element the given element number (e.g. '[SP-<i>element#<i>]')
 	 * @return the specific value on the stack
 	 * @throws X86StackException
 	 */

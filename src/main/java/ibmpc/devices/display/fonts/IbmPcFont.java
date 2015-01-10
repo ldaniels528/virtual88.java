@@ -12,18 +12,18 @@ public interface IbmPcFont {
 	/**
 	 * @return the width of this font
 	 */
-	public int getWidth();
+	int getWidth();
 	
 	/**
 	 * @return the height of this font
 	 */
-	public int getHeight();
+	int getHeight();
 	
 	/**
 	 * Returns the byte data for the given font
 	 * @param font the given font (0-255)
 	 * @return the byte data for the given font
 	 */
-	public byte[] getData( int font );
+	byte[] getData( int font );
 	
 }

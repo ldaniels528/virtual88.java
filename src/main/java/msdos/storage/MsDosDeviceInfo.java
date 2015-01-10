@@ -3,7 +3,7 @@ package msdos.storage;
 import static ibmpc.util.BitMaskGenerator.turnBitOnMask;
 
 /**
- * Represents an MSDOS Device Information
+ * Represents an MS-DOS Device Information
  * <pre>
  * Device Data Word
  * F E D C B A 9 8 7 6 5 4 3 2 1 0
@@ -29,7 +29,7 @@ public class MsDosDeviceInfo {
 	/**
 	 * Creates a new device information instance
 	 * @param deviceDataWord the given integer bit array 
-	 * representing the MSDOS-specific device information.
+	 * representing the MS-DOS-specific device information.
 	 */
 	public MsDosDeviceInfo( final int deviceInfo ) {
 		this.deviceDataWord = deviceInfo;

@@ -6,8 +6,9 @@ import static ibmpc.devices.display.fonts.IbmPcFont8x8.PIXEL_ZERO_MASK;
 import ibmpc.devices.display.IbmPcColors;
 import ibmpc.devices.display.IbmPcDisplayContext;
 import ibmpc.devices.display.IbmPcDisplayException;
-import ibmpc.util.Logger;
+import org.apache.log4j.Logger;
 
+import static java.lang.String.format;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -18,7 +19,8 @@ import java.awt.Graphics2D;
 public abstract class AbstractTextMode extends AbstractDisplayMode {
 	private static final Color[] COLOR_MAP = IbmPcColors.COLORS_16;
 	private static final byte SPACE = 0x20;
-	private static final int CHAR_WIDTH = 2;	
+	private static final int CHAR_WIDTH = 2;
+	private final Logger logger = Logger.getLogger(getClass());
 	private final int physicalColumns;
 	private final byte[] bytedata;
 	private final byte[] chardata;
@@ -160,10 +162,9 @@ public abstract class AbstractTextMode extends AbstractDisplayMode {
 		final double yscale = dc.frame.getPaneHeight() / height;;
 		
 		// calculate the page offset
-		final int pageOffset = dc.activePage * pageSize;
-		
+
 		// blit each row of data to video memory
-		int offset = pageOffset;
+		int offset = dc.activePage * pageSize;
 		for( int row = 0; row < rows; row++ ) {
 			// copy 1 column's worth of values to our buffer
 			dc.memory.getBytes( memorySegment, offset, bytedata, bytedata.length );
@@ -230,7 +231,7 @@ public abstract class AbstractTextMode extends AbstractDisplayMode {
 		
 		// offset cannot be outside of video memory
 		if( offset >= memorySize ) {
-			Logger.error( "Offset (%04X) is greater than memory size (%04X)\n", offset, memorySize );
+			logger.error(format("Offset (%04X) is greater than memory size (%04X)", offset, memorySize));
 		}
 		
 		// get the current attribute
@@ -260,7 +261,7 @@ public abstract class AbstractTextMode extends AbstractDisplayMode {
 		
 		// offset cannot be outside of video memory
 		if( offset >= memorySize ) {
-			Logger.error( "Offset (%04X) is greater than memory size (%04X)\n", offset, memorySize );
+			logger.error(format("Offset (%04X) is greater than memory size (%04X)", offset, memorySize));
 		}
 		
 		// create the character attribute

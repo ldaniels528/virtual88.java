@@ -84,7 +84,7 @@ public class GwBasicStatement implements JBasicProgramStatement {
 	   * @see java.lang.Object#toString()
 	   */
 	  public String toString() {
-	    return new StringBuffer( 6 + code.length() ).append( lineNumber ).append( ' ' ).append( code ).toString();
+	    return new StringBuilder( 6 + code.length() ).append( lineNumber ).append( ' ' ).append( code ).toString();
 	  }
 	  
 	  //////////////////////////////////////////////////////

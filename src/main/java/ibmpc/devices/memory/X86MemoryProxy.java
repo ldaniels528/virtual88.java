@@ -1,14 +1,17 @@
 package ibmpc.devices.memory;
 
 import ibmpc.devices.cpu.operands.Operand;
-import static ibmpc.devices.cpu.operands.Operand.*;
-import ibmpc.util.Logger;
+import org.apache.log4j.Logger;
+
+import static ibmpc.devices.cpu.operands.Operand.SIZE_32BIT;
+import static java.lang.String.format;
 
 /**
  * Acts as a proxy to the random access memory (RAM) instance
  * @author lawrence.daniels@gmail.com
  */
 public class X86MemoryProxy {
+	private final Logger logger = Logger.getLogger(getClass());
 	private final IbmPcRandomAccessMemory memory;
 	private int segment;
 	private int offset;
@@ -150,7 +153,7 @@ public class X86MemoryProxy {
 	
 	/**
 	 * Sets the given byte in the next memory offset
-	 * @param bytecode the given byte code
+	 * @param byteCode the given byte code
 	 */
 	public void setByte( final int offset, final int byteCode ) {
 		memory.setByte( segment, offset, (byte)byteCode );
@@ -158,22 +161,22 @@ public class X86MemoryProxy {
 	
 	/**
 	 * Sets the given byte in the next memory offset
-	 * @param bytecode the given byte code
+	 * @param byteCode the given byte code
 	 */
 	public void setByte( final int byteCode ) {
 		memory.setByte( segment, offset++, (byte)byteCode );
-		Logger.debug( "byte %02X\n", byteCode );
+		logger.debug(format("byte %02X", byteCode));
 	}
 	
 	/**
 	 * Sets the given bytes starting at the next memory offset
-	 * @param bytecodes the given byte codes
+	 * @param opCodes the given byte codes
 	 */
-	public void setBytes( final int ... opcodes ) {
+	public void setBytes( final int ... opCodes ) {
 		// create the byte code from the opCodes
-		final byte[] bytecodes = new byte[ opcodes.length ];
+		final byte[] bytecodes = new byte[ opCodes.length ];
 		for( int n = 0; n < bytecodes.length; n++ ) {
-			bytecodes[n] = (byte)opcodes[n]; 
+			bytecodes[n] = (byte)opCodes[n];
 		}
 		
 		// write the bytes to memory

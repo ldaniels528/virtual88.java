@@ -3,7 +3,7 @@ package msdos.storage;
 import ibmpc.devices.memory.MemoryObject;
 
 /**
- * MSDOS Diskette File Control Block
+ * MS-DOS Diskette File Control Block
  * <pre>
  * 	Offsets to FCB Information
  *  ------------------------------------------------------------------------------

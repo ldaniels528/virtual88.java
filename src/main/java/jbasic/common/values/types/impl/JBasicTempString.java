@@ -12,13 +12,13 @@ import jbasic.gwbasic.values.GwBasicValues;
 public class JBasicTempString implements StringMemoryObject {
 	public static final int MAX_LENGTH	 = 255;
 	public static final int ALLOCATE_SIZE = MAX_LENGTH + 1;
-	private final StringBuffer buffer;
+	private final StringBuilder buffer;
 
 	/**
 	 * Default Constructor
 	 */
 	public JBasicTempString() {
-		this.buffer = new StringBuffer( 255 );
+		this.buffer = new StringBuilder( 255 );
 	}
 	
 	/**

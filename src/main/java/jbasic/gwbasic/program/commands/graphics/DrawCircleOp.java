@@ -1,15 +1,16 @@
 package jbasic.gwbasic.program.commands.graphics;
 
 import com.ldaniels528.tokenizer.TokenIterator;
-
 import ibmpc.devices.display.IbmPcDisplay;
-import ibmpc.util.Logger;
 import jbasic.common.exceptions.JBasicException;
 import jbasic.common.program.JBasicCompiledCode;
 import jbasic.common.util.JBasicTokenUtil;
 import jbasic.common.values.Value;
 import jbasic.gwbasic.program.commands.GwBasicCommand;
 import jbasic.gwbasic.values.GwBasicValues;
+import org.apache.log4j.Logger;
+
+import static java.lang.String.format;
 
 /**
  * CIRCLE Command
@@ -17,6 +18,7 @@ import jbasic.gwbasic.values.GwBasicValues;
  * @author lawrence.daniels@gmail.com
  */
 public class DrawCircleOp extends GwBasicCommand {
+	private final Logger logger = Logger.getLogger(getClass());
 	private static final int NPOINTS = 36;
 	private static final double DIVISION = Math.PI / NPOINTS;
 	private final Value xpos;
@@ -98,10 +100,10 @@ public class DrawCircleOp extends GwBasicCommand {
 	  final int r = radius.getValue( program ).toInteger();
 	  
 	  // get optional parameters
-	  final Integer c = ( color != null ) ? new Integer( color.getValue( program ).toInteger() ) : null;	  
-	  final Integer s = ( start != null ) ? new Integer( start.getValue( program ).toInteger() ) : null;	
-	  final Integer e = ( end != null ) ? new Integer( end.getValue( program ).toInteger() ) : null;	
-	  final Integer a = ( aspect != null ) ? new Integer( aspect.getValue( program ).toInteger() ) : null;	
+	  final Integer c = ( color != null ) ? color.getValue(program).toInteger() : null;
+	  final Integer s = ( start != null ) ? start.getValue(program).toInteger() : null;
+	  final Integer e = ( end != null ) ? end.getValue(program).toInteger() : null;
+	  final Integer a = ( aspect != null ) ? aspect.getValue(program).toInteger() : null;
 	  
 	  // draw the circle
 	  drawCircle( display, x, y, r, c, s, e, a );
@@ -125,7 +127,7 @@ public class DrawCircleOp extends GwBasicCommand {
 		  				  final Integer start, 
 		  				  final Integer end, 
 		  				  final Integer aspect ) {
-	  Logger.debug( "circle at (%d,%d) where r = %d, c = %s, s = %s, e = %s, a = %s\n", x,y,radius,color,start,end,aspect );			  
+	  logger.debug(format("circle at (%d,%d) where r = %d, c = %s, s = %s, e = %s, a = %s", x,y,radius,color,start,end,aspect));
 	  for( double n = -Math.PI; n <= Math.PI; n += DIVISION ) {
 		  // compute the "from" point
 		  final double ax = Math.sin( n ) * radius + x;

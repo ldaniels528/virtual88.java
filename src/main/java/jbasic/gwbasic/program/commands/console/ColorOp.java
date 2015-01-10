@@ -89,7 +89,7 @@ public class ColorOp extends GwBasicCommand {
    * @see java.lang.Object#toString()
    */
   public String toString() {
-	  return new StringBuffer( 50 ) 
+	  return new StringBuilder( 50 )
 	  			.append( "COLOR[" )
 	  			.append( param1 )
 	  			.append( ',' )

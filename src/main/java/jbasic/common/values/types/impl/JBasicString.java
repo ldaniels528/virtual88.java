@@ -41,7 +41,7 @@ public class JBasicString extends JBasicObject implements StringMemoryObject {
 	 */
 	public void append( MemoryObject object ) {
 		// build a copy of the new string
-		StringBuffer buffer = new StringBuffer( MAX_LENGTH );
+		StringBuilder buffer = new StringBuilder( MAX_LENGTH );
 		buffer.append( this.toString() );
 		buffer.append( object.toString() );
 		

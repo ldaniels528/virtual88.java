@@ -42,7 +42,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * IBM PC/MS DOS Debugger
+ * IBM PC/MS-DOS Debugger
  * @author lawrence.daniels@gmail.com
  */
 public class IbmPcDebugger {
@@ -81,7 +81,7 @@ public class IbmPcDebugger {
 	/**
 	 * For standalone operation
 	 * @param args the given commandline arguments
-	 * @throws X86MalformedInstructionException 
+	 * @throws IbmPcException
 	 */
 	public static void main( final String[] args ) 
 	throws IbmPcException {
@@ -98,7 +98,7 @@ public class IbmPcDebugger {
 			// point to the file
 			app.filename = args[0];
 			
-			// attemp to load the file
+			// attempt to load the file
 			app.loadExecutable( app.filename );
 		}
 		
@@ -169,8 +169,6 @@ public class IbmPcDebugger {
 	/**
 	 * Dumps the specific number of bytes on screen
 	 * @param count the specified number of bytes to display
-	 * @return a {@link List collection} of string representing 
-	 * the dumped output.
 	 */
 	private void dump( final int count ) {
 		final int DUMP_LENGTH = 16;
@@ -217,8 +215,8 @@ public class IbmPcDebugger {
 	 * @return the formatted string
 	 */
 	private String layoutBytes( final List<Integer> byteCodes ) {
-		final StringBuffer sb1 = new StringBuffer( 3 * byteCodes.size() );
-		final StringBuffer sb2 = new StringBuffer( 3 * byteCodes.size() );
+		final StringBuilder sb1 = new StringBuilder( 3 * byteCodes.size() );
+		final StringBuilder sb2 = new StringBuilder( 3 * byteCodes.size() );
 		
 		sb2.append( '[' );
 		for( final Integer byteCode : byteCodes ) {
@@ -243,7 +241,7 @@ public class IbmPcDebugger {
 			// load the contents into a buffer
 			final ByteArrayOutputStream baos = new ByteArrayOutputStream( 65536 );
 			final byte[] buf = new byte[1024];
-			int count = 0;
+			int count;
 			int total = 0;
 			while( ( count = fis.read( buf ) ) != -1 ) {
 				baos.write( buf );
@@ -288,10 +286,9 @@ public class IbmPcDebugger {
 	}
 	
 	/**
-	 * Unassembles the specified number of instructions.
-	 * @param origin indicates where to begin unassembling
+	 * Disassemble the specified number of instructions.
+	 * @param command the given command to disassemble
 	 * @param count the specified number of instructions to unassemble.
-	 * @throws X86MalformedInstructionException
 	 */
 	private void unassemble( final String command, final int count ) {
 		// check the command arguments
@@ -345,7 +342,7 @@ public class IbmPcDebugger {
 		memory.getBytes( segment, offset, block, block.length );
 		
 		// create a byte string
-		final StringBuffer sb = new StringBuffer( MAX_LEN );
+		final StringBuilder sb = new StringBuilder( MAX_LEN );
 		for( final byte b : block ) {
 			sb.append( String.format( "%02X", b ) );
 		}
@@ -397,10 +394,9 @@ public class IbmPcDebugger {
 					new DecoderC0(), new DecoderD0(), new DecoderE0(), new DecoderF0( this )
 				};
 		}
-		
-		/* 
-		 * (non-Javadoc)
-		 * @see ibmpc.devices.cpu.x86.decoder.DecodeProcessor#decodeNext()
+
+		/**
+		 * {@inheritDoc}
 		 */
 		public OpCode decodeNext() {			
 			// capture the current offset
@@ -434,22 +430,22 @@ public class IbmPcDebugger {
 			return opCode;
 		}
 
-		/* (non-Javadoc)
-		 * @see ibmpc.devices.cpu.x86.decoder.DecodeProcessor#init()
+		/**
+		 * {@inheritDoc}
 		 */
 		public void init() {
 			// no initialization needed
 		}
 
-		/* (non-Javadoc)
-		 * @see ibmpc.devices.cpu.x86.decoder.DecodeProcessor#redirect(int, int)
+		/**
+		 * {@inheritDoc}
 		 */
 		public void redirect( final int segment, final int offset ) {
 			// no redirection needed
 		}
 
-		/* (non-Javadoc)
-		 * @see ibmpc.devices.cpu.x86.decoder.DecodeProcessor#shutdown()
+		/**
+		 * {@inheritDoc}
 		 */
 		public void shutdown() {
 			// no shutdown needed

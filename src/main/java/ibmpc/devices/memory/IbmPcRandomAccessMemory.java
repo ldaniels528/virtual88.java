@@ -5,7 +5,7 @@ import static ibmpc.devices.cpu.operands.Operand.SIZE_32BIT;
 import static ibmpc.devices.cpu.operands.Operand.*;
 import static ibmpc.devices.memory.X86MemoryUtil.computePhysicalAddress;
 import ibmpc.devices.cpu.operands.Operand;
-import ibmpc.util.Logger;
+import org.apache.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,12 +13,15 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
 
+import static java.lang.String.format;
+
 /**
  * Represents IBM PC-style segmented random access memory.
  * @author lawrence.daniels@gmail.com
  */
 public class IbmPcRandomAccessMemory {
 	private static final int SYSTEM_MEMORY_SIZE = 0x100000;
+	private final Logger logger = Logger.getLogger(getClass());
 	private final byte[] systemMemory;
 	
 	///////////////////////////////////////////////////////
@@ -121,7 +124,6 @@ public class IbmPcRandomAccessMemory {
 	/**
 	 * Retrieves a block of memory at the given offset
 	 * @param physicalAddress the physical address of the memory block
-	 * @param offset the offset of the memory block
 	 * @param length the length of the memory block
 	 * @return a block of memory at the given offset
 	 */
@@ -244,7 +246,7 @@ public class IbmPcRandomAccessMemory {
 	}
 	
 	/**
-	 * Guaruntees that the each set bit within the mask sets the 
+	 * Guarantees that the each set bit within the mask sets the
 	 * corresponding bit within the referenced byte of memory.
 	 * @param segment the segment of the memory location
 	 * @param offset the offset of the memory location
@@ -275,16 +277,14 @@ public class IbmPcRandomAccessMemory {
 	
 	/**
 	 * Writes a block of binary data to memory at the given segment and offset
-	 * @param segment the segment of the memory block
-	 * @param offset the offset of the memory block
+	 * @param physicalAddress the physical memory address
 	 * @param block the block of binary data
 	 * @param length the length of the memory block
-	 * @return a block of memory at the given offset
 	 */
 	public void setBytes( final int physicalAddress, final byte[] block, final int length ) {
 		// failsafe check
 		if( physicalAddress + length > SYSTEM_MEMORY_SIZE ) {
-			Logger.debug( "Warning physical address (%x) is outside of maximum (%x)\n", physicalAddress + length, SYSTEM_MEMORY_SIZE );
+			logger.debug(format("Warning physical address (%x) is outside of maximum (%x)", physicalAddress + length, SYSTEM_MEMORY_SIZE));
 		}
 		  
 		// copy the contents of the memory block to physical memory
@@ -297,7 +297,6 @@ public class IbmPcRandomAccessMemory {
 	 * @param offset the offset of the memory block
 	 * @param block the block of binary data
 	 * @param length the length of the memory block
-	 * @return a block of memory at the given offset
 	 */
 	public void setBytes( final int segment, final int offset, final byte[] block, final int length ) {
 		// compute the physical address

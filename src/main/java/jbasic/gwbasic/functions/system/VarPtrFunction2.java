@@ -43,7 +43,7 @@ public class VarPtrFunction2 extends JBasicFunction {
 		final MemoryObject object = objects[0];
 		
 		// create a string representing return value
-		final StringBuffer buffer = new StringBuffer( 3 );
+		final StringBuilder buffer = new StringBuilder( 3 );
 		buffer.append( getDataType( object ) );
 		buffer.append( getLeastSignificantByte( object ) );
 		buffer.append( getMostSignificantByte( object ) );

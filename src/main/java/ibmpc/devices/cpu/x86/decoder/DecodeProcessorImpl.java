@@ -6,13 +6,17 @@ import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.flow.AbstractForcedRedirectOpCode;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import ibmpc.devices.memory.X86MemoryProxy;
-import ibmpc.util.Logger;
+
+import static java.lang.String.format;
+
+import org.apache.log4j.Logger;
 
 /**
  * 80x86 Decode Processor
  * @author lawrence.daniels@gmail.com
  */
 public class DecodeProcessorImpl implements DecodeProcessor {
+	private final Logger logger = Logger.getLogger(getClass());
 	protected final IbmPcRandomAccessMemory memory;
 	protected final DecodeCache cache;
 	protected final X86MemoryProxy proxy;
@@ -22,7 +26,7 @@ public class DecodeProcessorImpl implements DecodeProcessor {
 	/**
 	 * Creates a new instance decode processor
 	 * @param cpu the given {@link Intel80x86 CPU}
-	 * @param memory the given {@link IbmPcRandomAccessMemory memory}
+	 * @param proxy the given {@link X86MemoryProxy memory}
 	 */
 	public DecodeProcessorImpl( final Intel80x86 cpu, final X86MemoryProxy proxy ) {
 		this.cpu		= cpu;
@@ -74,7 +78,7 @@ public class DecodeProcessorImpl implements DecodeProcessor {
 		opCode.setInstructionCode( insCode );
 		
 		// cache the instruction
-		//Logger.info( "D [%04X:%04X] %10X[%d] %s\n", proxy.getSegment(), offset0, insCode, codeLength, opCode );
+		//logger.info(format("D [%04X:%04X] %10X[%d] %s", proxy.getSegment(), offset0, insCode, codeLength, opCode));
 		cache.cache( insCode, opCode );
 			
 		// is it a forced redirect?
@@ -82,7 +86,7 @@ public class DecodeProcessorImpl implements DecodeProcessor {
 			final AbstractForcedRedirectOpCode forcedRedirectOpCode = (AbstractForcedRedirectOpCode)opCode;
 			final Operand destination = forcedRedirectOpCode.getDestination();
 			proxy.setDestination( destination );
-			Logger.info( "Redirecting to %04X:%04X\n", proxy.getSegment(), proxy.getOffset() );
+			logger.info(format("Redirecting to %04X:%04X", proxy.getSegment(), proxy.getOffset()));
 		}
 		
 		// return the opCode

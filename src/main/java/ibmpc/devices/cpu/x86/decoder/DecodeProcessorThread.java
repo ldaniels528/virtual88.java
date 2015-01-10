@@ -4,15 +4,18 @@
 package ibmpc.devices.cpu.x86.decoder;
 
 import ibmpc.devices.cpu.OpCode;
-import ibmpc.util.Logger;
+import org.apache.log4j.Logger;
 
 import java.util.LinkedList;
+
+import static java.lang.String.format;
 
 /**
  * 80x86 Decode Processor Thread
  * @author lawrence.daniels@gmail.com
  */
 public class DecodeProcessorThread implements DecodeProcessor, Runnable {
+	private final Logger logger = Logger.getLogger(getClass());
 	private final LinkedList<OpCode> queue;
 	private final DecodeProcessor decoder;
 	private boolean alive;
@@ -75,7 +78,7 @@ public class DecodeProcessorThread implements DecodeProcessor, Runnable {
 	 */
 	public void redirect( final int segment, final int offset ) {
 		synchronized( queue ) {
-			Logger.info( "Conditional redirect to %04X:%04X (queue size = %d)\n", segment, offset, queue.size() );
+			logger.info(format("Conditional redirect to %04X:%04X (queue size = %d)", segment, offset, queue.size()));
 			
 			// clear the queue
 			queue.clear();

@@ -1,5 +1,6 @@
 package jbasic.gwbasic.program;
 
+import ibmpc.app.IbmPcAssemblyLanguageCompiler;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.ProgramContext;
 import ibmpc.devices.display.IbmPcDisplay;
@@ -11,44 +12,26 @@ import ibmpc.devices.memory.MemoryObject;
 import ibmpc.devices.memory.OutOfMemoryException;
 import ibmpc.exceptions.X86AssemblyException;
 import ibmpc.system.IbmPcSystem;
-import ibmpc.util.Logger;
-
-import java.awt.event.KeyEvent;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import jbasic.assembler.JBasicAssemblyLanguageCompiler;
-import jbasic.common.exceptions.IllegalFunctionCallException;
-import jbasic.common.exceptions.InvalidLabelException;
-import jbasic.common.exceptions.JBasicException;
-import jbasic.common.exceptions.SubscriptOutOfRangeException;
-import jbasic.common.exceptions.SyntaxErrorException;
+import jbasic.common.exceptions.*;
 import jbasic.common.program.AbortableOpCode;
 import jbasic.common.program.ConditionalControlBlock;
 import jbasic.common.program.ConditionalOpCode;
 import jbasic.common.program.JBasicCompiledCode;
-import jbasic.common.values.Variable;
-import jbasic.common.values.VariableArray;
-import jbasic.common.values.VariableArrayIndexReference;
-import jbasic.common.values.VariableReference;
-import jbasic.common.values.VariableTypeDefinition;
+import jbasic.common.values.*;
 import jbasic.common.values.impl.SimpleConstant;
 import jbasic.common.values.impl.SimpleVariable;
 import jbasic.common.values.impl.SimpleVariableArray;
-import jbasic.common.values.systemvariables.CursorLineVariable;
-import jbasic.common.values.systemvariables.InKeyVariable;
-import jbasic.common.values.systemvariables.SystemDateVariable;
-import jbasic.common.values.systemvariables.SystemTimeVariable;
-import jbasic.common.values.systemvariables.SystemTimerVariable;
+import jbasic.common.values.systemvariables.*;
 import jbasic.common.values.types.impl.JBasicNumber;
 import jbasic.common.values.types.impl.JBasicString;
 import jbasic.gwbasic.GwBasicEnvironment;
 import jbasic.gwbasic.program.commands.GwBasicCommand;
+import org.apache.log4j.Logger;
+
+import java.awt.event.KeyEvent;
+import java.util.*;
+
+import static java.lang.String.format;
 
 /**
  * Represents GWBASICA/BASICA Program Source Code 
@@ -73,6 +56,7 @@ public class GwBasicCompiledCode implements JBasicCompiledCode, IbmPcKeyEventLis
 	private int dataPtr;
 	
 	// control flow-based fields
+	private final Logger logger = Logger.getLogger(getClass());
 	private final Map<String,ConditionalControlBlock> controlBlockMapping;
 	private final LinkedList<ConditionalControlBlock> controlStack;
 	private final LinkedList<Integer> callStack;		
@@ -162,7 +146,7 @@ public class GwBasicCompiledCode implements JBasicCompiledCode, IbmPcKeyEventLis
 	  
 	  /**
 	   * Adds the given command to the compiled code
-	   * @param command the given {@link GwBasicCommand commands/opCodes}
+	   * @param commands the given {@link GwBasicCommand commands/opCodes}
 	   */
 	  public void addAll( final Collection<GwBasicCommand> commands ) {
 		  opCodes.addAll( commands );
@@ -182,7 +166,7 @@ public class GwBasicCompiledCode implements JBasicCompiledCode, IbmPcKeyEventLis
 	   * @return the array of command/opCodes held by this container
 	   */
 	  public GwBasicCommand[] getCommands() {
-		  return (GwBasicCommand[])opCodes.toArray( new GwBasicCommand[ opCodes.size() ] );
+		  return opCodes.toArray( new GwBasicCommand[ opCodes.size() ] );
 	  }
 	 
 	  /* 
@@ -193,7 +177,7 @@ public class GwBasicCompiledCode implements JBasicCompiledCode, IbmPcKeyEventLis
 	  throws JBasicException {
 		  try {
 			  // create the x86 opCodes
-			  final byte[] x86Code = JBasicAssemblyLanguageCompiler.encode( asmCodes );
+			  final byte[] x86Code = IbmPcAssemblyLanguageCompiler.encode(asmCodes);
 			  
 			  // allocate memory for the opCodes
 			  final int offset = memoryManager.allocate( x86Code.length );
@@ -532,7 +516,7 @@ public class GwBasicCompiledCode implements JBasicCompiledCode, IbmPcKeyEventLis
 	    
 	    // get the screen instance, and create a string buffer (used for traces)
 	    final IbmPcDisplay screen = environment.getDisplay();
-	    final StringBuffer buffer = new StringBuffer( 10 );
+	    final StringBuilder buffer = new StringBuilder( 10 );
 	        
 	    // execute the program
 	    GwBasicCommand opCode = null; 
@@ -569,11 +553,12 @@ public class GwBasicCompiledCode implements JBasicCompiledCode, IbmPcKeyEventLis
 		    // display statistics
 		    final long elapsed = System.currentTimeMillis() - startTime; 
 		    final double avg = (double)counter / (double)elapsed;
-		    Logger.info( "program executed %d opCodes in %d msec(s): %f opCodes/msec\n", counter, elapsed, avg );
+		    logger.info(format("program executed %d opCodes in %d msec(s): %f opCodes/msec", counter, elapsed, avg));
 	    }
 	    catch( final RuntimeException e ) {
     		// get the opCode's line number
-    		final int lineNumber = opCode.getLineNumber();
+			assert opCode != null;
+			final int lineNumber = opCode.getLineNumber();
     		// re-throw the exception using the line number
     		throw new GwBasicProgramSyntaxException( e, lineNumber );
 	    }
@@ -632,7 +617,7 @@ public class GwBasicCompiledCode implements JBasicCompiledCode, IbmPcKeyEventLis
 	   */
 	  public Variable getLastControlStackVariable() {
 		  // get the last control block from the stack
-		  final ConditionalControlBlock controlBlock = (ConditionalControlBlock)controlStack.removeLast();
+		  final ConditionalControlBlock controlBlock = controlStack.removeLast();
 		  
 		  // return the variable
 		  return controlBlock.getVariable();

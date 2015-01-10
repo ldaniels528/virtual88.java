@@ -1,7 +1,9 @@
 package ibmpc.devices.display.modes;
 
 import ibmpc.devices.display.IbmPcDisplayContext;
-import ibmpc.util.Logger;
+import org.apache.log4j.Logger;
+
+import static java.lang.String.format;
 
 /**
  * Represents a Generic Graphics Mode
@@ -9,6 +11,7 @@ import ibmpc.util.Logger;
  */
 public abstract class AbstractGraphicsMode extends AbstractDisplayMode {
 	protected static final byte CLEAR_BYTE = 0x00;
+	private final Logger logger = Logger.getLogger(getClass());
 	
 	/////////////////////////////////////////////////////
 	//      Constructor(s)
@@ -138,7 +141,7 @@ public abstract class AbstractGraphicsMode extends AbstractDisplayMode {
 		
 		// offset cannot be outside of video memory
 		if( offset >= memorySize ) {
-			Logger.error( "Offset (%04X) is greater than memory size (%04X)\n", offset, memorySize );
+			logger.error(format("Offset (%04X) is greater than memory size (%04X)", offset, memorySize));
 		}
 		
 		// write the character

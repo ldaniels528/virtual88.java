@@ -54,7 +54,6 @@ public class TokenIterator {
 	  
 	  // get the object
 	  final String token = tokens.get( position++ );
-//JBDebug.debug( "TokenIterator: token '%s'\n", token );	  
 
 	  // return the next element
 	  return token;
@@ -138,7 +137,7 @@ public class TokenIterator {
    * @see java.lang.Object#toString()
    */
   public String toString() {
-	  final StringBuffer sb = new StringBuffer( 100 );
+	  final StringBuilder sb = new StringBuilder( 100 );
 	  int n = 0;
 	  for( int p = position; p < tokens.size(); p++ ) {
 		  if( n++ > 0 ) sb.append( ' ' );

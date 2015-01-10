@@ -258,7 +258,7 @@ public class DecoderUtil {
 			// compute the composite code
 			final int compCode = ( elemCode << 6 ) | refCode;
 			
-			//Logger.info( "elemCode = %02X, refCode = %02X, compCode = %02X\n", elemCode, refCode, compCode );
+			//logger.info( "elemCode = %02X, refCode = %02X, compCode = %02X", elemCode, refCode, compCode );
 			
 			// lookup the memory reference
 			final MemoryReference ref = lookupReferencedAddress( cpu, proxy, compCode );

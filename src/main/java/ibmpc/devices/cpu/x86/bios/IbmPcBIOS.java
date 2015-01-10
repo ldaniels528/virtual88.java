@@ -1,36 +1,22 @@
 package ibmpc.devices.cpu.x86.bios;
 
-import static ibmpc.devices.display.fonts.IbmPcFont8x8.FONTS_8X8;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.operands.memory.MemoryAddressFAR32;
-import ibmpc.devices.cpu.x86.bios.services.ATSystemServices;
-import ibmpc.devices.cpu.x86.bios.services.ConventionalMemorySizeService;
-import ibmpc.devices.cpu.x86.bios.services.DiskServices;
-import ibmpc.devices.cpu.x86.bios.services.DivisionByZeroInterrupt;
-import ibmpc.devices.cpu.x86.bios.services.EquipmentListServices;
-import ibmpc.devices.cpu.x86.bios.services.InterruptHandler;
-import ibmpc.devices.cpu.x86.bios.services.InvalidOpCodeInterrupt;
-import ibmpc.devices.cpu.x86.bios.services.KeyboardHardwareServices;
-import ibmpc.devices.cpu.x86.bios.services.KeyboardSoftwareServices;
-import ibmpc.devices.cpu.x86.bios.services.ParallelPortServices;
-import ibmpc.devices.cpu.x86.bios.services.PrintScreenService;
-import ibmpc.devices.cpu.x86.bios.services.RealTimeClockServices;
-import ibmpc.devices.cpu.x86.bios.services.SerialPortServices;
-import ibmpc.devices.cpu.x86.bios.services.SystemRebootService;
-import ibmpc.devices.cpu.x86.bios.services.SystemTimerService;
-import ibmpc.devices.cpu.x86.bios.services.VideoServices;
+import ibmpc.devices.cpu.x86.bios.services.*;
 import ibmpc.devices.cpu.x86.opcodes.system.INT;
 import ibmpc.devices.display.IbmPcDisplayContext;
 import ibmpc.devices.display.modes.IbmPcDisplayMode;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import ibmpc.exceptions.X86AssemblyException;
-import ibmpc.system.IbmPcSystem;
 import ibmpc.system.IbmPcSystemInfo;
 import ibmpc.system.IbmPcSystemTypeConstants;
-import ibmpc.util.Logger;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static ibmpc.devices.display.fonts.IbmPcFont8x8.FONTS_8X8;
+import static java.lang.String.format;
 
 /**
  * Represents the memory resident portion of the 
@@ -163,6 +149,7 @@ public class IbmPcBIOS {
 	private static final byte[] ROM_DATE = "04/24/1981".getBytes();
 	
 	// internal fields
+	private final Logger logger = Logger.getLogger(getClass());
 	private Map<MemoryAddressFAR32,InterruptHandler> handlers;
 	private final IbmPcRandomAccessMemory memory;
 	
@@ -221,7 +208,7 @@ public class IbmPcBIOS {
 		// is there a system handler defined?
 		if( handlers.containsKey( address ) ) {
 			final InterruptHandler handler = handlers.get( address );
-			Logger.info( "Handling interrupt %02X with %s (%s)\n", interruptNo, handler.getClass().getSimpleName(), address );
+			logger.info(format("Handling interrupt %02X with %s (%s)", interruptNo, handler.getClass().getSimpleName(), address));
 			
 			// handle the interrupt
 			handler.process( cpu );
@@ -229,7 +216,7 @@ public class IbmPcBIOS {
 		
 		// otherwise, use the defined user handler
 		else {
-			Logger.info( "Handling interrupt %02X at %s\n", interruptNo, address );
+			logger.info(format("Handling interrupt %02X at %s", interruptNo, address));
 			
 			// jump to the address in memory
 			cpu.invokeInterrupt( address );
@@ -305,7 +292,7 @@ public class IbmPcBIOS {
 		memory.setWord( 0x0040, 0x0013, memory.sizeInKilobytes() );
 	
 		// Print-screen status: 00h=ok; 01h=printing; 0FFh=error while printing screen
-		memory.setByte( 0x0040, 0x0100, (byte)00 );
+		memory.setByte( 0x0040, 0x0100, 0 );
 	
 		// Phantom-floppy status: 01h=drive A is acting as drive B.
 		memory.setByte( 0x0040, 0x0104, (byte)( systemInfo.getFloppyDrives() == 1 ? 1 : 0 ) );
@@ -318,7 +305,7 @@ public class IbmPcBIOS {
 	}
 	
 	/** 
-	 * Update's the video information area of BIOS memory
+	 * Updates the video information area of BIOS memory
 	 * @param mode the given {@link IbmPcDisplayMode display mode}
 	 * @param dc the given {@link IbmPcDisplayContext display context}
 	 */
@@ -397,7 +384,6 @@ public class IbmPcBIOS {
 	
 	/**
 	 * Get the vector address for this interrupt
-	 * @param environment the given {@link IbmPcSystem environment}
 	 * @param interrupt the given interrupt number
 	 * @return the segment and offset 
 	 */
@@ -412,7 +398,7 @@ public class IbmPcBIOS {
 	/**
 	 * Displays the interrupt vector table
 	 */
-	void showVectorTable() {
+	protected void showVectorTable() {
 		final int segment = 0x0000;
 		for( int n = 0; n < 256; n++ ) {
 			// setup the offset
@@ -426,7 +412,7 @@ public class IbmPcBIOS {
 			final int codeSegment = ( pointer & 0x0000FFFF );
 				
 			// set offset:segment value
-			Logger.info( "Interrupt %02X [at %04X:%04X] points to %04X:%04X (%08X)\n", n, segment, offset, codeSegment, codeOffset, pointer );
+			logger.info(format("Interrupt %02X [at %04X:%04X] points to %04X:%04X (%08X)", n, segment, offset, codeSegment, codeOffset, pointer));
 			
 		}
 	}

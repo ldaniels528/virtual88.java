@@ -71,7 +71,7 @@ public class IbmPcValues {
 		  int remaining = number;
 		  
 		  // generate the baseN number (in reverse order)
-		  final StringBuffer sb = new StringBuffer();
+		  final StringBuilder sb = new StringBuilder();
 		  while( remaining > 0 ) {
 			  // determine the next digit
 			  final int digit = remaining % baseN;		  
@@ -125,7 +125,7 @@ public class IbmPcValues {
 	   * Parses the given hexadecimal string into an integer value 
 	   * @param hexString the given hexadecimal string
 	   * @return the integer equivalent value 
-	   * @throws IllegalNumberFormat 
+	   * @throws IbmPcNumericFormatException
 	   */
 	  public static int parseHexadecimalString( final String hexString ) 
 	  throws IbmPcNumericFormatException {

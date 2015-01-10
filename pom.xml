@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ldaniels528</groupId>
 	<artifactId>jbasic</artifactId>
-	<version>0.430</version>
-	<name>Woozle</name>
+	<version>0.431</version>
+	<name>jbasic</name>
 	<description>A GWBASIC interpreter and IBM PC emulator</description>
 
 	<dependencies>

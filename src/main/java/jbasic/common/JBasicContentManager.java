@@ -28,11 +28,8 @@ public class JBasicContentManager {
 		// get a URL to the resource
 		final URL url = lookupResource( FONTS_8X8 );
 
-		// get the font data
-		final byte[] fontdata = getResourceContent( url );
-
 		// return the font data
-		return fontdata;	
+		return getResourceContent( url );
 	}
 	
 	///////////////////////////////////////////////////////
@@ -56,7 +53,7 @@ public class JBasicContentManager {
 		
 		// now, let's check the file system
 		final File file = new File( resourcePath );
-		if( file.exists() ) return file.toURL();
+		if( file.exists() ) return file.toURI().toURL();
 		
 		// couldn't find it
 		return null;

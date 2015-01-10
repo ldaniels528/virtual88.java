@@ -1,6 +1,6 @@
 package jbasic.common.exceptions;
 
-import jbasic.assembler.instruction.exception.X86IllegalNumericFormatException;
+import ibmpc.instruction.exception.X86IllegalNumericFormatException;
 
 /**
  * Represents an "Illegal number format" Exception

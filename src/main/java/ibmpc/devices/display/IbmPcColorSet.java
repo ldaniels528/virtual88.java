@@ -51,7 +51,7 @@ public class IbmPcColorSet {
 	
 	/**
 	 * Updates the environment with the given color set
-	 * @param colorSet the given {@linkp {@link IbmPcColorSet color set}
+	 * @param colorSet the given {@link IbmPcColorSet color set}
 	 */
 	public void update( final IbmPcColorSet colorSet ) {
 		if( colorSet.foreground != -1 ) this.foreground = colorSet.foreground;

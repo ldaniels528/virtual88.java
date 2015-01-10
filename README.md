@@ -8,12 +8,11 @@ My first programming language was GWBASIC. As such, BASIC remains my first love;
 programming in the little language that could, and quite a few old programs that I can no longer run because I've 
 switched to Mac OS X. I started JBasic in 2004 (as a hobby project) to be able to run those old programs on via the JVM. 
 
-This codebase is now defunct, as I'm not longer developing it (and haven't for almost 10 years), but I'm considering 
-rekindling/rewritting the project in Scala.
+I've recently decided to update this project to Java 8, and improve its x86 compatibility and performance in the process.
 
 ### Build Requirements
 
-* Java SDK 1.6+
+* Java 8 SDK 
 * Apache Maven 3.0+
 
 ### Building the code

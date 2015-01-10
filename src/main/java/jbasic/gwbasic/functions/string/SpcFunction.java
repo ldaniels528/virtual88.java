@@ -36,7 +36,7 @@ public class SpcFunction extends JBasicFunction {
 		final int count = objects[0].toInteger();
       
 		// build the space filled string
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 		for( int i = 0; i < count; i++ ) {
 			sb.append( ' ' );
 		}
