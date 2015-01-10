@@ -9,24 +9,26 @@ import ibmpc.devices.cpu.x86.opcodes.flow.AbstractFlowControlOpCode;
  * Jump if Signed
  * Jump Condition: SF=1
  * </pre>
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class JS extends AbstractFlowControlOpCode {
-	
-	/**
-	 * Creates a new conditional jump instruction
-	 * @param offset the given memory offset to jump to.
-	 */
-	public JS( final Operand offset ) {
-		super( offset );
-	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected boolean redirectsFlow( final Intel80x86 cpu ) {
-		return ( cpu.FLAGS.isSF() );
-	}
+    /**
+     * Creates a new conditional jump instruction
+     *
+     * @param offset the given memory offset to jump to.
+     */
+    public JS(final Operand offset) {
+        super(offset);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean redirectsFlow(final Intel80x86 cpu) {
+        return (cpu.FLAGS.isSF());
+    }
 
 }

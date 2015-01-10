@@ -1,11 +1,11 @@
 package ibmpc.devices.cpu.x86.opcodes.string;
 
-import static ibmpc.devices.cpu.operands.OperandUtil.compare;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 
 /**
+ * Scan String Byte
  * <pre>
  * Usage:  SCAS    string
  *         SCASB
@@ -21,45 +21,44 @@ import ibmpc.devices.memory.IbmPcRandomAccessMemory;
  * </pre>
  */
 public class SCASB extends AbstractOpCode {
-	private static SCASB instance = new SCASB();
-	
-	/**
-	 * Private constructor
-	 */
-	private SCASB() {
-		super();
-	}
-	
-	/**
-	 * @return the singleton instance of this class
-	 */
-	public static SCASB getInstance() {
-		return instance;
-	}
+    private static SCASB instance = new SCASB();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void execute( final Intel80x86 cpu ) {
-		// get the memory instance
-		final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
-		
-		// get the data word from DS:[SI]
-		final int data0 = memory.getByte( cpu.DS.get(), cpu.SI.get() );
-		
-		// put the data word into ES:[DI]
-		final int data1 = memory.getByte( cpu.ES.get(), cpu.DI.get() );
-		
-		// compare the data
-		compare( cpu.FLAGS, data0, data1 );
-		
-		// setup increment/decrement value
-		final int delta = cpu.FLAGS.isDF() ? -1 : 1;
-		
-		// increment/decrement pointers
-		cpu.SI.add( delta );
-		cpu.DI.add( delta );
-	}
+    /**
+     * Private constructor
+     */
+    private SCASB() {
+        super();
+    }
+
+    /**
+     * @return the singleton instance of this class
+     */
+    public static SCASB getInstance() {
+        return instance;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final Intel80x86 cpu) {
+        // get the memory instance
+        final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
+
+        // get the byte from register AL
+        final int data0 = cpu.AL.get();
+
+        // put the data word into ES:[DI]
+        final int data1 = memory.getByte(cpu.ES.get(), cpu.DI.get());
+
+        // compare the data
+        cpu.FLAGS.compare(data0, data1);
+
+        // setup increment/decrement value
+        final int delta = cpu.FLAGS.isDF() ? -1 : 1;
+
+        // increment/decrement pointer
+        cpu.DI.add(delta);
+    }
 
 }

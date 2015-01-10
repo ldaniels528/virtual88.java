@@ -56,10 +56,11 @@ import ibmpc.devices.memory.X86MemoryProxy;
  * @author lawrence.daniels@gmail.com
  */
 public class DecoderE0 implements Decoder {
-	
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.decoders.I8086Decoder#decode(ibmpc.devices.cpu.VirtualCPU)
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public OpCode decode( final Intel80x86 cpu, final X86MemoryProxy proxy ) {
 		// peek at the next byte
 		final int code8 = proxy.nextByte();

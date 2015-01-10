@@ -1,11 +1,11 @@
 package ibmpc.devices.cpu.x86.opcodes.string;
 
-import static ibmpc.devices.cpu.operands.OperandUtil.compare;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 
 /**
+ * Compare String Word
  * <pre>
  * Usage:  CMPS    dest,src
  *         CMPSB
@@ -26,47 +26,49 @@ import ibmpc.devices.memory.IbmPcRandomAccessMemory;
  *
  * dest,src          22    8     10    8             1  (W88=30)
  * </pre>
+ *
+ * @author lawrence.daniels@gmail.com
  * @see REPZ
  * @see REPNZ
- * @author lawrence.daniels@gmail.com
  */
 public class CMPSW extends AbstractOpCode {
-	private static CMPSW instance = new CMPSW();
-	
-	/**
-	 * Private constructor
-	 */
-	private CMPSW() {
-		super();
-	}
-	
-	/**
-	 * @return the singleton instance of this class
-	 */
-	public static CMPSW getInstance() {
-		return instance;
-	}
+    private static CMPSW instance = new CMPSW();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void execute( final Intel80x86 cpu ) {
-		// get the RAM instance
-		final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
-		
-		// compare byte from DS:[SI] to ES:[DI]
-		final int src = memory.getWord( cpu.DS.get(), cpu.SI.get() );
-		final int dst = memory.getWord( cpu.ES.get(), cpu.DI.get() );
-		
-		// perform the comparison (update flags)
-		compare( cpu.FLAGS, src, dst );
-		
-		// setup increment/decrement value
-		final int delta = cpu.FLAGS.isDF() ? -2 : 2;
-		
-		// increment/decrement SI
-		cpu.SI.add( delta );
-	}
+    /**
+     * Private constructor
+     */
+    private CMPSW() {
+        super();
+    }
+
+    /**
+     * @return the singleton instance of this class
+     */
+    public static CMPSW getInstance() {
+        return instance;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final Intel80x86 cpu) {
+        // get the RAM instance
+        final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
+
+        // compare byte from DS:[SI] to ES:[DI]
+        final int src = memory.getWord(cpu.DS.get(), cpu.SI.get());
+        final int dst = memory.getWord(cpu.ES.get(), cpu.DI.get());
+
+        // perform the comparison (update flags)
+        cpu.FLAGS.compare(src, dst);
+
+        // setup increment/decrement value
+        final int delta = cpu.FLAGS.isDF() ? -2 : 2;
+
+        // increment/decrement SI
+        cpu.SI.add(delta);
+        cpu.DI.add(delta);
+    }
 
 }

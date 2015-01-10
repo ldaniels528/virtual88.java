@@ -6,27 +6,29 @@ import ibmpc.devices.cpu.x86.opcodes.flow.AbstractFlowControlOpCode;
 
 /**
  * <pre>
- * Jump if Greater  
+ * Jump if Greater
  * Jump Condition: ZF=0 and SF=OF
  * </pre>
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class JG extends AbstractFlowControlOpCode {
-	
-	/**
-	 * Creates a new conditional jump instruction
-	 * @param offset the given memory offset to jump to.
-	 */
-	public JG( final Operand offset ) {
-		super( offset );
-	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected boolean redirectsFlow( final Intel80x86 cpu ) {
-		return ( !cpu.FLAGS.isZF() && ( cpu.FLAGS.isSF() == cpu.FLAGS.isOF() ) );
-	}
+    /**
+     * Creates a new conditional jump instruction
+     *
+     * @param offset the given memory offset to jump to.
+     */
+    public JG(final Operand offset) {
+        super(offset);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean redirectsFlow(final Intel80x86 cpu) {
+        return (!cpu.FLAGS.isZF() && (cpu.FLAGS.isSF() == cpu.FLAGS.isOF()));
+    }
 
 }

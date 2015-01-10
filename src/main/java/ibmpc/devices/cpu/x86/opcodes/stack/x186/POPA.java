@@ -2,7 +2,6 @@ package ibmpc.devices.cpu.x86.opcodes.stack.x186;
 
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.X86Stack;
-import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.exceptions.X86AssemblyException;
 

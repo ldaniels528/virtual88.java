@@ -5,10 +5,10 @@ import ibmpc.devices.cpu.X86Stack;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.exceptions.X86AssemblyException;
 
-/** 
+/**
  * <pre>
  * Interrupt Return
- * 
+ *
  * Usage:  IRET
  * Modifies flags: AF CF DF IF PF SF TF ZF
  *
@@ -21,37 +21,38 @@ import ibmpc.exceptions.X86AssemblyException;
  * </pre>
  */
 public class IRET extends AbstractOpCode {
-	private static IRET instance;
-	private final X86Stack stack;
-	
-	/**
-	 * Private constructor
-	 */
-	private IRET( final Intel80x86 cpu  ) {
-		this.stack = cpu.getStack();
-	}
-	
-	/**
-	 * Returns the singleton instance of this class
-	 * @param cpu the given {@link Intel80x86 Intel 80x86 CPU}
-	 * @return the singleton instance of this class
-	 */
-	public static IRET getInstance( final Intel80x86 cpu ) {
-		if( instance == null ) {
-			instance = new IRET( cpu );
-		}
-		return instance;
-	}
+    private static IRET instance;
+    private final X86Stack stack;
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
-	 */
-	public void execute( final Intel80x86 cpu ) 
-	throws X86AssemblyException {
-		// pop the registers
-		stack.pop( cpu.IP );
-		stack.pop( cpu.CS );
-		stack.pop( cpu.FLAGS );
-	}
+    /**
+     * Private constructor
+     */
+    private IRET(final Intel80x86 cpu) {
+        this.stack = cpu.getStack();
+    }
+
+    /**
+     * Returns the singleton instance of this class
+     *
+     * @param cpu the given {@link Intel80x86 Intel 80x86 CPU}
+     * @return the singleton instance of this class
+     */
+    public static IRET getInstance(final Intel80x86 cpu) {
+        if (instance == null) {
+            instance = new IRET(cpu);
+        }
+        return instance;
+    }
+
+    /* (non-Javadoc)
+     * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
+     */
+    public void execute(final Intel80x86 cpu)
+            throws X86AssemblyException {
+        // pop the registers
+        stack.pop(cpu.IP);
+        stack.pop(cpu.CS);
+        stack.pop(cpu.FLAGS);
+    }
 
 }

@@ -9,50 +9,53 @@ import ibmpc.exceptions.X86AssemblyException;
  * <pre>
  * Usage:  NEG     dest
  * Modifies flags: AF CF OF PF SF ZF
- * 
+ *
  *  Subtracts the destination from 0 and saves the 2s complement of
  *  "dest" back into "dest".
- *  
- *                         Clocks             		Size
- *	Operands         808x  286   386   486          Bytes
  *
- *	reg               3     2     2     1             2
- *	mem             16+EA   7     6     3            2-4  (W88=24+EA)
+ *                         Clocks             		Size
+ * 	Operands         808x  286   386   486          Bytes
+ *
+ * 	reg               3     2     2     1             2
+ * 	mem             16+EA   7     6     3            2-4  (W88=24+EA)
  * </pre>
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class NEG extends AbstractOpCode {
-	private final Operand dest;
-	
-	/**
-	 * NEG dest
-	 * @param operand
-	 */
-	public NEG( final Operand operand ) {
-		this.dest = operand;
-	}
+    private final Operand dest;
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
-	 */
-	public void execute( final Intel80x86 cpu ) 
-	throws X86AssemblyException {
-		// get the initial value of the destination
-		final int value0 = dest.get();
-		
-		// compute 2's complement
-		final int value1 = ( 2 - value0 );
-		
-		// set the desination with the new value
-		dest.set( value1 );
-	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.x86.opcodes.AbstractOpCode#toString()
-	 */
-	public String toString() {
-		return String.format( "NEG %s", dest );
-	}
+    /**
+     * NEG dest
+     *
+     * @param operand
+     */
+    public NEG(final Operand operand) {
+        this.dest = operand;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final Intel80x86 cpu)
+            throws X86AssemblyException {
+        // get the initial value of the destination
+        final int value0 = dest.get();
+
+        // compute 2's complement
+        final int value1 = (2 - value0);
+
+        // set the desination with the new value
+        dest.set(value1);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format("NEG %s", dest);
+    }
 
 }

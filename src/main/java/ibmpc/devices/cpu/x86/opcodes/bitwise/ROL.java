@@ -6,8 +6,8 @@ import ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
 
 /**
  * Roll Left (ROL)
- * <pre>         
- *		Usage:  ROL     dest,count
+ * <pre>
+ * 		Usage:  ROL     dest,count
  *      Modifies flags: CF OF
  *
  * +---+       +-----------------------+
@@ -30,59 +30,62 @@ import ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
  *      reg,immed8        -    5+n    3     2             3
  *      mem,immed8        -    8+n    7     4            3-5
  * </pre>
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class ROL extends AbstractDualOperandOpCode {
-	
-	/**
-	 * ROL dest, src
-	 * @param dest the given {@link Operand destination}
-	 * @param src the given {@link Operand source}
-	 */
-	public ROL( final Operand dest, final Operand src ) {
-		super( "ROL", dest, src );
-	}
 
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
-	 */
-	public void execute( final Intel80x86 cpu ) {
-		// get the destination value
-		final int value = dest.get();
-		
-		// get the count of bits to roll
-		final int count = src.get();
-		
-		// get the size of the destination in bits
-		final int size = dest.size();
-		
-		// shift left the value by "count" bits
-		// to get the rolled portion
-		final int shl = ( value << count );
-		
-		// shift right the value by "size"-"count" bits 
-		// to get the rolled off portion
-		final int shr = ( value >> ( size - count ) );
-		
-		// determine the last bit rolled
-		final int mask = computeMask( size, count );
-		final boolean bit = ( ( value & mask ) >= 1 );
-		
-		// put the value into the destination
-		// put the last bit rolled into CF
-		dest.set( shl | shr );
-		cpu.FLAGS.setCF( bit );
-	}
-	
-	/**
-	 * Computes the mask for determining the list bit rolled
-	 * @param size the size in bits of the operand
-	 * @param count the given number of bits to roll
-	 * @return the mask for determining the list bit rolled
-	 */
-	private int computeMask( final int size, final int count ) {
-		return ( 1 << ( size - count ) );
-	}
-	
+    /**
+     * ROL dest, src
+     *
+     * @param dest the given {@link Operand destination}
+     * @param src  the given {@link Operand source}
+     */
+    public ROL(final Operand dest, final Operand src) {
+        super("ROL", dest, src);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final Intel80x86 cpu) {
+        // get the destination value
+        final int value = dest.get();
+
+        // get the count of bits to roll
+        final int count = src.get();
+
+        // get the size of the destination in bits
+        final int size = dest.size();
+
+        // shift left the value by "count" bits
+        // to get the rolled portion
+        final int shl = (value << count);
+
+        // shift right the value by "size"-"count" bits
+        // to get the rolled off portion
+        final int shr = (value >> (size - count));
+
+        // determine the last bit rolled
+        final int mask = computeMask(size, count);
+        final boolean bit = ((value & mask) >= 1);
+
+        // put the value into the destination
+        // put the last bit rolled into CF
+        dest.set(shl | shr);
+        cpu.FLAGS.setCF(bit);
+    }
+
+    /**
+     * Computes the mask for determining the list bit rolled
+     *
+     * @param size  the size in bits of the operand
+     * @param count the given number of bits to roll
+     * @return the mask for determining the list bit rolled
+     */
+    private int computeMask(final int size, final int count) {
+        return (1 << (size - count));
+    }
+
 }

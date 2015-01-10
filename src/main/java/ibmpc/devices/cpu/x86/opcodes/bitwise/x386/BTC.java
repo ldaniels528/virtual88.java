@@ -14,23 +14,24 @@ import ibmpc.exceptions.X86AssemblyException;
  * 0F  BA /7 ib  BTC r/m16,imm8  6/8     Save bit in carry flag and complement
  * 0F  BA /7 ib  BTC r/m32,imm8  6/8     Save bit in carry flag and complement
  * </pre>
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class BTC extends AbstractDualOperandOpCode {
-	
-	/**
-	 * Default constructor
-	 */
-	public BTC( final Operand dest, final Operand src ) {
-		super( "BT", dest, src );
-	}
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
-	 */
-	public void execute( final Intel80x86 cpu ) 
-	throws X86AssemblyException {
-		throw new IllegalStateException( "Not yet implemented" );
-	}
+    /**
+     * Default constructor
+     */
+    public BTC(final Operand dest, final Operand src) {
+        super("BT", dest, src);
+    }
+
+    /* (non-Javadoc)
+     * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
+     */
+    public void execute(final Intel80x86 cpu)
+            throws X86AssemblyException {
+        throw new IllegalStateException("Not yet implemented");
+    }
 
 }

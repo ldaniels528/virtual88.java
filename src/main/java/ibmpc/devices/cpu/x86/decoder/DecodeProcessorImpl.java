@@ -49,11 +49,11 @@ public class DecodeProcessorImpl implements DecodeProcessor {
 	public DecodeProcessorImpl( final Intel80x86 cpu, final IbmPcRandomAccessMemory memory ) {
 		this( cpu, new X86MemoryProxy( memory, 0, 0 ) );
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.x86.decoder.DecodeProcessor#decodeNext()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public OpCode decodeNext() {			
 		// capture the current offset
 		final int offset0 = proxy.getOffset();
@@ -94,27 +94,27 @@ public class DecodeProcessorImpl implements DecodeProcessor {
 				? new FlowControlCallBackOpCode( this, opCode ) 
 				: opCode;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.x86.decoder.DecodeProcessor#init()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void init() {
 		// nothing to do
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.x86.decoder.DecodeProcessor#shutdown()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void shutdown() {
 		// nothing to do
 	}
 
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.x86.decoder.DecodeProcessor#redirect(int, int)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void redirect( final int segment, final int offset ) {
 		// point to the new decode position
 		proxy.setSegment( segment );

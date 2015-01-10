@@ -206,9 +206,10 @@ public class DecoderD0 implements Decoder {
 	private static final int SAL = 6; // 110b
 	private static final int SAR = 7; // 111b
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.decoders.I8086Decoder#decode(ibmpc.devices.cpu.VirtualCPU)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public OpCode decode( final Intel80x86 cpu, final X86MemoryProxy proxy ) {
 		// Instruction code layout
 		// -----------------------------

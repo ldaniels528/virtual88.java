@@ -33,7 +33,7 @@ public interface JBasicCompiledCode extends JBasicCompiledCodeReference {
 	  /**
 	   * Maps the given label to the current position 
 	   * with the compiled code.
-	   * @param lineNumber the given label 
+	   * @param label the given label
 	   */
 	void addLabel( String label );
 	

@@ -8,15 +8,15 @@ import ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
  * <pre>
  * Usage:  MOV     dest,src
  * Modifies flags: None
- * 
+ *
  * Copies byte or word from the source operand to the destination
  * operand.  If the destination is SS interrupts are disabled except
  * on early buggy 808x CPUs.  Some CPUs disable interrupts if the
  * destination is any of the segment registers
- *  
+ *
  *                           Clocks                 Size
  *  Operands         808x  286   386   486          Bytes
- *  
+ *
  * reg,reg           2     2     2     1             2
  * mem,reg          9+EA   3     2     1            2-4  (W88=13+EA)
  * reg,mem          8+EA   5     4     1            2-4  (W88=12+EA)
@@ -40,28 +40,30 @@ import ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
  * TR6/TR7,reg32     -     -     12    4             3
  * reg32,TR3                           3
  * TR3,reg32                           6
- * 
+ *
  *       - when the 386 special registers are used all operands are 32 bits
  * </pre>
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class MOV extends AbstractDualOperandOpCode {
-	
-	/**
-	 * MOV dst, src
-	 * @param dest the given {@link Operand destination}
-	 * @param src the given {@link Operand source}
-	 */
-	public MOV( final Operand dest, final Operand src ) {
-		super( "MOV", dest, src );
-	}
 
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
-	 */
-	public void execute( final Intel80x86 cpu ) {
-		dest.set( src.get() );
-	}
+    /**
+     * MOV dst, src
+     *
+     * @param dest the given {@link Operand destination}
+     * @param src  the given {@link Operand source}
+     */
+    public MOV(final Operand dest, final Operand src) {
+        super("MOV", dest, src);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final Intel80x86 cpu) {
+        dest.set(src.get());
+    }
 
 }

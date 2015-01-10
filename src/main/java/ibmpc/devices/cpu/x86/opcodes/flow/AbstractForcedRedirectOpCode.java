@@ -31,9 +31,8 @@ public class AbstractForcedRedirectOpCode extends AbstractOpCode {
         this.isDirect = (destination instanceof OperandValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
+    /**
+     * {@inheritDoc}
      */
     @Override
     public void execute(final Intel80x86 cpu) throws X86AssemblyException {
@@ -47,27 +46,24 @@ public class AbstractForcedRedirectOpCode extends AbstractOpCode {
         return destination;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see ibmpc.devices.cpu.OpCode#isConditional()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public boolean isConditional() {
         return !isDirect;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see ibmpc.devices.cpu.OpCode#isForcedRedirect()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public boolean isForcedRedirect() {
         return isDirect;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see ibmpc.devices.cpu.x86.opcodes.AbstractOpCode#toString()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public String toString() {

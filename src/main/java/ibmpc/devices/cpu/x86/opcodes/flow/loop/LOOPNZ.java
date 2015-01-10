@@ -6,7 +6,7 @@ import ibmpc.devices.cpu.x86.opcodes.flow.AbstractFlowControlOpCode;
 
 /**
  * LOOP, LOOPE, LOOPZ, LOOPNE, LOOPNZ: Loop with Counter
- *
+ * <p/>
  * LOOP imm                      ; E2 rb                [8086]
  * LOOP imm,CX                   ; a16 E2 rb            [8086]
  * LOOP imm,ECX                  ; a32 E2 rb            [386]
@@ -24,7 +24,7 @@ import ibmpc.devices.cpu.x86.opcodes.flow.AbstractFlowControlOpCode;
  * LOOPNZ imm                    ; E0 rb                [8086]
  * LOOPNZ imm,CX                 ; a16 E0 rb            [8086]
  * LOOPNZ imm,ECX                ; a32 E0 rb            [386]
- *
+ * <p/>
  * LOOP decrements its counter register (either CX or ECX--if one is not specified explicitly,
  * the BITS setting dictates which is used) by one, and if the counter does not become zero as
  * a result of this operation, it jumps to the given label. The jump has a range of 128 bytes.
@@ -32,6 +32,7 @@ import ibmpc.devices.cpu.x86.opcodes.flow.AbstractFlowControlOpCode;
  * LOOPE (or its synonym LOOPZ) adds the additional condition that it only jumps if the counter
  * is nonzero and the zero flag is set. Similarly, LOOPNE (and LOOPNZ) jumps only if the counter
  * is nonzero and the zero flag is clear.
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class LOOPNZ extends AbstractFlowControlOpCode {
@@ -45,9 +46,10 @@ public class LOOPNZ extends AbstractFlowControlOpCode {
         super(destination);
     }
 
-    /* (non-Javadoc)
-     * @see ibmpc.devices.cpu.ConditionalOpCode#redirectsFlow(ibmpc.devices.cpu.Intel80x86)
+    /**
+     * {@inheritDoc}
      */
+    @Override
     protected boolean redirectsFlow(final Intel80x86 cpu) {
         final boolean ok = (cpu.CX.get() > 0) && (!cpu.FLAGS.isZF());
         if (ok) {

@@ -127,10 +127,10 @@ public class Decoder80 implements Decoder {
 	private static final int INS_TYPE_D_MOV2	= 0x02; // 10
 	private static final int INS_TYPE_D_POP		= 0x03; // 11
 
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.x86.decoder.Decoder#decode(ibmpc.devices.cpu.Intel80x86, ibmpc.x86.util.X86MemoryProxy)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public OpCode decode( final Intel80x86 cpu, final X86MemoryProxy proxy ) {
 		// get the 16-bit instruction
 		final int code16 = proxy.nextWord();

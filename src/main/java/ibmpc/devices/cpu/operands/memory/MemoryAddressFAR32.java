@@ -24,11 +24,11 @@ public class MemoryAddressFAR32 implements OperandAddress {
 		this.offset 			= offset;
 		this.physicalAddress	= computePhysicalAddress( segment, offset );
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals( final Object o ) {
 		// the object must be a 32-bit memory address
 		if( o instanceof MemoryAddressFAR32 ) {
@@ -38,11 +38,11 @@ public class MemoryAddressFAR32 implements OperandAddress {
 		}
 		return false;		
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		return physicalAddress;
 	}
@@ -71,31 +71,34 @@ public class MemoryAddressFAR32 implements OperandAddress {
 		return offset;
 	}
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.Operand#get()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int get() {
 		return memory.getDoubleWord( segment, offset );
 	}
-	
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.Operand#set(int)
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void set( final int value ) {
 		memory.setDoubleWord( segment, offset, value );
 	}
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.Operand#size()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int size() {
 		return SIZE_32BIT;
 	}
 
-	/* 
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		return String.format( "%04X:%04X", segment, offset );
 	}

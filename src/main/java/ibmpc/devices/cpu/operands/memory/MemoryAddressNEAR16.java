@@ -23,31 +23,34 @@ public class MemoryAddressNEAR16 implements OperandAddress {
 		this.offset = offset;
 	}
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.Operand#get()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int get() {
 		return memory.getWord( cpu.DS.get(), offset );
 	}
-	
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.Operand#set(int)
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void set( final int value ) {
 		memory.setWord( cpu.DS.get(), offset, value );
 	}
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.Operand#size()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int size() {
 		return SIZE_16BIT;
 	}
 
-	/* 
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		return String.format( "[%04X]", offset );
 	}

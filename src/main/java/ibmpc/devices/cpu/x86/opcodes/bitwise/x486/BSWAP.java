@@ -8,7 +8,7 @@ import ibmpc.exceptions.X86AssemblyException;
 /**
  * BSWAP - Byte Swap       (486+)
  * <pre>
- *	  Usage:  BSWAP   reg32
+ * 	  Usage:  BSWAP   reg32
  *    Modifies flags: none
  *
  *    Changes the byte order of a 32 bit register from big endian to
@@ -20,23 +20,24 @@ import ibmpc.exceptions.X86AssemblyException;
  *
  *    reg32             -     -     -     1             2
  * </pre>
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class BSWAP extends AbstractDualOperandOpCode {
-	
-	/**
-	 * Default constructor
-	 */
-	public BSWAP( final Operand dest, final Operand src ) {
-		super( "BSWAP", dest, src );
-	}
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
-	 */
-	public void execute( final Intel80x86 cpu ) 
-	throws X86AssemblyException {
-		throw new IllegalStateException( "Not yet implemented" );
-	}
+    /**
+     * Default constructor
+     */
+    public BSWAP(final Operand dest, final Operand src) {
+        super("BSWAP", dest, src);
+    }
+
+    /* (non-Javadoc)
+     * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
+     */
+    public void execute(final Intel80x86 cpu)
+            throws X86AssemblyException {
+        throw new IllegalStateException("Not yet implemented");
+    }
 
 }

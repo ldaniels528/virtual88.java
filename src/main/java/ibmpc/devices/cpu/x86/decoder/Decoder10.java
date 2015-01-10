@@ -59,9 +59,10 @@ public class Decoder10 implements Decoder {
 	private static final int ADC_CODE 	= 0x02;	// 00010
 	private static final int SBB_CODE 	= 0x03;	// 00011
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.decoders.I8086Decoder#decode(ibmpc.devices.cpu.VirtualCPU)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public OpCode decode( final Intel80x86 cpu, final X86MemoryProxy proxy ) {
 		// get the 8-bit instruction
 		final int code8 = proxy.nextByte();

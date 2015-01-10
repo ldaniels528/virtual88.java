@@ -35,9 +35,10 @@ import ibmpc.devices.memory.X86MemoryProxy;
  */
 public class DecoderB0 implements Decoder {
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.decoders.I8086Decoder#decode(ibmpc.devices.cpu.VirtualCPU)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public OpCode decode( final Intel80x86 cpu, X86MemoryProxy proxy ) {
 		// get the 8-bit instruction code
 		final int code8 = proxy.nextByte();

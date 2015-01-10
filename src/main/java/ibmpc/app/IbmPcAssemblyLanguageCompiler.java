@@ -2,9 +2,9 @@ package ibmpc.app;
 
 import static ibmpc.util.X86CompilerUtil.getConfiguredTokenizer;
 import ibmpc.exceptions.X86AssemblyException;
-import ibmpc.instruction.X86Instruction;
-import ibmpc.instruction.X86InstructionParser;
-import ibmpc.instruction.encoder.X86Assembler;
+import ibmpc.compiler.X86Instruction;
+import ibmpc.compiler.X86InstructionParser;
+import ibmpc.compiler.encoder.X86Assembler;
 import ibmpc.util.X86CodeBuffer;
 
 import com.ldaniels528.tokenizer.TokenIterator;

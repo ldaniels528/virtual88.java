@@ -14,23 +14,24 @@ import ibmpc.exceptions.X86AssemblyException;
  * 0F  BA /5 ib  BTS r/m16,imm8  6/8     Save bit in carry flag and set
  * 0F  BA /5 ib  BTS r/m32,imm8  6/8     Save bit in carry flag and set
  * </pre>
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class BTS extends AbstractDualOperandOpCode {
-	
-	/**
-	 * Default constructor
-	 */
-	public BTS( final Operand dest, final Operand src ) {
-		super( "BTS", dest, src );
-	}
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
-	 */
-	public void execute( final Intel80x86 cpu ) 
-	throws X86AssemblyException {
-		throw new IllegalStateException( "Not yet implemented" );
-	}
+    /**
+     * Default constructor
+     */
+    public BTS(final Operand dest, final Operand src) {
+        super("BTS", dest, src);
+    }
+
+    /* (non-Javadoc)
+     * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
+     */
+    public void execute(final Intel80x86 cpu)
+            throws X86AssemblyException {
+        throw new IllegalStateException("Not yet implemented");
+    }
 
 }

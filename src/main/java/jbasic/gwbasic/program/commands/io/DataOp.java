@@ -10,14 +10,14 @@ import jbasic.common.program.JBasicCompiledCode;
 import jbasic.common.util.JBasicTokenUtil;
 import jbasic.common.values.impl.SimpleConstant;
 import jbasic.gwbasic.program.commands.NoOp;
-import jbasic.gwbasic.program.commands.PreprocessibleOpCode;
+import jbasic.gwbasic.program.commands.PreProcessedOpCode;
 import jbasic.gwbasic.values.GwBasicValues;
 
 /**
  * DATA Command 
  * <br>Syntax: DATA <i>constant1</i>[,<i>constant2</i>[,<i>constant3</i>]]
  */
-public class DataOp extends NoOp implements PreprocessibleOpCode {
+public class DataOp extends NoOp implements PreProcessedOpCode {
   private final List<SimpleConstant> constants;
 
   /**
@@ -40,9 +40,9 @@ public class DataOp extends NoOp implements PreprocessibleOpCode {
 
   /* 
    * (non-Javadoc)
-   * @see jbasic.gwbasic.program.opcodes.PreprocessibleOpCode#preprocess(jbasic.base.program.JBasicProgram, jbasic.base.environment.JBasicEnvironment)
+   * @see jbasic.gwbasic.program.opcodes.PreprocessibleOpCode#preProcess(jbasic.base.program.JBasicProgram, jbasic.base.environment.JBasicEnvironment)
    */
-  public void preprocess( final JBasicCompiledCode compiledCode ) {
+  public void preProcess(final JBasicCompiledCode compiledCode) {
 	  // add the values to the given program
 	  for( final SimpleConstant constant : constants ) {
 		  compiledCode.addData( constant );

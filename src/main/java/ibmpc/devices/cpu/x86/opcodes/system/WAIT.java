@@ -3,7 +3,7 @@ package ibmpc.devices.cpu.x86.opcodes.system;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 
-/** 
+/**
  * <pre>
  * Usage:  WAIT
  *         FWAIT
@@ -14,31 +14,31 @@ import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
  *  accessing memory that may be temporarily in use by the coor.
  *  WAIT and FWAIT are identical
  * </pre>
- * @author lawrence.daniels@gmail.com
  *
+ * @author lawrence.daniels@gmail.com
  */
 public class WAIT extends AbstractOpCode {
-	private static WAIT instance = new WAIT();
-	
-	/**
-	 * Private constructor
-	 */
-	private WAIT() {
-		super();
-	}
-	
-	/**
-	 * @return the singleton instance of this class
-	 */
-	public static WAIT getInstance() {
-		return instance;
-	}
+    private static WAIT instance = new WAIT();
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
-	 */
-	public void execute( final Intel80x86 cpu ) {
-		// TODO figure it out
-	}
+    /**
+     * Private constructor
+     */
+    private WAIT() {
+        super();
+    }
+
+    /**
+     * @return the singleton instance of this class
+     */
+    public static WAIT getInstance() {
+        return instance;
+    }
+
+    /* (non-Javadoc)
+     * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
+     */
+    public void execute(final Intel80x86 cpu) {
+        // TODO figure it out
+    }
 
 }

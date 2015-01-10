@@ -59,9 +59,10 @@ public class Decoder20 implements Decoder {
 	private static final int AND_CODE 	= 0x04;	// 00100
 	private static final int SUB_CODE 	= 0x05;	// 00101
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.decoders.I8086Decoder#decode(ibmpc.devices.cpu.VirtualCPU)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public OpCode decode( final Intel80x86 cpu, X86MemoryProxy proxy ) {
 		// get the 8-bit instruction
 		final int code8 = proxy.nextByte();

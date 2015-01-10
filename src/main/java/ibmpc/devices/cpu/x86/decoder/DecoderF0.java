@@ -111,10 +111,11 @@ public class DecoderF0 implements Decoder {
 	public DecoderF0( final DecodeProcessor processor ) {
 		this.processor = processor;
 	}
-		
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.decoders.I8086Decoder#decode(ibmpc.devices.cpu.VirtualCPU)
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public OpCode decode( final Intel80x86 cpu, final X86MemoryProxy proxy ) {
 		// peek at the next word
 		final int code8  = proxy.nextByte();

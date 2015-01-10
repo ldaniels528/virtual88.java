@@ -4,9 +4,8 @@ import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 
-import static ibmpc.devices.cpu.operands.OperandUtil.compare;
-
 /**
+ * Scan String Word
  * <pre>
  * Usage:  SCAS    string
  *         SCASB
@@ -46,20 +45,19 @@ public class SCASW extends AbstractOpCode {
         // get the register collection and memory instances
         final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
 
-        // get the data word from DS:[SI]
-        final int data0 = memory.getWord(cpu.DS.get(), cpu.SI.get());
+        // get the value of register AX
+        final int data0 = cpu.AX.get();
 
         // put the data word into ES:[DI]
         final int data1 = memory.getWord(cpu.ES.get(), cpu.DI.get());
 
         // compare the data
-        compare(cpu.FLAGS, data0, data1);
+        cpu.FLAGS.compare(data0, data1);
 
         // setup increment/decrement value
-        final int delta = cpu.FLAGS.isDF() ? -2 : 2;
+        final int delta = cpu.FLAGS.isDF() ? 2 : -2;
 
-        // increment/decrement pointers
-        cpu.SI.add(delta);
+        // increment/decrement pointer
         cpu.DI.add(delta);
     }
 

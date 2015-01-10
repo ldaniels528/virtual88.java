@@ -57,10 +57,10 @@ import ibmpc.devices.memory.X86MemoryProxy;
  */
 public class Decoder60 implements Decoder {
 
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.x86.decoder.Decoder#decode(ibmpc.devices.cpu.Intel80x86, ibmpc.x86.util.X86MemoryProxy)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public OpCode decode( final Intel80x86 cpu, final X86MemoryProxy proxy ) {
 		// get the 8-bit instruction code
 		final int code8 = proxy.nextByte();

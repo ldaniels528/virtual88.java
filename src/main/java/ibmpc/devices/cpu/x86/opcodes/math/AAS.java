@@ -58,7 +58,7 @@ public class AAS extends AbstractOpCode {
         final int lowNibble = (cpu.AL.get() & 0x0F);
 
 		/*
-		 	if low nibble of AL > 9 or AF = 1 
+             if low nibble of AL > 9 or AF = 1
 		 	then:
 				AL = AL - 6
 				AH = AH - 1
