@@ -50,6 +50,7 @@ public class CMPSB extends AbstractOpCode {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void execute( final Intel80x86 cpu ) {
 		// get the RAM instance
 		final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();

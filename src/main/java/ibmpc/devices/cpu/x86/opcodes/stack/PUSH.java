@@ -26,36 +26,39 @@ import ibmpc.exceptions.X86AssemblyException;
  *  segreg          10/14   3     2     3             1
  *  immed             -     3     2     1            2-3
  * </pre>
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class PUSH extends AbstractOpCode {
-	private final Operand operand;
-	
-	/**
-	 * Creates a new PUSH instruction
-	 * @param operand the given {@link Operand operand}
-	 */
-	public PUSH( final Operand operand ) {
-		this.operand = operand;
-	}
+    private final Operand operand;
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
-	 */
-	public void execute( final Intel80x86 cpu ) 
-	throws X86AssemblyException {
-		// get the stack instance
-		final X86Stack stack = cpu.getStack();
-		
-		// push the operand onto the stack
-		stack.pushValue( operand.get() );
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public String toString() {
-		return String.format( "PUSH %s", operand );
-	}
+    /**
+     * Creates a new PUSH instruction
+     *
+     * @param operand the given {@link Operand operand}
+     */
+    public PUSH(final Operand operand) {
+        this.operand = operand;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final Intel80x86 cpu) throws X86AssemblyException {
+        // get the stack instance
+        final X86Stack stack = cpu.getStack();
+
+        // push the operand onto the stack
+        stack.pushValue(operand.get());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format("PUSH %s", operand);
+    }
 
 }

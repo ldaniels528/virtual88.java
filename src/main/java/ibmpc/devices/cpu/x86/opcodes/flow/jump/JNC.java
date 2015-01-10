@@ -6,26 +6,29 @@ import ibmpc.devices.cpu.x86.opcodes.flow.AbstractFlowControlOpCode;
 
 /**
  * <pre>
- * Jump if Not Carry 
+ * Jump if Not Carry
  * Jump Condition: CF=0
  * </pre>
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class JNC extends AbstractFlowControlOpCode {
-	
-	/**
-	 * Creates a new conditional jump instruction
-	 * @param offset the given memory offset to jump to.
-	 */
-	public JNC( final Operand offset ) {
-		super( offset );
-	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected boolean redirectsFlow(Intel80x86 cpu) {
-		return ( !cpu.FLAGS.isCF() );
-	}
+    /**
+     * Creates a new conditional jump instruction
+     *
+     * @param offset the given memory offset to jump to.
+     */
+    public JNC(final Operand offset) {
+        super(offset);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean redirectsFlow(Intel80x86 cpu) {
+        return (!cpu.FLAGS.isCF());
+    }
 
 }

@@ -23,6 +23,22 @@ I've recently decided to update this project to Java 8, and improve its x86 comp
 
     $ mvn test    
 
-### Run the application
+### Run the application(s)
 
-	$ java -jar jbasic-0.430-jar-with-dependencies.jar
+To execute the GWBASIC/BASICA emulator:
+
+```bash
+	$ java -jar jbasic-0.431-jar-with-dependencies.jar
+```
+
+To execute the IBM PC/MS-DOS emulator:
+
+```bash
+	$ java -cp jbasic-0.431-jar-with-dependencies.jar ibmpc.app.IbmPcEmulator
+```
+
+To execute the IBM PC/MS-DOS debugger:
+
+```bash
+	$ java -cp jbasic-0.431-jar-with-dependencies.jar ibmpc.app.IbmPcDebugger
+```

@@ -24,36 +24,39 @@ import ibmpc.exceptions.X86AssemblyException;
  * mem16           17+EA   5     5     6            2-4
  * mem32             5     -     -     6            2-4
  * </pre>
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class POP extends AbstractOpCode {
-	private final Operand operand;
-	
-	/**
-	 * Creates a new POP instruction
-	 * @param operand the given {@link Operand operand}
-	 */
-	public POP( final Operand operand ) {
-		this.operand = operand;
-	}
+    private final Operand operand;
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
-	 */
-	public void execute( final Intel80x86 cpu ) 
-	throws X86AssemblyException {
-		// get the stack instance
-		final X86Stack stack = cpu.getStack();
-		
-		// push the operand onto the stack
-		operand.set( stack.popValue() );
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public String toString() {
-		return String.format( "POP %s", operand );
-	}
+    /**
+     * Creates a new POP instruction
+     *
+     * @param operand the given {@link Operand operand}
+     */
+    public POP(final Operand operand) {
+        this.operand = operand;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final Intel80x86 cpu) throws X86AssemblyException {
+        // get the stack instance
+        final X86Stack stack = cpu.getStack();
+
+        // push the operand onto the stack
+        operand.set(stack.popValue());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format("POP %s", operand);
+    }
 
 }

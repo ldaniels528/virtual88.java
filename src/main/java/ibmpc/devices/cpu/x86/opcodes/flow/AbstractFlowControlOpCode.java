@@ -19,22 +19,21 @@ public abstract class AbstractFlowControlOpCode extends AbstractOpCode {
 	public AbstractFlowControlOpCode( final Operand destination ) {
 		this.destination = destination;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
+
+	/**
+	 * {@inheritDoc}
 	 */
-	public void execute( final Intel80x86 cpu ) 
-	throws X86AssemblyException {
+	@Override
+	public void execute( final Intel80x86 cpu ) throws X86AssemblyException {
 		if( redirectsFlow( cpu ) ) {
 			cpu.jumpTo( this, destination, false );
 		}
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#isConditional()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isConditional() {
 		return true;
 	}
@@ -47,11 +46,11 @@ public abstract class AbstractFlowControlOpCode extends AbstractOpCode {
 	 * @return the result of evaluate the opCode's condition
 	 */
 	protected abstract boolean redirectsFlow( Intel80x86 cpu );
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.x86.opcodes.AbstractOpCode#toString()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		return String.format( "%s %s", getClass().getSimpleName(), destination );
 	}

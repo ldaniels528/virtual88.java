@@ -1,9 +1,10 @@
 package ibmpc.devices.cpu.x86.opcodes.string;
 
-import static ibmpc.devices.cpu.operands.OperandUtil.compare;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
+
+import static ibmpc.devices.cpu.operands.OperandUtil.compare;
 
 /**
  * <pre>
@@ -21,45 +22,45 @@ import ibmpc.devices.memory.IbmPcRandomAccessMemory;
  * </pre>
  */
 public class SCASW extends AbstractOpCode {
-	private static SCASW instance = new SCASW();
-	
-	/**
-	 * Private constructor
-	 */
-	private SCASW() {
-		super();
-	}
-	
-	/**
-	 * @return the singleton instance of this class
-	 */
-	public static SCASW getInstance() {
-		return instance;
-	}
+    private static SCASW instance = new SCASW();
 
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
-	 */
-	public void execute( final Intel80x86 cpu ) {
-		// get the register collection and memory instances
-		final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
-		
-		// get the data word from DS:[SI]
-		final int data0 = memory.getWord( cpu.DS.get(), cpu.SI.get() );
-		
-		// put the data word into ES:[DI]
-		final int data1 = memory.getWord( cpu.ES.get(), cpu.DI.get() );
-		
-		// compare the data
-		compare( cpu.FLAGS, data0, data1 );
-		
-		// setup increment/decrement value
-		final int delta = cpu.FLAGS.isDF() ? -2 : 2;
-		
-		// increment/decrement pointers
-		cpu.SI.add( delta );
-		cpu.DI.add( delta );
-	}
+    /**
+     * Private constructor
+     */
+    private SCASW() {
+        super();
+    }
+
+    /**
+     * @return the singleton instance of this class
+     */
+    public static SCASW getInstance() {
+        return instance;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final Intel80x86 cpu) {
+        // get the register collection and memory instances
+        final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
+
+        // get the data word from DS:[SI]
+        final int data0 = memory.getWord(cpu.DS.get(), cpu.SI.get());
+
+        // put the data word into ES:[DI]
+        final int data1 = memory.getWord(cpu.ES.get(), cpu.DI.get());
+
+        // compare the data
+        compare(cpu.FLAGS, data0, data1);
+
+        // setup increment/decrement value
+        final int delta = cpu.FLAGS.isDF() ? -2 : 2;
+
+        // increment/decrement pointers
+        cpu.SI.add(delta);
+        cpu.DI.add(delta);
+    }
 
 }

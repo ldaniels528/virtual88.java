@@ -46,6 +46,7 @@ public class RETFn extends AbstractOpCode {
 	 * (non-Javadoc)
 	 * @see ibmpc.devices.cpu.OpCode#isConditional()
 	 */
+	@Override
 	public boolean isConditional() {
 		return true;
 	}
@@ -54,6 +55,7 @@ public class RETFn extends AbstractOpCode {
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return String.format( "RETF %04X", count );
 	}

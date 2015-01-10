@@ -47,10 +47,10 @@ public class CMPSW extends AbstractOpCode {
 		return instance;
 	}
 
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void execute( final Intel80x86 cpu ) {
 		// get the RAM instance
 		final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();

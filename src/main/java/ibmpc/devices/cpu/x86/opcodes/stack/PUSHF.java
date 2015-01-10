@@ -21,33 +21,34 @@ import ibmpc.exceptions.X86AssemblyException;
  *  none            10/14   3     4     4             1
  *  none  (PM)        -     -     4     3             1
  * </pre>
- * @see PUSHFD
+ *
  * @author lawrence.daniels@gmail.com
+ * @see PUSHFD
  */
 public class PUSHF extends AbstractOpCode {
-	private static PUSHF instance = new PUSHF();
-	
-	/**
-	 * Private constructor
-	 */
-	private PUSHF() {
-		super();
-	}
-	
-	/**
-	 * @return the singleton instance of this class
-	 */
-	public static PUSHF getInstance() {
-		return instance;
-	}
+    private static PUSHF instance = new PUSHF();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void execute( final Intel80x86 cpu ) 
-	throws X86AssemblyException {
-		final X86Stack stack = cpu.getStack();
-		stack.push( cpu.FLAGS );
-	}
+    /**
+     * Private constructor
+     */
+    private PUSHF() {
+        super();
+    }
+
+    /**
+     * @return the singleton instance of this class
+     */
+    public static PUSHF getInstance() {
+        return instance;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final Intel80x86 cpu) throws X86AssemblyException {
+        final X86Stack stack = cpu.getStack();
+        stack.push(cpu.FLAGS);
+    }
 
 }

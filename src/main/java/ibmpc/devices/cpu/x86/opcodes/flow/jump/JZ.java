@@ -24,6 +24,7 @@ public class JZ extends AbstractFlowControlOpCode {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected boolean redirectsFlow( final Intel80x86 cpu ) {
 		return ( cpu.FLAGS.isZF() );
 	}

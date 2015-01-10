@@ -23,11 +23,11 @@ public abstract class AbstractDualOperandOpCode extends AbstractOpCode {
 		this.dest 	= dst;
 		this.src	= src;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.x86.opcodes.AbstractOpCode#toString()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		// if the source is a memory pointer, point to it's memory reference
 		final Object srcObj = ( src instanceof MemoryPointer )

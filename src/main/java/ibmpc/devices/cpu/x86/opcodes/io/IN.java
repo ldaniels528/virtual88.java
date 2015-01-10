@@ -37,11 +37,11 @@ public class IN extends AbstractOpCode {
 		this.accum	= accum;
 		this.port	= port;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void execute( final Intel80x86 cpu ) {
 		// get the port number
 		final int portNum = port.get();
@@ -59,11 +59,11 @@ public class IN extends AbstractOpCode {
 		// place the value into the accumulator
 		accum.set( value );
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.x86.opcodes.AbstractOpCode#toString()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		return String.format( "IN %s,%s", accum, port );
 	}

@@ -46,8 +46,8 @@ public class RETF extends AbstractOpCode {
 	/* (non-Javadoc)
 	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
 	 */
-	public void execute( final Intel80x86 cpu ) 
-	throws X86AssemblyException {
+	@Override
+	public void execute( final Intel80x86 cpu ) throws X86AssemblyException {
 		cpu.returnFar( 0 );
 	}
 	

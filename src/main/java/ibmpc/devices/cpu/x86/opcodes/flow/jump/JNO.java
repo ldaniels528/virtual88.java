@@ -9,23 +9,26 @@ import ibmpc.devices.cpu.x86.opcodes.flow.AbstractFlowControlOpCode;
  * Jump if Not Overflow
  * Jump Condition: OF=0
  * </pre>
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class JNO extends AbstractFlowControlOpCode {
-	
-	/**
-	 * Creates a new conditional jump instruction
-	 * @param destination the given memory offset to jump to.
-	 */
-	public JNO( final Operand destination ) {
-		super( destination );
-	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected boolean redirectsFlow(Intel80x86 cpu) {
-		return ( !cpu.FLAGS.isOF() );
-	}
+    /**
+     * Creates a new conditional jump instruction
+     *
+     * @param destination the given memory offset to jump to.
+     */
+    public JNO(final Operand destination) {
+        super(destination);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean redirectsFlow(Intel80x86 cpu) {
+        return (!cpu.FLAGS.isOF());
+    }
 
 }

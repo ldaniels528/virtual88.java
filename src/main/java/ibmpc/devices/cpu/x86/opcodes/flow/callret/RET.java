@@ -43,8 +43,8 @@ public class RET extends AbstractOpCode {
 	/* (non-Javadoc)
 	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
 	 */
-	public void execute( final Intel80x86 cpu ) 
-	throws X86AssemblyException {
+	@Override
+	public void execute( final Intel80x86 cpu ) throws X86AssemblyException {
 		cpu.returnNear( 0 );
 	}
 	
@@ -52,6 +52,7 @@ public class RET extends AbstractOpCode {
 	 * (non-Javadoc)
 	 * @see ibmpc.devices.cpu.OpCode#isConditional()
 	 */
+	@Override
 	public boolean isConditional() {
 		return true;
 	}

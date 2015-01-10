@@ -16,59 +16,59 @@ public abstract class AbstractOpCode implements OpCode {
 	protected AbstractOpCode() {
 		super();
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#isConditional()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isConditional() {
 		return false;
 	}
 
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#isForcedRedirect()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isForcedRedirect() {
 		return false;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#getInstructionCode()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public long getInstructionCode() {
 		return instructionCode;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#setInstructionCode(long)
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setInstructionCode( final long instructionCode ) {
 		this.instructionCode = instructionCode;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#getLength()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int getLength() {
 		return length;
 	}
 
-	/* 
-	 * (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#setLength(int)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setLength( final int length ) {
 		this.length = length;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		return getClass().getSimpleName();
 	}

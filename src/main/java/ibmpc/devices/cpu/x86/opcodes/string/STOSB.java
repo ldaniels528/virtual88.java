@@ -6,7 +6,7 @@ import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 
 /**
  * <pre>
- *	Usage:  STOS    dest
+ * 	Usage:  STOS    dest
  *          STOSB
  *          STOSW
  *          STOSD
@@ -22,42 +22,44 @@ import ibmpc.devices.memory.IbmPcRandomAccessMemory;
  *
  *  dest              11    3     4     5             1  (W88=15)
  * </pre>
+ *
+ * @author lawrence.daniels@gmail.com
  * @see REPZ
  * @see REPNZ
- * @author lawrence.daniels@gmail.com
  */
 public class STOSB extends AbstractOpCode {
-	private static STOSB instance = new STOSB();
-	
-	/**
-	 * Private constructor
-	 */
-	private STOSB() {
-		super();
-	}
-	
-	/**
-	 * @return the singleton instance of this class
-	 */
-	public static STOSB getInstance() {
-		return instance;
-	}
+    private static STOSB instance = new STOSB();
 
-	/* (non-Javadoc)
-	 * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
-	 */
-	public void execute( final Intel80x86 cpu ) {
-		// get the RAM instance
-		final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
-		
-		// put byte from AL into DS:[SI] 
-		memory.setByte( cpu.DS.get(), cpu.SI.get(), cpu.AL.get() );
-		
-		// setup increment/decrement value
-		final int delta = cpu.FLAGS.isDF() ? -1 : 1;
-		
-		// increment/decrement SI
-		cpu.SI.add( delta );
-	}
+    /**
+     * Private constructor
+     */
+    private STOSB() {
+        super();
+    }
+
+    /**
+     * @return the singleton instance of this class
+     */
+    public static STOSB getInstance() {
+        return instance;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final Intel80x86 cpu) {
+        // get the RAM instance
+        final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
+
+        // put byte from AL into DS:[SI]
+        memory.setByte(cpu.DS.get(), cpu.SI.get(), cpu.AL.get());
+
+        // setup increment/decrement value
+        final int delta = cpu.FLAGS.isDF() ? -1 : 1;
+
+        // increment/decrement SI
+        cpu.SI.add(delta);
+    }
 
 }

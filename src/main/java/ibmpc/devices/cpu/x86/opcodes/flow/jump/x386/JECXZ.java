@@ -28,6 +28,7 @@ public class JECXZ extends AbstractFlowControlOpCode {
 	 * (non-Javadoc)
 	 * @see ibmpc.devices.cpu.x86.opcodes.flow.AbstractFlowControlOpCode#redirectsFlow(ibmpc.devices.cpu.Intel80x86)
 	 */
+	@Override
 	protected boolean redirectsFlow( final Intel80x86 cpu ) {
 		return ( cpu.ECX.get() == 0 );
 	}

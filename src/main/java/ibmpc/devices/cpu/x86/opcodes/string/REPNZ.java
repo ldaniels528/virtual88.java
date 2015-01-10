@@ -7,7 +7,7 @@ import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.cpu.x86.registers.X86Register;
 import ibmpc.exceptions.X86AssemblyException;
 
-/** 
+/**
  * <pre>
  * Usage:  REPNE
  *         REPNZ
@@ -19,6 +19,8 @@ import ibmpc.exceptions.X86AssemblyException;
  *  segment override on ors other than the 386 may result in
  *  errors if an interrupt occurs before CX=0.
  * </pre>
+ *
+ * @author lawrence.daniels@gmail.com
  * @see CMPSB
  * @see CMPSW
  * @see LODSB
@@ -27,41 +29,41 @@ import ibmpc.exceptions.X86AssemblyException;
  * @see SCASW
  * @see STOSB
  * @see STOSW
- * @author lawrence.daniels@gmail.com
  */
 public class REPNZ extends AbstractOpCode {
-	private final OpCode opCode;
-	
-	/**
-	 * Creates a new REPNZ opCode
-	 * @param opCode the given {@link OpCode opCode}
-	 */
-	public REPNZ( final OpCode opCode ) {
-		this.opCode = opCode;
-	}
+    private final OpCode opCode;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void execute( final Intel80x86 cpu ) 
-	throws X86AssemblyException {
-		// cache CX and FLAGS
-		final X86Register CX = cpu.CX;
-		final X86ExtendedFlags FLAGS = cpu.FLAGS;
-		
-		// while the CX != 0 and ZF=1
-		while( ( CX.get() != 0 ) && FLAGS.isZF() ) {
-			// execute the instruction
-			cpu.execute( opCode );
-			CX.add( -1 );
-		}
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public String toString() {
-		return String.format( "REPNZ %s", opCode );
-	}
+    /**
+     * Creates a new REPNZ opCode
+     *
+     * @param opCode the given {@link OpCode opCode}
+     */
+    public REPNZ(final OpCode opCode) {
+        this.opCode = opCode;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final Intel80x86 cpu) throws X86AssemblyException {
+        // cache CX and FLAGS
+        final X86Register CX = cpu.CX;
+        final X86ExtendedFlags FLAGS = cpu.FLAGS;
+
+        // while the CX != 0 and ZF=1
+        while ((CX.get() != 0) && FLAGS.isZF()) {
+            // execute the instruction
+            cpu.execute(opCode);
+            CX.add(-1);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return String.format("REPNZ %s", opCode);
+    }
 
 }
