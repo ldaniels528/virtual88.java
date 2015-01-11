@@ -3,6 +3,7 @@ package ibmpc.devices.cpu.x86.bios.services;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * BIOS Conventional Memory Size (INT 12h) Service
@@ -30,10 +31,10 @@ public class ConventionalMemorySizeService implements InterruptHandler {
 	 * Process the Conventional Memory Size Interrupt
 	 * @throws X86AssemblyException
 	 */
-	public void process( final Intel80x86 cpu ) 
+	public void process(IbmPcSystem system, final Intel80x86 cpu)
 	throws X86AssemblyException {
 		// get the RAM instance
-		final IbmPcRandomAccessMemory memory = cpu.getSystem().getRandomAccessMemory();
+		final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
 		
 		// calculate free memory in Kilobytes
 		final int memSize = memory.getWord( 0x0040, 0x0013 );

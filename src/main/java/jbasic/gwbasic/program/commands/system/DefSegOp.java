@@ -2,7 +2,7 @@ package jbasic.gwbasic.program.commands.system;
 
 import ibmpc.devices.memory.MemoryObject;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 import jbasic.common.exceptions.JBasicException;
 import jbasic.common.exceptions.TypeMismatchException;
@@ -58,7 +58,7 @@ public class DefSegOp extends GwBasicCommand {
 	  /**
 	   * Converts the given textual representation into {@link jbasic.common.values.Value values}
 	   * that will be displayed at runtime
-	   * @param it the given {@link com.ldaniels528.tokenizer.TokenIterator iterator}
+	   * @param it the given {@link jbasic.common.tokenizer.TokenIterator iterator}
 	   * @throws jbasic.common.exceptions.JBasicException
 	   */
 	  private void parse( TokenIterator it ) throws JBasicException {

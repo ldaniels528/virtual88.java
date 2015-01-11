@@ -2,7 +2,7 @@ package jbasic.gwbasic.functions.system;
 
 import ibmpc.devices.memory.MemoryObject;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 import jbasic.common.JBasicCompiledCodeReference;
 import jbasic.common.exceptions.JBasicException;

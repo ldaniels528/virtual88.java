@@ -8,7 +8,7 @@ import jbasic.common.functions.JBasicFunction;
 import jbasic.common.values.types.impl.JBasicTempString;
 import jbasic.gwbasic.values.GwBasicValues;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * OCT$ Function

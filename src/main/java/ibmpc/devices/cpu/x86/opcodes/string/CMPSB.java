@@ -1,8 +1,10 @@
 package ibmpc.devices.cpu.x86.opcodes.string;
 
 import ibmpc.devices.cpu.Intel80x86;
+import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * Compare String Byte
@@ -52,16 +54,16 @@ public class CMPSB extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // get the RAM instance
         final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
 
         // compare byte from DS:[SI] to ES:[DI]
-        final int src = memory.getByte(cpu.DS.get(), cpu.SI.get());
-        final int dst = memory.getByte(cpu.ES.get(), cpu.DI.get());
+        final Operand src = memory.getByte(cpu.DS, cpu.SI);
+        final Operand dst = memory.getByte(cpu.ES, cpu.DI);
 
         // perform the comparison (update flags)
-        cpu.FLAGS.compare(src, dst);
+        cpu.FLAGS.updateSUB(dst, src);
 
         // setup increment/decrement value
         final int delta = cpu.FLAGS.isDF() ? -1 : 1;

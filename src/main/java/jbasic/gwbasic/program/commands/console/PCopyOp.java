@@ -9,7 +9,7 @@ import jbasic.common.util.JBasicTokenUtil;
 import jbasic.common.values.Value;
 import jbasic.gwbasic.program.commands.GwBasicCommand;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /** 
  * PCOPY Command

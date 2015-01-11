@@ -3,6 +3,7 @@ package ibmpc.devices.cpu.x86.opcodes.string;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
+import ibmpc.system.IbmPcSystem;
 
 import static ibmpc.devices.memory.X86MemoryUtil.computePhysicalAddress;
 import static ibmpc.devices.memory.X86MemoryUtil.reverseBlock;
@@ -41,7 +42,7 @@ public class MOVSB extends AbstractOpCode implements MassDataOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // get the register collection and memory instances
         final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
 

@@ -5,6 +5,7 @@ import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.cpu.x86.registers.X86Register;
 import ibmpc.devices.ports.IbmPcHardwarePorts;
+import ibmpc.system.IbmPcSystem;
 
 import static ibmpc.devices.cpu.operands.Operand.*;
 
@@ -45,12 +46,12 @@ public class IN extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // get the port number
         final int portNum = port.get();
 
         // retrieve the information from the port
-        final IbmPcHardwarePorts ports = cpu.getHardwarePorts();
+        final IbmPcHardwarePorts ports = system.getHardwarePorts();
 
         int value = 0;
         switch (accum.size()) {
@@ -59,9 +60,6 @@ public class IN extends AbstractOpCode {
                 break;
             case SIZE_16BIT:
                 value = ports.in16(portNum);
-                break;
-            case SIZE_32BIT:
-                value = ports.in32(portNum);
                 break;
         }
 

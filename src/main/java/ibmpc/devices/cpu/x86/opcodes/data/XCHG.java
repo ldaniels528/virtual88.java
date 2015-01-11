@@ -3,6 +3,7 @@ package ibmpc.devices.cpu.x86.opcodes.data;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -32,7 +33,7 @@ public class XCHG extends AbstractDualOperandOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // save the destination's current value
         final int destValue = dest.get();
 

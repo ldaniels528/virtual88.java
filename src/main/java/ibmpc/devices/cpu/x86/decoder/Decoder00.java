@@ -4,21 +4,14 @@ import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.OpCode;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.bitwise.OR;
-import ibmpc.devices.cpu.x86.opcodes.bitwise.x386.BT;
-import ibmpc.devices.cpu.x86.opcodes.bitwise.x386.BTC;
-import ibmpc.devices.cpu.x86.opcodes.bitwise.x386.BTR;
-import ibmpc.devices.cpu.x86.opcodes.bitwise.x386.BTS;
 import ibmpc.devices.cpu.x86.opcodes.data.MOVSX;
-import ibmpc.devices.cpu.x86.opcodes.flags.x386.*;
 import ibmpc.devices.cpu.x86.opcodes.math.ADD;
 import ibmpc.devices.cpu.x86.opcodes.stack.POP;
 import ibmpc.devices.cpu.x86.opcodes.stack.PUSH;
-import ibmpc.devices.cpu.x86.opcodes.system.x286.STR;
 import ibmpc.devices.cpu.x86.registers.X86Register;
 import ibmpc.devices.memory.X86MemoryProxy;
 
 import static ibmpc.devices.cpu.operands.Operand.SIZE_16BIT;
-import static ibmpc.devices.cpu.operands.Operand.SIZE_32BIT;
 import static ibmpc.devices.cpu.x86.decoder.DecoderUtil.*;
 
 /**
@@ -144,78 +137,12 @@ public class Decoder00 implements Decoder {
         // get the 8-bit code
         final int subCode = proxy.nextByte();
         switch (subCode) {
-            // STR
-            case 0x00:
-                return new STR(decodeRegister16(cpu, proxy));
-            // SETO
-            case 0x90:
-                return new SETO(decodeRegister16(cpu, proxy));
-            // SETNO
-            case 0x91:
-                return new SETNO(decodeRegister16(cpu, proxy));
-            // SETNAE/SETB/SETC
-            case 0x92:
-                return new SETC(decodeRegister16(cpu, proxy));
-            // SETAE/SETNB/SETNC
-            case 0x93:
-                return new SETNC(decodeRegister16(cpu, proxy));
-            // SETE/SETZ
-            case 0x94:
-                return new SETZ(decodeRegister16(cpu, proxy));
-            // SETNE/SETNZ
-            case 0x95:
-                return new SETNZ(decodeRegister16(cpu, proxy));
-            // SETBE/SETNA
-            case 0x96:
-                return new SETNA(decodeRegister16(cpu, proxy));
-            // SETA/SETNBE
-            case 0x97:
-                return new SETA(decodeRegister16(cpu, proxy));
-            // SETS
-            case 0x98:
-                return new SETS(decodeRegister16(cpu, proxy));
-            // SETNS
-            case 0x99:
-                return new SETNS(decodeRegister16(cpu, proxy));
-            // SETP/SETPE
-            case 0x9A:
-                return new SETP(decodeRegister16(cpu, proxy));
-            // SETNP/SETPO
-            case 0x9B:
-                return new SETNP(decodeRegister16(cpu, proxy));
-            // SETNGE/SETL
-            case 0x9C:
-                return new SETNGE(decodeRegister16(cpu, proxy));
-            // SETGE/SETNL
-            case 0x9D:
-                return new SETGE(decodeRegister16(cpu, proxy));
-            // SETNG/SETLE
-            case 0x9E:
-                return new SETNG(decodeRegister16(cpu, proxy));
-            // SETG/SETNLE
-            case 0x9F:
-                return new SETG(decodeRegister16(cpu, proxy));
             // POP FS
             case 0xA1:
                 return new POP(cpu.FS);
-            // BT r16/32,r/m8
-            case 0xA3:
-                return decodeBT(cpu, proxy, MEM_CLASS_8BIT);
             // POP GS
             case 0xA9:
                 return new POP(cpu.GS);
-            // BTS r16/32,r/m8
-            case 0xAB:
-                return decodeBTS(cpu, proxy, MEM_CLASS_8BIT);
-            // BTR r16/32,r/m8
-            case 0xB3:
-                return decodeBTR(cpu, proxy, MEM_CLASS_8BIT);
-            // BT/BTC/BTR/BTS r32,r/m16
-            case 0xBA:
-                return decodeBT(cpu, proxy, MEM_CLASS_16BIT);
-            // BTC r32,r/m16
-            case 0xBB:
-                return decodeBTC(cpu, proxy, MEM_CLASS_8BIT);
             // MOVSX r16/32,r/m8
             case 0xBE:
                 return decodeMOVSX(cpu, proxy, MEM_CLASS_8BIT);
@@ -285,70 +212,6 @@ public class Decoder00 implements Decoder {
     }
 
     /**
-     * BT r16/32,r/m8 | BTC r32,r/m16
-     *
-     * @param cpu         the given {@link Intel80x86 CPU} instance
-     * @param proxy       the given {@link X86MemoryProxy memory proxy}
-     * @param srcMemClass the given source memory class
-     * @return the resultant {@link BTC opCode}
-     */
-    private BT decodeBT(final Intel80x86 cpu, final X86MemoryProxy proxy, final int srcMemClass) {
-        // lookup the operands
-        final Operand[] operands = decodeOperands(cpu, proxy, srcMemClass);
-
-        // return the BTC opCode
-        return new BT(operands[0], operands[1]);
-    }
-
-    /**
-     * BTC r16/32,r/m8 | BTC r32,r/m16
-     *
-     * @param cpu         the given {@link Intel80x86 CPU} instance
-     * @param proxy       the given {@link X86MemoryProxy memory proxy}
-     * @param srcMemClass the given source memory class
-     * @return the resultant {@link BTC opCode}
-     */
-    private BTC decodeBTC(final Intel80x86 cpu, final X86MemoryProxy proxy, final int srcMemClass) {
-        // lookup the operands
-        final Operand[] operands = decodeOperands(cpu, proxy, srcMemClass);
-
-        // return the BTC opCode
-        return new BTC(operands[0], operands[1]);
-    }
-
-    /**
-     * BTR r16/32,r/m8 | BTR r32,r/m16
-     *
-     * @param cpu         the given {@link Intel80x86 CPU} instance
-     * @param proxy       the given {@link X86MemoryProxy memory proxy}
-     * @param srcMemClass the given source memory class
-     * @return the resultant {@link BTC opCode}
-     */
-    private BTR decodeBTR(final Intel80x86 cpu, final X86MemoryProxy proxy, final int srcMemClass) {
-        // lookup the operands
-        final Operand[] operands = decodeOperands(cpu, proxy, srcMemClass);
-
-        // return the BTR opCode
-        return new BTR(operands[0], operands[1]);
-    }
-
-    /**
-     * BTS r16/32,r/m8 | BTS r32,r/m16
-     *
-     * @param cpu         the given {@link Intel80x86 CPU} instance
-     * @param proxy       the given {@link X86MemoryProxy memory proxy}
-     * @param srcMemClass the given source memory class
-     * @return the resultant {@link BTC opCode}
-     */
-    private BTS decodeBTS(final Intel80x86 cpu, final X86MemoryProxy proxy, final int srcMemClass) {
-        // lookup the operands
-        final Operand[] operands = decodeOperands(cpu, proxy, srcMemClass);
-
-        // return the BTS opCode
-        return new BTS(operands[0], operands[1]);
-    }
-
-    /**
      * MOVSX r16/32,r/m8 | MOVSX r32,r/m16
      *
      * @param cpu         the given {@link Intel80x86 CPU} instance
@@ -403,9 +266,7 @@ public class Decoder00 implements Decoder {
         final int refCode = (code & 0b0111);
 
         // get the destination operand
-        final X86Register dest = (srcMemClass == MEM_CLASS_8BIT)
-                ? getRegister(cpu, regCode, cpu.FLAGS.isVM() ? SIZE_32BIT : SIZE_16BIT)
-                : getRegister(cpu, regCode, SIZE_32BIT);
+        final X86Register dest = getRegister(cpu, regCode, SIZE_16BIT);
 
         // get the source operand
         final Operand src = lookupOperand(cpu, proxy, elemCode, refCode, srcMemClass);

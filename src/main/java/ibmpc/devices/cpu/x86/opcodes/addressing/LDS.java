@@ -5,6 +5,7 @@ import ibmpc.devices.cpu.operands.memory.MemoryReference;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.cpu.x86.registers.X86Register;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -43,7 +44,7 @@ public class LDS extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // get the random access memory (RAM) instance
         final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
 

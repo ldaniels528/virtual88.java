@@ -3,6 +3,10 @@ package ibmpc.devices.cpu.x86.opcodes.string;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
+import ibmpc.system.IbmPcSystem;
+
+import static ibmpc.devices.memory.X86MemoryUtil.computePhysicalAddress;
+import static ibmpc.devices.memory.X86MemoryUtil.reverseBlock;
 
 /**
  * <pre>
@@ -17,7 +21,7 @@ import ibmpc.devices.memory.IbmPcRandomAccessMemory;
  * @see REPZ
  * @see REPNZ
  */
-public class MOVSW extends AbstractOpCode {
+public class MOVSW extends AbstractOpCode  implements MassDataOpCode {
     private static MOVSW instance = new MOVSW();
 
     /**
@@ -38,7 +42,7 @@ public class MOVSW extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // get the register collection and memory instances
         final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
 
@@ -50,6 +54,50 @@ public class MOVSW extends AbstractOpCode {
 
         // setup increment/decrement value
         final int delta = cpu.FLAGS.isDF() ? -2 : 2;
+
+        // increment/decrement SI and DI
+        cpu.SI.add(delta);
+        cpu.DI.add(delta);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void executeEnMass(final Intel80x86 cpu, final int wordCount) {
+        // get the register collection and memory instances
+        final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
+
+        // determine direction
+        final boolean backward = cpu.FLAGS.isDF();
+
+        // two bytes per word
+        final int count = wordCount * 2;
+
+        // setup increment/decrement value
+        final int delta = count * (backward ? -1 : 1);
+
+        // if the direction is backwards ...
+        if (backward) {
+            // determine the source and destination addresses
+            final int sourceAddress = computePhysicalAddress(cpu.DS.get(), cpu.SI.get()) + delta;
+            final int destinationAddress = computePhysicalAddress(cpu.ES.get(), cpu.DI.get()) + delta;
+
+            // get the source block from DS:[SI]
+            final byte[] srcBlock = memory.getBytes(sourceAddress, count);
+
+            // reverse the bytes in the memory block
+            final byte[] dstBlock = reverseBlock(srcBlock);
+
+            // copy the source block into ES:[DI]
+            memory.setBytes(destinationAddress, dstBlock, count);
+        }
+
+        // must be forward
+        else {
+            // move "count" bytes of data from DS:[SI] to ES:[DI]
+            memory.copyBytes(cpu.DS.get(), cpu.SI.get(), cpu.ES.get(), cpu.DI.get(), count);
+        }
 
         // increment/decrement SI and DI
         cpu.SI.add(delta);

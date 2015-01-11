@@ -4,7 +4,7 @@
 package ibmpc.devices.cpu.operands;
 
 /**
- * Represents an operand value
+ * Represents a direct operand value
  *
  * @author lawrence.daniels@gmail.com
  */

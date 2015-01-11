@@ -8,7 +8,7 @@ import jbasic.common.program.JBasicSourceCode;
 import jbasic.gwbasic.GwBasicEnvironment;
 import jbasic.gwbasic.storage.GwBasicStorageDevice;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * Load Program Command

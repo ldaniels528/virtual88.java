@@ -2,6 +2,7 @@ package ibmpc.devices.cpu.x86.bios.services;
 
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * BIOS Keyboard Hardware Services Processor
@@ -29,7 +30,7 @@ public class KeyboardHardwareServices implements InterruptHandler {
 	 * Process the Disk Services Interrupt (INT 13h)
 	 * @throws X86AssemblyException
 	 */
-	public void process( Intel80x86 cpu ) throws X86AssemblyException {
+	public void process(IbmPcSystem system, Intel80x86 cpu) throws X86AssemblyException {
 		// determine what to do
 		switch( cpu.AH.get() ) {
 			default:

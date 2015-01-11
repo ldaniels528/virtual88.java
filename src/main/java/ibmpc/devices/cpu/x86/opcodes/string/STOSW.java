@@ -3,6 +3,7 @@ package ibmpc.devices.cpu.x86.opcodes.string;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -48,7 +49,7 @@ public class STOSW extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // get the RAM instance
         final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
 

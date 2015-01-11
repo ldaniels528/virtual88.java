@@ -48,9 +48,6 @@ public class IbmPcEmulator {
 
         // create debug helper objects
         this.proxy = new X86MemoryProxy(memory, 0x13F0, 0x0100);
-
-        // (un)set the CPU into virtual mode
-        cpu.FLAGS.setVM(false);
     }
 
     /**
@@ -82,7 +79,7 @@ public class IbmPcEmulator {
         // initialize the CPU
         final ProgramContext pc = new ProgramContext(proxy.getSegment(), proxy.getSegment(), proxy.getOffset(), new ProgramArguments[0]);
         memory.setBytes(proxy.getSegment(), proxy.getOffset(), code, code.length);
-        cpu.execute(pc);
+        cpu.execute(system, pc);
     }
 
     /**

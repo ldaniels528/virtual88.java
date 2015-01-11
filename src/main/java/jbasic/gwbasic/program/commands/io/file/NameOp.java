@@ -11,7 +11,7 @@ import jbasic.common.util.JBasicTokenUtil;
 import jbasic.common.values.Value;
 import jbasic.gwbasic.values.GwBasicValues;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /** 
  * NAME Command

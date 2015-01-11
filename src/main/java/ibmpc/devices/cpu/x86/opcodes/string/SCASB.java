@@ -3,6 +3,7 @@ package ibmpc.devices.cpu.x86.opcodes.string;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * Scan String Byte
@@ -41,18 +42,12 @@ public class SCASB extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // get the memory instance
         final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
 
-        // get the byte from register AL
-        final int data0 = cpu.AL.get();
-
-        // put the data word into ES:[DI]
-        final int data1 = memory.getByte(cpu.ES.get(), cpu.DI.get());
-
-        // compare the data
-        cpu.FLAGS.compare(data0, data1);
+        // compare the byte at ES:[DI] to AL
+        cpu.FLAGS.updateSUB(memory.getByte(cpu.ES, cpu.DI), cpu.AL);
 
         // setup increment/decrement value
         final int delta = cpu.FLAGS.isDF() ? -1 : 1;

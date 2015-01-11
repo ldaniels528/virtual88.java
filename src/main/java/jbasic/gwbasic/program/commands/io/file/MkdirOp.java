@@ -6,7 +6,7 @@ import jbasic.common.program.JBasicCompiledCode;
 
 import java.io.File;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * Make Directory (MKDIR) Command

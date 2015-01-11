@@ -18,9 +18,9 @@ import ibmpc.compiler.element.values.X86WordValue;
 import ibmpc.compiler.exception.X86MalformedInstructionException;
 import jbasic.gwbasic.values.GwBasicValues;
 
-import com.ldaniels528.tokenizer.TokenIterator;
-import com.ldaniels528.tokenizer.Tokenizer;
-import com.ldaniels528.tokenizer.TokenizerContext;
+import jbasic.common.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.Tokenizer;
+import jbasic.common.tokenizer.TokenizerContext;
 
 /**
  * 80x86 "Referenced" Address Parser (e.g. "[BX+SI]")

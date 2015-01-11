@@ -21,7 +21,7 @@ import jbasic.gwbasic.values.GwBasicValues;
 import msdos.storage.MsDosFileAccessMode;
 import msdos.storage.MsDosDisketteFileControlBlock;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * OPEN Command

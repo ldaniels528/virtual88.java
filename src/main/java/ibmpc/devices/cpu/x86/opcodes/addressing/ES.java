@@ -2,6 +2,7 @@ package ibmpc.devices.cpu.x86.opcodes.addressing;
 
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * ES:
@@ -29,8 +30,8 @@ public class ES extends SegmentOverrideOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) throws X86AssemblyException {
-        override(cpu, cpu.ES);
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) throws X86AssemblyException {
+        override(system, cpu, cpu.ES);
     }
 
     /**

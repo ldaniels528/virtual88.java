@@ -1,9 +1,9 @@
 package jbasic.gwbasic.program;
 
-import com.ldaniels528.tokenizer.TokenIterator;
-import com.ldaniels528.tokenizer.Tokenizer;
-import com.ldaniels528.tokenizer.TokenizerContext;
-import com.ldaniels528.tokenizer.parsers.*;
+import jbasic.common.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.Tokenizer;
+import jbasic.common.tokenizer.TokenizerContext;
+import jbasic.common.tokenizer.parsers.*;
 import ibmpc.system.IbmPcSystem;
 import jbasic.common.exceptions.JBasicException;
 import jbasic.common.exceptions.NeverShouldHappenException;

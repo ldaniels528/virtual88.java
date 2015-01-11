@@ -5,7 +5,7 @@ import jbasic.common.exceptions.JBasicException;
 import jbasic.common.exceptions.SyntaxErrorException;
 import jbasic.common.exceptions.UnexpectedTokenException;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * Utility class for managing {@link Value value implementations}

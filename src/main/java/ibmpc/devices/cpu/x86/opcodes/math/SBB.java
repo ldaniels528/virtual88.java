@@ -1,9 +1,9 @@
 package ibmpc.devices.cpu.x86.opcodes.math;
 
 import ibmpc.devices.cpu.Intel80x86;
-import ibmpc.devices.cpu.X86ExtendedFlags;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * Subtract with Borrow (SBB)
@@ -28,29 +28,13 @@ public class SBB extends AbstractDualOperandOpCode {
         super("SBB", dest, src);
     }
 
-    /* (non-Javadoc)
-     * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
+    /**
+     * {@inheritDoc}
      */
-    public void execute(final Intel80x86 cpu) {
-        // cache the flags
-        final X86ExtendedFlags flags = cpu.FLAGS;
-
-        // cache the values (registers are slower)
-        final int value0 = dest.get();
-        final int value1 = src.get();
-
-        // calculate the sum of the values
-        final int diff0 = (value0 - value1) - (flags.isCF() ? 1 : 0);
-
-        // update the flags
-        flags.setOF(diff0 > 0xFFFF);
-        flags.setZF(diff0 == 0);
-        flags.setSF(diff0 > 0x7FFF);
-        flags.setPF(diff0 % 2 == 0);
-        //flags.setAF( value == 0 );
-
-        // set the dest
-        dest.set(diff0);
+    @Override
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
+        final int borrow = cpu.FLAGS.isCF() ? 1 : 0;
+        dest.set(cpu.FLAGS.updateADD(dest, src) - borrow);
     }
 
 }

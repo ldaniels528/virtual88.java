@@ -95,6 +95,10 @@ public class GwBasicCompiledCode implements JBasicCompiledCode, IbmPcKeyEventLis
         keyboard.register(this);
     }
 
+    public GwBasicEnvironment getEnvironment() {
+        return environment;
+    }
+
     ///////////////////////////////////////////////////////
     //      Event Handler Method(s)
     ///////////////////////////////////////////////////////
@@ -398,8 +402,7 @@ public class GwBasicCompiledCode implements JBasicCompiledCode, IbmPcKeyEventLis
      * {@inheritDoc}
      */
     @Override
-    public void executeAssembly(final int offset)
-            throws JBasicException {
+    public void executeAssembly(final int offset) throws JBasicException {
         // create an execution context
         final ProgramContext context =
                 new ProgramContext(
@@ -415,7 +418,7 @@ public class GwBasicCompiledCode implements JBasicCompiledCode, IbmPcKeyEventLis
             final Intel80x86 cpu = environment.getCPU();
 
             // execute the code
-            cpu.execute(context);
+            cpu.execute(environment, context);
         } catch (final X86AssemblyException e) {
             throw new JBasicException(e);
         }

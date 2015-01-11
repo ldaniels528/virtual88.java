@@ -3,7 +3,7 @@ package jbasic.gwbasic.program.commands.io;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 import jbasic.common.exceptions.JBasicException;
 import jbasic.common.program.JBasicCompiledCode;

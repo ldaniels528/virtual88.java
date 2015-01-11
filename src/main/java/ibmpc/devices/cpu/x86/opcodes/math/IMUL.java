@@ -5,6 +5,7 @@ import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 import static ibmpc.devices.cpu.operands.Operand.SIZE_16BIT;
 import static ibmpc.devices.cpu.operands.Operand.SIZE_8BIT;
@@ -46,7 +47,7 @@ public class IMUL extends AbstractOpCode {
      * (non-Javadoc)
      * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
      */
-    public void execute(final Intel80x86 cpu)
+    public void execute(IbmPcSystem system, final Intel80x86 cpu)
             throws X86AssemblyException {
         switch (operand.size()) {
             // is it operand 8-bit?

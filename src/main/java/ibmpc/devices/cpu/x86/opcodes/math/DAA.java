@@ -5,6 +5,7 @@ package ibmpc.devices.cpu.x86.opcodes.math;
 
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * DAA
@@ -31,7 +32,7 @@ public class DAA extends AbstractOpCode {
     /* (non-Javadoc)
      * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
      */
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
 
     }
 

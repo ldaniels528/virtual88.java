@@ -1,7 +1,7 @@
 package ibmpc.devices.cpu.operands;
 
 /**
- * Represents a signed byte (8-bit) operand value
+ * Represents an 8-bit signed operand value
  *
  * @author lawrence.daniels@gmail.com
  */

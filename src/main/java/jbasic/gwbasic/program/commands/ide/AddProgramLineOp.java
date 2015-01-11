@@ -10,7 +10,7 @@ import jbasic.gwbasic.program.GwBasicStatement;
 import jbasic.gwbasic.program.commands.GwBasicCommand;
 import jbasic.gwbasic.values.GwBasicValues;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * Syntax: <i>lineNumber</i> <i>command1<i>[: <i>command2<i>[: <i>commandN</i>]]</i><br>

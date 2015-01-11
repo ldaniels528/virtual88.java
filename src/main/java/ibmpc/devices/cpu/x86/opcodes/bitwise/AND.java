@@ -1,9 +1,9 @@
 package ibmpc.devices.cpu.x86.opcodes.bitwise;
 
 import ibmpc.devices.cpu.Intel80x86;
-import ibmpc.devices.cpu.X86ExtendedFlags;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * Logical AND
@@ -43,22 +43,8 @@ public class AND extends AbstractDualOperandOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
-        // perform the logical AND operation
-        // on the source and destination values
-        final int andValue = dest.get() & src.get();
-        final int addValue = dest.get() + src.get();
-
-        // set the dest
-        dest.set(andValue);
-
-        // adjust the flags
-        final X86ExtendedFlags flags = cpu.FLAGS;
-        flags.setCF(andValue == addValue);
-        flags.setOF(andValue > addValue);
-        flags.setPF(andValue % 2 == 0);
-        flags.setSF(andValue >= 0x80);
-        flags.setZF(andValue == 0);
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
+        dest.set(cpu.FLAGS.updateAND(dest, src));
     }
 
 }

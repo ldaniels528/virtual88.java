@@ -6,6 +6,7 @@ package ibmpc.devices.cpu.x86.opcodes.bitwise;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -35,7 +36,7 @@ public class SAR extends AbstractDualOperandOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // get the source and destination values
         final int value0 = dest.get();
         final int value1 = src.get();

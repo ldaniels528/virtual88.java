@@ -3,6 +3,7 @@ package ibmpc.devices.cpu.x86.opcodes.data;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * Define Word (DW) MACRO Instruction
@@ -25,7 +26,7 @@ public class DW extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu)
+    public void execute(IbmPcSystem system, final Intel80x86 cpu)
             throws X86AssemblyException {
         // do nothing
     }

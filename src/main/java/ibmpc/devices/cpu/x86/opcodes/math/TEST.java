@@ -1,9 +1,9 @@
 package ibmpc.devices.cpu.x86.opcodes.math;
 
 import ibmpc.devices.cpu.Intel80x86;
-import ibmpc.devices.cpu.X86ExtendedFlags;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -47,19 +47,8 @@ public class TEST extends AbstractOpCode {
      * (non-Javadoc)
      * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
      */
-    public void execute(final Intel80x86 cpu) {
-        // perform the logic AND operation
-        // on the source and destination values
-        final int andValue = dest.get() & src.get();
-        final int addValue = dest.get() + src.get();
-
-        // adjust the flags
-        final X86ExtendedFlags flags = cpu.FLAGS;
-        flags.setCF(andValue == addValue);
-        flags.setOF(andValue > addValue);
-        flags.setPF(andValue % 2 == 0);
-        flags.setSF(andValue >= 0x80);
-        flags.setZF(andValue == 0);
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
+        cpu.FLAGS.updateAND(src, dest);
     }
 
     /*

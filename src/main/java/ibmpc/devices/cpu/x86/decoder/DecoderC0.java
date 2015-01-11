@@ -1,10 +1,5 @@
 package ibmpc.devices.cpu.x86.decoder;
 
-import static ibmpc.devices.cpu.x86.decoder.DecoderUtil.lookupOperands;
-import static ibmpc.devices.cpu.x86.decoder.DecoderUtil.lookupReferencedAddress;
-import static ibmpc.devices.cpu.x86.decoder.DecoderUtil.lookupRegister;
-import static ibmpc.devices.cpu.x86.decoder.DecoderUtil.nextValue16;
-import static ibmpc.devices.cpu.x86.decoder.DecoderUtil.nextValue8;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.OpCode;
 import ibmpc.devices.cpu.operands.Operand;
@@ -22,28 +17,28 @@ import ibmpc.devices.cpu.x86.opcodes.flow.callret.RETn;
 import ibmpc.devices.cpu.x86.opcodes.system.INT;
 import ibmpc.devices.cpu.x86.opcodes.system.INTO;
 import ibmpc.devices.cpu.x86.opcodes.system.IRET;
-import ibmpc.devices.cpu.x86.opcodes.system.x186.ENTER;
-import ibmpc.devices.cpu.x86.opcodes.system.x186.LEAVE;
 import ibmpc.devices.cpu.x86.registers.X86Register;
 import ibmpc.devices.memory.X86MemoryProxy;
+
+import static ibmpc.devices.cpu.x86.decoder.DecoderUtil.*;
 
 /**
  * <pre>
  * Decodes instruction codes between C0h and CFh
- *	---------------------------------------------------------------------------
- *	type	bits		description 				comments
- *	---------------------------------------------------------------------------
+ * 	---------------------------------------------------------------------------
+ * 	type	bits		description 				comments
+ * 	---------------------------------------------------------------------------
  * 	t		2			register/memory type		register=11b
- * 	j		3			instruction sub-code	
- * 	r		3			register/memory reference	
- *	i		6	 		instruction type
- *	j		2			instruction sub type		00/11=N/A, 01=8-bit, 10=16-bit
+ * 	j		3			instruction sub-code
+ * 	r		3			register/memory reference
+ * 	i		6	 		instruction type
+ * 	j		2			instruction sub type		00/11=N/A, 01=8-bit, 10=16-bit
  *
  *  Instruction code layout
  *  -----------------------------
  *  7654 3210 (8 bits)
  *  iiii iijj
- *  
+ *
  * ---------------------------------------------------------------------------
  * instruction						code 		tt rrr mmm	iiiiii jj dddd
  * ---------------------------------------------------------------------------
@@ -65,173 +60,171 @@ import ibmpc.devices.memory.X86MemoryProxy;
  * into								  CE					110011 10
  * iret								  CF					110011 11
  * </pre>
+ *
  * @author lawrence.daniels@gmail.com
  */
 public class DecoderC0 implements Decoder {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public OpCode decode( final Intel80x86 cpu, final X86MemoryProxy proxy ) {
-		// peek at the next byte
-		final int code8 = proxy.nextByte();
-		
-		// decode the instruction
-		switch( code8 ) {
-			// undefined
-			case 0xC0:	return new DB( code8 );
-			// undefined
-			case 0xC1:	return new DB( code8 );
-			// RET count
-			case 0xC2:	return new RETn( proxy.nextWord() );
-			// RET
-			case 0xC3:	return RET.getInstance();
-			// LES dest,src
-			case 0xC4:	return createLES( cpu, proxy, code8 );
-			// LDS dest,src
-			case 0xC5:	return createLDS( cpu, proxy, code8 );
-			// MOV byte ptr [ref],nn
-			case 0xC6:	return createMOVBytePtr( cpu, proxy, code8 );
-			// MOV word ptr [ref],nn
-			case 0xC7:	return createMOVWordPtr( cpu, proxy, code8 );
-			// ENTER dest, src
-			case 0xC8:	return createENTER( cpu, proxy, code8 );
-			// LEAVE
-			case 0xC9:	return LEAVE.getInstance();
-			// RETF count
-			case 0xCA:	return new RETFn( proxy.nextWord() );
-			// RETF
-			case 0xCB:	return RETF.getInstance();
-			// INT 3
-			case 0xCC:	return INT.BREAKPT;
-			// INT nn
-			case 0xCD:	return new INT( proxy.nextByte() );
-			// INTO 
-			case 0xCE:	return INTO.getInstance();
-			// IRET
-			case 0xCF:	return IRET.getInstance( cpu );
-			// unrecognized
-			default:	return new DB( code8 );
-		}
-	}
-	
-	/**
-	 * Creates a new 'ENTER <i>dest<i>,<i>src<i>' instruction
-	 * @param cpu the given {@link Intel80x86 CPU} instance
-	 * @param proxy the given {@link X86MemoryProxy memory proxy}
-	 * @param code8 the 8-bit instruction identifier
-	 * @return an {@link ENTER ENTER} opCode
-	 */
-	private ENTER createENTER( final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8 ) {
-		// code: tt rrr mmm	iiiiii jj dddd
-		final int code16 = proxy.nextWord( code8 );
-		
-		// lookup the register
-		final Operand[] operands = lookupOperands( cpu, proxy, code16 );
-		
-		// return the opCode
-		return new ENTER( operands[0], operands[1] );
-	}
-	
-	/**
-	 * Creates a new 'LDS <i>dest<i>,<i>src<i>' instruction
-	 * @param cpu the given {@link Intel80x86 CPU} instance
-	 * @param proxy the given {@link X86MemoryProxy memory proxy}
-	 * @param code8 the 8-bit instruction identifier
-	 * @return an {@link LDS LDS} opCode
-	 */
-	private LDS createLDS( final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8 ) {
-		// code: tt rrr mmm	iiiiii jj dddd
-		final int code16 = proxy.nextWord( code8 );
-		
-		// get the composite reference code
-		// code: tt.. .mmm .... .... (mask = 1100 0111 0000 0000)
-		final int compCode = ( code16 & 0xC700 ) >> 8;
-		
-		// lookup the register
-		final X86Register register = lookupRegister( cpu, proxy, code16 );
-		
-		// lookup the operands
-		final MemoryReference memref = lookupReferencedAddress( cpu, proxy, compCode );
-		
-		// return the opCode
-		return new LDS( register, memref );
-	}
-	
-	/**
-	 * Creates a new 'LES <i>dest<i>,<i>src<i>' instruction
-	 * @param cpu the given {@link Intel80x86 CPU} instance
-	 * @param proxy the given {@link X86MemoryProxy memory proxy}
-	 * @param code8 the 8-bit instruction identifier
-	 * @return an {@link LES LES} opCode
-	 */
-	private LES createLES( final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8 ) {
-		// code: tt rrr mmm	iiiiii jj dddd
-		final int code16 = proxy.nextWord( code8 );
-		
-		// get the composite reference code
-		// code: tt.. .mmm .... .... (mask = 1100 0111 0000 0000)
-		final int compCode = ( code16 & 0xC700 ) >> 8;
-		
-		// lookup the register
-		final X86Register register = lookupRegister( cpu, proxy, code16 );
-		
-		// lookup the operands
-		final MemoryReference memref = lookupReferencedAddress( cpu, proxy, compCode );
-		
-		// return the opCode
-		return new LES( register, memref );
-	}
-	
-	/**
-	 * Creates a new 'MOV BYTE PTR <i>dest<i>,<i>nn</i>' instruction
-	 * @param cpu the given {@link Intel80x86 CPU} instance
-	 * @param proxy the given {@link X86MemoryProxy memory proxy}
-	 * @param code8 the 8-bit instruction identifier
-	 * @return an {@link MOV MOV} opCode
-	 */
-	private MOV createMOVBytePtr( final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8  ) {
-		// code: tt rrr mmm	iiiiii jj dddd
-		final int code16 = proxy.nextWord( code8 );
-		
-		// extract the composite code
-		// code: tt.. .mmm .... .... (mask = 1100 0111 0000 0000)
-		final int compCode = ( code16 & 0xC700 ) >> 8;
-		
-		// lookup the operands
-		final MemoryReference memref = lookupReferencedAddress( cpu, proxy, compCode );
-		
-		// get the 16-bit value
-		final Operand value = nextValue8( proxy );
-		
-		// return the opCode
-		return new MOV( new BytePtr( memref ), value );
-	}
-	
-	/**
-	 * Creates a new 'MOV WORD PTR <i>dest<i>,<i>nnnn</i>' instruction
-	 * @param cpu the given {@link Intel80x86 CPU} instance
-	 * @param proxy the given {@link X86MemoryProxy memory proxy}
-	 * @param code8 the 8-bit instruction identifier
-	 * @return an {@link MOV MOV} opCode
-	 */
-	private MOV createMOVWordPtr( final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8  ) {
-		// code: tt rrr mmm	iiiiii jj dddd
-		final int code16 = proxy.nextWord( code8 );
-		
-		// extract the composite code
-		// code: tt.. .mmm .... .... (mask = 1100 0111 0000 0000)
-		final int compCode = ( code16 & 0xC700 ) >> 8;
-		
-		// lookup the operands
-		final MemoryReference memref = lookupReferencedAddress( cpu, proxy, compCode );
-		
-		// get the 16-bit value
-		final Operand value = nextValue16( proxy );
-		
-		// return the opCode
-		return new MOV( new WordPtr( memref ), value );
-	}
-	
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public OpCode decode(final Intel80x86 cpu, final X86MemoryProxy proxy) {
+        // peek at the next byte
+        final int code8 = proxy.nextByte();
+
+        // decode the instruction
+        switch (code8) {
+            // undefined
+            case 0xC0:
+                return new DB(code8);
+            // undefined
+            case 0xC1:
+                return new DB(code8);
+            // RET count
+            case 0xC2:
+                return new RETn(proxy.nextWord());
+            // RET
+            case 0xC3:
+                return RET.getInstance();
+            // LES dest,src
+            case 0xC4:
+                return createLES(cpu, proxy, code8);
+            // LDS dest,src
+            case 0xC5:
+                return createLDS(cpu, proxy, code8);
+            // MOV byte ptr [ref],nn
+            case 0xC6:
+                return createMOVBytePtr(cpu, proxy, code8);
+            // MOV word ptr [ref],nn
+            case 0xC7:
+                return createMOVWordPtr(cpu, proxy, code8);
+            // RETF count
+            case 0xCA:
+                return new RETFn(proxy.nextWord());
+            // RETF
+            case 0xCB:
+                return RETF.getInstance();
+            // INT 3
+            case 0xCC:
+                return INT.BREAKPT;
+            // INT nn
+            case 0xCD:
+                return new INT(proxy.nextByte());
+            // INTO
+            case 0xCE:
+                return INTO.getInstance();
+            // IRET
+            case 0xCF:
+                return IRET.getInstance(cpu);
+            // unrecognized
+            default:
+                return new DB(code8);
+        }
+    }
+
+    /**
+     * Creates a new 'LDS <i>dest<i>,<i>src<i>' instruction
+     *
+     * @param cpu   the given {@link Intel80x86 CPU} instance
+     * @param proxy the given {@link X86MemoryProxy memory proxy}
+     * @param code8 the 8-bit instruction identifier
+     * @return an {@link LDS LDS} opCode
+     */
+    private LDS createLDS(final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8) {
+        // code: tt rrr mmm	iiiiii jj dddd
+        final int code16 = proxy.nextWord(code8);
+
+        // get the composite reference code
+        // code: tt.. .mmm .... .... (mask = 1100 0111 0000 0000)
+        final int compCode = (code16 & 0xC700) >> 8;
+
+        // lookup the register
+        final X86Register register = lookupRegister(cpu, proxy, code16);
+
+        // lookup the operands
+        final MemoryReference memref = lookupReferencedAddress(cpu, proxy, compCode);
+
+        // return the opCode
+        return new LDS(register, memref);
+    }
+
+    /**
+     * Creates a new 'LES <i>dest<i>,<i>src<i>' instruction
+     *
+     * @param cpu   the given {@link Intel80x86 CPU} instance
+     * @param proxy the given {@link X86MemoryProxy memory proxy}
+     * @param code8 the 8-bit instruction identifier
+     * @return an {@link LES LES} opCode
+     */
+    private LES createLES(final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8) {
+        // code: tt rrr mmm	iiiiii jj dddd
+        final int code16 = proxy.nextWord(code8);
+
+        // get the composite reference code
+        // code: tt.. .mmm .... .... (mask = 1100 0111 0000 0000)
+        final int compCode = (code16 & 0xC700) >> 8;
+
+        // lookup the register
+        final X86Register register = lookupRegister(cpu, proxy, code16);
+
+        // lookup the operands
+        final MemoryReference memref = lookupReferencedAddress(cpu, proxy, compCode);
+
+        // return the opCode
+        return new LES(register, memref);
+    }
+
+    /**
+     * Creates a new 'MOV BYTE PTR <i>dest<i>,<i>nn</i>' instruction
+     *
+     * @param cpu   the given {@link Intel80x86 CPU} instance
+     * @param proxy the given {@link X86MemoryProxy memory proxy}
+     * @param code8 the 8-bit instruction identifier
+     * @return an {@link MOV MOV} opCode
+     */
+    private MOV createMOVBytePtr(final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8) {
+        // code: tt rrr mmm	iiiiii jj dddd
+        final int code16 = proxy.nextWord(code8);
+
+        // extract the composite code
+        // code: tt.. .mmm .... .... (mask = 1100 0111 0000 0000)
+        final int compCode = (code16 & 0xC700) >> 8;
+
+        // lookup the operands
+        final MemoryReference memref = lookupReferencedAddress(cpu, proxy, compCode);
+
+        // get the 16-bit value
+        final Operand value = nextValue8(proxy);
+
+        // return the opCode
+        return new MOV(new BytePtr(memref), value);
+    }
+
+    /**
+     * Creates a new 'MOV WORD PTR <i>dest<i>,<i>nnnn</i>' instruction
+     *
+     * @param cpu   the given {@link Intel80x86 CPU} instance
+     * @param proxy the given {@link X86MemoryProxy memory proxy}
+     * @param code8 the 8-bit instruction identifier
+     * @return an {@link MOV MOV} opCode
+     */
+    private MOV createMOVWordPtr(final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8) {
+        // code: tt rrr mmm	iiiiii jj dddd
+        final int code16 = proxy.nextWord(code8);
+
+        // extract the composite code
+        // code: tt.. .mmm .... .... (mask = 1100 0111 0000 0000)
+        final int compCode = (code16 & 0xC700) >> 8;
+
+        // lookup the operands
+        final MemoryReference memref = lookupReferencedAddress(cpu, proxy, compCode);
+
+        // get the 16-bit value
+        final Operand value = nextValue16(proxy);
+
+        // return the opCode
+        return new MOV(new WordPtr(memref), value);
+    }
+
 }

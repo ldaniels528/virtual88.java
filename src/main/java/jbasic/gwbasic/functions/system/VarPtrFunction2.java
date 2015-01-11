@@ -11,7 +11,7 @@ import jbasic.common.values.types.impl.JBasicNumber;
 import jbasic.common.values.types.impl.JBasicTempString;
 import jbasic.gwbasic.values.GwBasicValues;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * VARPTR$ Function

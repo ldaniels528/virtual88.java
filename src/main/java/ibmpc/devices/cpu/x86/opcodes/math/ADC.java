@@ -1,11 +1,12 @@
 package ibmpc.devices.cpu.x86.opcodes.math;
 
 import ibmpc.devices.cpu.Intel80x86;
-import ibmpc.devices.cpu.X86ExtendedFlags;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
+import ibmpc.system.IbmPcSystem;
 
 /**
+ * Add with Carry (ADC)
  * <pre>
  * Usage:  ADC     dest,src
  * Modifies flags: AF CF OF SF PF ZF
@@ -32,26 +33,8 @@ public class ADC extends AbstractDualOperandOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
-        // cache the flags
-        final X86ExtendedFlags FLAGS = cpu.FLAGS;
-
-        // cache the values (registers are slower)
-        final int value0 = dest.get();
-        final int value1 = src.get();
-
-        // compute the sum
-        final int sum = value0 + value1 + (FLAGS.isCF() ? 1 : 0);
-
-        // calculate the sum of the values,
-        // and set the dest
-        dest.set(sum);
-
-        // adjust the flags
-        FLAGS.setOF((sum & 0xFFFF0000) > 0);
-        FLAGS.setCF((sum & 0xFFFF0000) > 0);
-        FLAGS.setPF(sum % 2 == 0);
-        FLAGS.setZF(sum == 0);
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
+        dest.set((cpu.FLAGS.isCF() ? 1 : 0) + cpu.FLAGS.updateADD(dest, src));
     }
 
 }

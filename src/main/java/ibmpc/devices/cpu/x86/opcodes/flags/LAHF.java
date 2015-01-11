@@ -2,6 +2,7 @@ package ibmpc.devices.cpu.x86.opcodes.flags;
 
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -37,11 +38,12 @@ public class LAHF extends AbstractOpCode {
         return instance;
     }
 
-    /* (non-Javadoc)
-     * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
+    /**
+     * {@inheritDoc}
      */
-    public void execute(final Intel80x86 cpu) {
-        cpu.AH.set(cpu.FLAGS.get());
+    @Override
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
+        cpu.AH.set(cpu.FLAGS.get() & 0b0111_1111);
     }
 
 }

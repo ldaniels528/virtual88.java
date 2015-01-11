@@ -8,6 +8,7 @@ import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.cpu.x86.opcodes.system.INT;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 import static ibmpc.devices.cpu.operands.Operand.SIZE_16BIT;
 import static ibmpc.devices.cpu.operands.Operand.SIZE_8BIT;
@@ -51,7 +52,7 @@ public class DIV extends AbstractOpCode {
      * (non-Javadoc)
      * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
      */
-    public void execute(final Intel80x86 cpu)
+    public void execute(IbmPcSystem system, final Intel80x86 cpu)
             throws X86AssemblyException {
         final int value0;
         final int value1;
@@ -69,7 +70,7 @@ public class DIV extends AbstractOpCode {
                     cpu.AH.set(value0 % value1);
                 } else {
                     // call interrupt 0
-                    cpu.execute(INT.DIVBYZR);
+                    cpu.execute(system, INT.DIVBYZR);
                 }
                 break;
 
@@ -85,7 +86,7 @@ public class DIV extends AbstractOpCode {
                     cpu.AH.set(value0 % value1);
                 } else {
                     // call interrupt 0
-                    cpu.execute(INT.DIVBYZR);
+                    cpu.execute(system, INT.DIVBYZR);
                 }
                 break;
 

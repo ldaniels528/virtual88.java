@@ -6,6 +6,7 @@ package ibmpc.devices.cpu.x86.opcodes.bitwise;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
+import ibmpc.system.IbmPcSystem;
 
 import static ibmpc.devices.cpu.operands.Operand.*;
 
@@ -37,7 +38,7 @@ public class SAL extends AbstractDualOperandOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // get the source and destination values
         final int value0 = dest.get();
         final int value1 = src.get();
@@ -61,8 +62,6 @@ public class SAL extends AbstractDualOperandOpCode {
                 return 0x80;        // 1000 0000
             case SIZE_16BIT:
                 return 0x8000;        // 1000 0000 0000 0000
-            case SIZE_32BIT:
-                return 0x80000000;    // 1000 0000 0000 0000 0000 0000 0000 0000
             default:
                 throw new IllegalArgumentException("Unhandled operand size");
         }

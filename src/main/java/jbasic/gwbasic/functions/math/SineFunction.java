@@ -3,7 +3,7 @@ package jbasic.gwbasic.functions.math;
 import ibmpc.devices.memory.MemoryObject;
 import ibmpc.devices.memory.NumberMemoryObject;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 import jbasic.common.JBasicCompiledCodeReference;
 import jbasic.common.exceptions.JBasicException;

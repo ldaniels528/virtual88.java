@@ -5,6 +5,7 @@ import ibmpc.devices.cpu.X86Stack;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -43,7 +44,7 @@ public class POP extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) throws X86AssemblyException {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) throws X86AssemblyException {
         // get the stack instance
         final X86Stack stack = cpu.getStack();
 

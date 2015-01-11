@@ -4,6 +4,7 @@ import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
 import ibmpc.devices.cpu.x86.registers.X86Register;
+import ibmpc.system.IbmPcSystem;
 
 import static ibmpc.devices.cpu.operands.Operand.*;
 
@@ -44,7 +45,7 @@ public class MOVSX extends AbstractDualOperandOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // get the source and destination operand sizes
         final int destSize = dest.size();
         final int srcSize = src.size();
@@ -54,20 +55,6 @@ public class MOVSX extends AbstractDualOperandOpCode {
             // and the destination is 16-bit ...
             if (destSize == SIZE_16BIT) {
                 byteToWord(dest, src);
-                return;
-            }
-            // and the destination is 32-bit ...
-            else if (destSize == SIZE_32BIT) {
-                byteToDoubleWord(dest, src);
-                return;
-            }
-        }
-
-        // if the source is 16-bit
-        else if (srcSize == SIZE_16BIT) {
-            // and the destination is 32-bit ...
-            if (destSize == SIZE_32BIT) {
-                wordToDoubleWord(dest, src);
                 return;
             }
         }

@@ -1,6 +1,6 @@
 package jbasic.gwbasic.values;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 import ibmpc.devices.memory.MemoryObject;
 import ibmpc.devices.memory.NumberMemoryObject;
 import ibmpc.devices.memory.StringMemoryObject;

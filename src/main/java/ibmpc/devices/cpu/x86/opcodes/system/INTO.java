@@ -3,6 +3,7 @@ package ibmpc.devices.cpu.x86.opcodes.system;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -37,11 +38,11 @@ public class INTO extends AbstractOpCode {
     /* (non-Javadoc)
      * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
      */
-    public void execute(final Intel80x86 cpu)
+    public void execute(IbmPcSystem system, final Intel80x86 cpu)
             throws X86AssemblyException {
         // if the overflow flag is set, call interrupt 4
         if (cpu.FLAGS.isOF()) {
-            new INT(0x04).execute(cpu);
+            new INT(0x04).execute(system, cpu);
         }
     }
 

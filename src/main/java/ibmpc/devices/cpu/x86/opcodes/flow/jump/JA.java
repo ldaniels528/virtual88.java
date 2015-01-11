@@ -26,8 +26,9 @@ public class JA extends AbstractFlowControlOpCode {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected boolean redirectsFlow(final Intel80x86 cpu) {
-        return (!cpu.FLAGS.isCF() && !cpu.FLAGS.isZF());
+        return !cpu.FLAGS.isCF() && !cpu.FLAGS.isZF();
     }
 
 }

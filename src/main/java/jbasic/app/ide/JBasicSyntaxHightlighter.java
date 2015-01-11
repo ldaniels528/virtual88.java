@@ -14,14 +14,14 @@ import javax.swing.text.LayeredHighlighter;
 import javax.swing.text.Position;
 import javax.swing.text.View;
 
-import com.ldaniels528.tokenizer.Token;
-import com.ldaniels528.tokenizer.Tokenizer;
-import com.ldaniels528.tokenizer.TokenizerContext;
-import com.ldaniels528.tokenizer.parsers.DoubleQuotedTextTokenParser;
-import com.ldaniels528.tokenizer.parsers.EndOfLineTokenParser;
-import com.ldaniels528.tokenizer.parsers.NumericTokenParser;
-import com.ldaniels528.tokenizer.parsers.OperatorTokenParser;
-import com.ldaniels528.tokenizer.parsers.TextTokenParser;
+import jbasic.common.tokenizer.Token;
+import jbasic.common.tokenizer.Tokenizer;
+import jbasic.common.tokenizer.TokenizerContext;
+import jbasic.common.tokenizer.parsers.DoubleQuotedTextTokenParser;
+import jbasic.common.tokenizer.parsers.EndOfLineTokenParser;
+import jbasic.common.tokenizer.parsers.NumericTokenParser;
+import jbasic.common.tokenizer.parsers.OperatorTokenParser;
+import jbasic.common.tokenizer.parsers.TextTokenParser;
 
 
 /**

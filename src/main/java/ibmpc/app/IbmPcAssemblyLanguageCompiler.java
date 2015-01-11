@@ -7,9 +7,9 @@ import ibmpc.compiler.X86InstructionParser;
 import ibmpc.compiler.encoder.X86Assembler;
 import ibmpc.util.X86CodeBuffer;
 
-import com.ldaniels528.tokenizer.TokenIterator;
-import com.ldaniels528.tokenizer.Tokenizer;
-import com.ldaniels528.tokenizer.TokenizerContext;
+import jbasic.common.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.Tokenizer;
+import jbasic.common.tokenizer.TokenizerContext;
 
 /**
  * Represents an IBM PC Assembly Language Compiler

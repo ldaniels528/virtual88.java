@@ -7,7 +7,7 @@ import jbasic.common.exceptions.JBasicException;
 import jbasic.common.functions.JBasicFunction;
 import jbasic.common.values.types.impl.JBasicTempString;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * LEFT$(var$,length) Function

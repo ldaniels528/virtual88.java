@@ -6,7 +6,7 @@ import jbasic.common.util.JBasicTokenUtil;
 import jbasic.gwbasic.program.GwBasicCompiledCode;
 import jbasic.gwbasic.program.commands.GwBasicCommand;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /** 
  * TRON Command

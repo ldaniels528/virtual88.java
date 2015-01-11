@@ -6,6 +6,7 @@ import ibmpc.devices.display.IbmPcDisplay;
 import ibmpc.devices.keyboard.IbmPcKeyboard;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import ibmpc.devices.mouse.IbmPcMouse;
+import ibmpc.devices.ports.IbmPcHardwarePorts;
 import ibmpc.devices.storage.IbmPcStorageSystem;
 
 /**
@@ -28,6 +29,11 @@ public interface IbmPcSystem {
 	 * @return the graphical display manager.
 	 */
 	IbmPcDisplay getDisplay();
+
+	/**
+	 * @return the hardware ports
+	 */
+	IbmPcHardwarePorts getHardwarePorts();
 	
 	/**
 	 * @return the console input device associated to this environment.

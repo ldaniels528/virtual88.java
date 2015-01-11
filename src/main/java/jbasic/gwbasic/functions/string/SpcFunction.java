@@ -8,7 +8,7 @@ import jbasic.common.exceptions.TypeMismatchException;
 import jbasic.common.functions.JBasicFunction;
 import jbasic.common.values.types.impl.JBasicTempString;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * SPC(x) Function

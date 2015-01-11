@@ -2,6 +2,7 @@ package ibmpc.devices.cpu.x86.bios.services;
 
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * BIOS AT System Services
@@ -29,7 +30,7 @@ public class ATSystemServices implements InterruptHandler {
 	 * Process the Disk Services Interrupt (INT 15h)
 	 * @throws X86AssemblyException
 	 */
-	public void process( final Intel80x86 cpu ) throws X86AssemblyException {
+	public void process(IbmPcSystem system, final Intel80x86 cpu) throws X86AssemblyException {
 		// determine what to do
 		switch( cpu.AH.get() ) {
 			default:

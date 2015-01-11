@@ -2,10 +2,11 @@ package ibmpc.devices.cpu.x86.opcodes.string;
 
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.OpCode;
-import ibmpc.devices.cpu.X86ExtendedFlags;
+import ibmpc.devices.cpu.X86Flags;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.cpu.x86.registers.X86Register;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -46,11 +47,11 @@ public class REPZ extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu)
+    public void execute(IbmPcSystem system, final Intel80x86 cpu)
             throws X86AssemblyException {
         // cache CX and FLAGS
         final X86Register CX = cpu.CX;
-        final X86ExtendedFlags FLAGS = cpu.FLAGS;
+        final X86Flags FLAGS = cpu.FLAGS;
 
         // is it a mass data instruction?
         if (opCode instanceof MassDataOpCode) {
@@ -66,7 +67,7 @@ public class REPZ extends AbstractOpCode {
             // while the CX != 0 and ZF=0
             while ((CX.get() != 0) && !FLAGS.isZF()) {
                 // execute the instruction
-                cpu.execute(opCode);
+                cpu.execute(system, opCode);
                 CX.add(-1);
             }
         }

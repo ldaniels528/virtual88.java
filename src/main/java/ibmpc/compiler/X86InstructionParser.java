@@ -3,7 +3,7 @@
  */
 package ibmpc.compiler;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 import ibmpc.exceptions.X86AssemblyException;
 import ibmpc.compiler.element.X86DataElement;
 import ibmpc.compiler.exception.X86MalformedInstructionException;

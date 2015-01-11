@@ -4,7 +4,7 @@ import jbasic.common.exceptions.JBasicException;
 import jbasic.common.program.JBasicCompiledCode;
 import jbasic.common.values.VariableTypeDefinition;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * DEFINT Command 

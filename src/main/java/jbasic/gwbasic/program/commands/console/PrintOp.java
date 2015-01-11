@@ -5,7 +5,7 @@ import ibmpc.devices.display.IbmPcDisplay;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 import jbasic.common.exceptions.JBasicException;
 import jbasic.common.exceptions.SyntaxErrorException;

@@ -4,7 +4,7 @@ import ibmpc.devices.display.IbmPcDisplay;
 
 import java.util.Collection;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 import jbasic.common.exceptions.JBasicException;
 import jbasic.common.exceptions.SyntaxErrorException;
@@ -66,7 +66,7 @@ public class ListOp extends GwBasicCommand {
 	/**
 	 * Converts the given textual representation into {@link jbasic.common.values.Value values}
 	 * that will be displayed at runtime
-	 * @param it the given {@link com.ldaniels528.tokenizer.TokenIterator iterator}
+	 * @param it the given {@link jbasic.common.tokenizer.TokenIterator iterator}
 	 * @throws JBasicException
 	 */
 	private void parse( TokenIterator it ) 
@@ -79,7 +79,7 @@ public class ListOp extends GwBasicCommand {
 	
 	/**
 	 * Returns a range of line numbers to display
-	 * @param it the given {@link com.ldaniels528.tokenizer.TokenIterator iterator}
+	 * @param it the given {@link jbasic.common.tokenizer.TokenIterator iterator}
 	 * @return a range of line numbers to display
 	 * @throws JBasicException
 	 */
@@ -109,7 +109,7 @@ public class ListOp extends GwBasicCommand {
 
 	/**
 	 * Builds the parameter string for the range (e.g. "100-1000")
-	 * @param it the given {@link com.ldaniels528.tokenizer.TokenIterator iterator}
+	 * @param it the given {@link jbasic.common.tokenizer.TokenIterator iterator}
 	 * @return the parameter string for the range
 	 */
 	private String buildParameterString( TokenIterator it ) {

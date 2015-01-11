@@ -10,8 +10,7 @@ import ibmpc.devices.cpu.OpCode;
 public interface Operand {
     int SIZE_8BIT = 8;
     int SIZE_16BIT = 16;
-    int SIZE_32BIT = 32;
-    int SIZE_64BIT = 64;
+    int SIZE_32BIT = 32; // TODO limit to 20-bits?
 
     /**
      * Returns the value contained within this element

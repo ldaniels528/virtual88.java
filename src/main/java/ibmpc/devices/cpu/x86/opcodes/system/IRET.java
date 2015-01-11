@@ -4,6 +4,7 @@ import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.X86Stack;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -47,7 +48,7 @@ public class IRET extends AbstractOpCode {
     /* (non-Javadoc)
      * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
      */
-    public void execute(final Intel80x86 cpu)
+    public void execute(IbmPcSystem system, final Intel80x86 cpu)
             throws X86AssemblyException {
         // pop the registers
         stack.pop(cpu.IP);

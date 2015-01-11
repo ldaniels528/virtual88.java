@@ -5,7 +5,7 @@ import jbasic.common.program.JBasicCompiledCode;
 import jbasic.common.util.JBasicTokenUtil;
 import jbasic.gwbasic.program.commands.GwBasicCommand;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * GOSUB Comand

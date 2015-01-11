@@ -5,6 +5,7 @@ import ibmpc.devices.display.IbmPcColorSet;
 import ibmpc.devices.display.IbmPcDisplay;
 import ibmpc.devices.display.modes.IbmPcDisplayMode;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -44,9 +45,9 @@ public class VideoServices implements InterruptHandler {
      *
      * @throws X86AssemblyException
      */
-    public void process(final Intel80x86 cpu) throws X86AssemblyException {
+    public void process(final IbmPcSystem system, final Intel80x86 cpu) throws X86AssemblyException {
         // get the display
-        final IbmPcDisplay display = cpu.getSystem().getDisplay();
+        final IbmPcDisplay display = system.getDisplay();
 
         // determine what to do
         switch (cpu.AH.get()) {
@@ -429,7 +430,7 @@ public class VideoServices implements InterruptHandler {
      *
      * @return a {@link Map mapping} of available {@link IbmPcDisplayMode display modes}
      */
-    private static final Map<Integer, IbmPcDisplayMode> getAvailableDisplayModes() {
+    private static Map<Integer, IbmPcDisplayMode> getAvailableDisplayModes() {
         final Map<Integer, IbmPcDisplayMode> map = new HashMap<Integer, IbmPcDisplayMode>();
         for (final IbmPcDisplayMode mode : DISPLAY_MODES) {
             map.put(mode.getVideoMode(), mode);

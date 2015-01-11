@@ -3,6 +3,7 @@ package ibmpc.devices.cpu.x86.bios.services;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -66,7 +67,7 @@ public class SystemTimerService implements InterruptHandler {
 	/* (non-Javadoc)
 	 * @see ibmpc.devices.cpu.x86.bios.services.InterruptHandler#process(ibmpc.devices.cpu.Intel80x86)
 	 */
-	public void process( final Intel80x86 cpu ) 
+	public void process(IbmPcSystem system, final Intel80x86 cpu)
 	throws X86AssemblyException {
 		// get the memory instance
 		final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();

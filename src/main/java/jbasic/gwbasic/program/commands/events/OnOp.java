@@ -15,7 +15,7 @@ import jbasic.common.values.VariableReference;
 import jbasic.gwbasic.program.commands.GwBasicCommand;
 import jbasic.gwbasic.values.GwBasicValues;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * ON <i>variable</i> Command

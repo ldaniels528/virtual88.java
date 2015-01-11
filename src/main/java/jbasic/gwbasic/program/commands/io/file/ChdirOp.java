@@ -6,7 +6,7 @@ import ibmpc.system.IbmPcSystem;
 
 import java.io.File;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 import jbasic.common.exceptions.JBasicException;
 import jbasic.common.program.JBasicCompiledCode;

@@ -1,7 +1,6 @@
 package ibmpc.devices.cpu.x86.opcodes.system;
 
 import ibmpc.devices.cpu.Intel80x86;
-import ibmpc.devices.cpu.x86.bios.IbmPcBIOS;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.exceptions.X86AssemblyException;
 import ibmpc.system.IbmPcSystem;
@@ -42,15 +41,12 @@ public class INT extends AbstractOpCode {
         this.interruptNumber = interruptNumber;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.Intel80x86)
+    /**
+     * {@inheritDoc}
      */
-    public void execute(final Intel80x86 cpu)
-            throws X86AssemblyException {
-        final IbmPcSystem system = cpu.getSystem();
-        final IbmPcBIOS bios = system.getBIOS();
-        bios.invoke(cpu, this);
+    @Override
+    public void execute(final IbmPcSystem system, final Intel80x86 cpu) throws X86AssemblyException {
+        system.getBIOS().invoke(system, cpu, this);
     }
 
     /**
@@ -60,10 +56,10 @@ public class INT extends AbstractOpCode {
         return interruptNumber;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see ibmpc.devices.cpu.x86.opcodes.AbstractOpCode#toString()
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public String toString() {
         return String.format("INT %02X", interruptNumber);
     }

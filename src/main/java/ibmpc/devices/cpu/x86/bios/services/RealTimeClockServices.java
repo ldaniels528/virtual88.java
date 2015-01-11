@@ -2,6 +2,7 @@ package ibmpc.devices.cpu.x86.bios.services;
 
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 import java.util.Calendar;
 
@@ -34,7 +35,7 @@ public class RealTimeClockServices implements InterruptHandler {
 	 * Process the Time Services Interrupt (INT 1Ah)
 	 * @throws X86AssemblyException
 	 */
-	public void process( final Intel80x86 cpu ) 
+	public void process(IbmPcSystem system, final Intel80x86 cpu)
 	throws X86AssemblyException {
 		switch( cpu.AH.get() ) {
 			case 0x00:	readSystemClockCounter( cpu ); break;

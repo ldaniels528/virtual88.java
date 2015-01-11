@@ -51,15 +51,6 @@ public class IbmPcHardwarePorts {
 		return memory.getWord( DEFAULT_SEGMENT, port );
 	}
 	
-	/**
-	 * Reads a 32-bit data value from the given port number
-	 * @param port the given port number
-	 * @return a byte or word from the specified port
-	 */
-	public int in32( final int port ) {
-		return memory.getDoubleWord( DEFAULT_SEGMENT, port );
-	}
-	
 	/** 
 	 * Writes the given value to the given port number
 	 * @param port the given port number

@@ -3,6 +3,7 @@ package ibmpc.devices.cpu.x86.opcodes.bitwise;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * Roll Right (ROR)
@@ -49,7 +50,7 @@ public class ROR extends AbstractDualOperandOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // get the destination value
         final int value = dest.get();
 

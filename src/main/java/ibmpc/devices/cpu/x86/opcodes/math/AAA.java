@@ -1,8 +1,9 @@
 package ibmpc.devices.cpu.x86.opcodes.math;
 
 import ibmpc.devices.cpu.Intel80x86;
-import ibmpc.devices.cpu.X86ExtendedFlags;
+import ibmpc.devices.cpu.X86Flags;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * Ascii Adjust for Addition (AAA)
@@ -49,9 +50,9 @@ public class AAA extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // cache the Flags
-        final X86ExtendedFlags FLAGS = cpu.FLAGS;
+        final X86Flags FLAGS = cpu.FLAGS;
 
         // get the low nibble of AL (mask = 0000 1111)
         final int lowNibble = (cpu.AL.get() & 0x0F);

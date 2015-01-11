@@ -4,6 +4,7 @@ import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.operands.memory.MemoryReference;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.cpu.x86.registers.X86Register;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -36,7 +37,7 @@ public class LEA extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         dest.set(src.getOffset());
     }
 

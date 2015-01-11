@@ -1,6 +1,6 @@
 package jbasic.gwbasic.program.commands.graphics;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 import ibmpc.devices.display.IbmPcDisplay;
 import jbasic.common.exceptions.JBasicException;
 import jbasic.common.program.JBasicCompiledCode;
@@ -31,7 +31,7 @@ public class DrawCircleOp extends GwBasicCommand {
 	
   /**
    * Creates an instance of this {@link jbasic.common.program.OpCode opCode}
-   * @param it the given {@link com.ldaniels528.tokenizer.TokenIterator token iterator}
+   * @param it the given {@link jbasic.common.tokenizer.TokenIterator token iterator}
    * @throws JBasicException
    */
   public DrawCircleOp( final TokenIterator it ) throws JBasicException {

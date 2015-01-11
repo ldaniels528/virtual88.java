@@ -2,6 +2,7 @@ package ibmpc.devices.cpu.x86.bios.services;
 
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -49,7 +50,7 @@ public class PrintScreenService implements InterruptHandler {
 	 * Process the interrupt
 	 * @throws X86AssemblyException
 	 */
-	public void process( final Intel80x86 cpu ) 
+	public void process(IbmPcSystem system, final Intel80x86 cpu)
 	throws X86AssemblyException {
 		
 	}

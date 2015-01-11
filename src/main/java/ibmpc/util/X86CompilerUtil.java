@@ -1,8 +1,8 @@
 package ibmpc.util;
 
-import com.ldaniels528.tokenizer.TokenIterator;
-import com.ldaniels528.tokenizer.Tokenizer;
-import com.ldaniels528.tokenizer.parsers.*;
+import jbasic.common.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.Tokenizer;
+import jbasic.common.tokenizer.parsers.*;
 import ibmpc.exceptions.X86AssemblyException;
 import ibmpc.compiler.element.addressing.X86MemoryAddressParser;
 import jbasic.common.exceptions.IllegalNumberFormat;

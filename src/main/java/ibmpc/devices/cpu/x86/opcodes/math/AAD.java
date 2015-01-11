@@ -2,6 +2,7 @@ package ibmpc.devices.cpu.x86.opcodes.math;
 
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -43,7 +44,7 @@ public class AAD extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         cpu.AL.add(10 * cpu.AH.get());
         cpu.AH.set(0);
     }

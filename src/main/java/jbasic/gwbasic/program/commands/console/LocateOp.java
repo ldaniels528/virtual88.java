@@ -1,6 +1,6 @@
 package jbasic.gwbasic.program.commands.console;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 import ibmpc.devices.display.IbmPcDisplay;
 import ibmpc.devices.memory.MemoryObject;

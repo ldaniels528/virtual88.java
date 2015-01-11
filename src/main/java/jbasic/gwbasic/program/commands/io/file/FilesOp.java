@@ -10,7 +10,7 @@ import jbasic.gwbasic.program.commands.GwBasicCommand;
 
 import java.io.File;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * Files Command 

@@ -4,6 +4,7 @@ import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.X86Stack;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -55,7 +56,7 @@ public class POPF extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) throws X86AssemblyException {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) throws X86AssemblyException {
         final X86Stack stack = cpu.getStack();
         stack.pop(cpu.FLAGS);
     }

@@ -2,6 +2,7 @@ package ibmpc.devices.cpu.x86.bios.services;
 
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * BIOS Disk Services (Interrupt 13h)
@@ -29,7 +30,7 @@ public class DiskServices implements InterruptHandler {
 	 * Process the Disk Services Interrupt (INT 13h)
 	 * @throws X86AssemblyException
 	 */
-	public void process( final Intel80x86 cpu ) 
+	public void process(IbmPcSystem system, final Intel80x86 cpu)
 	throws X86AssemblyException {
 		// determine what to do
 		switch( cpu.AH.get() ) {

@@ -6,12 +6,12 @@ import ibmpc.devices.cpu.x86.decoder.DecodeProcessor;
 import ibmpc.devices.cpu.x86.decoder.DecodeProcessorImpl;
 import ibmpc.devices.cpu.x86.opcodes.system.INT;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
-import ibmpc.devices.ports.IbmPcHardwarePorts;
 import ibmpc.exceptions.X86AssemblyException;
 import ibmpc.system.IbmPcSystem;
 import org.apache.log4j.Logger;
 
-import static ibmpc.devices.cpu.operands.Operand.*;
+import static ibmpc.devices.cpu.operands.Operand.SIZE_16BIT;
+import static ibmpc.devices.cpu.operands.Operand.SIZE_8BIT;
 import static java.lang.String.format;
 
 /**
@@ -20,12 +20,6 @@ import static java.lang.String.format;
  * @author lawrence.daniels@gmail.com
  */
 public class Intel80x86 extends X86RegisterSet {
-    // CPU mode constants
-    public static final int REAL_MODE = 0;      // [80286] 20 bit segmented memory address space
-    public static final int PROTECTED_MODE = 1; // [80286] Enhances multitasking & system stability
-    public static final int VIRTUAL_MODE = 2;   // [80386] Allows the execution of real mode applications that violate the rules under the control of a protected mode operating system.
-    public static final int LONG_MODE = 3;      // [AMD64] Provides an application access to 64-bit instructions and registers
-
     // system timer frequency
     private static final long SYSTEM_TIMER_FREQ = 1000 / 18; // 18 times/sec
 
@@ -33,8 +27,6 @@ public class Intel80x86 extends X86RegisterSet {
     private final Logger logger = Logger.getLogger(getClass());
     private final IbmPcRandomAccessMemory memory;
     private final DecodeProcessor decoder;
-    private final IbmPcHardwarePorts ports;
-    private final IbmPcSystem system;
     private final X86Stack stack;
     private long lastTimerUpdate;
     private boolean ipChanged;
@@ -47,16 +39,13 @@ public class Intel80x86 extends X86RegisterSet {
     /**
      * Creates a new i8086 instance
      *
-     * @param system the {@link IbmPcSystem system} the CPU reside within
-     * @param memory the {@link IbmPcRandomAccessMemory random access memory} instance
+     * @param memory the {@link ibmpc.devices.memory.IbmPcRandomAccessMemory random access memory} instance
      */
-    public Intel80x86(final IbmPcSystem system, final IbmPcRandomAccessMemory memory) {
-        this.system = system;
+    public Intel80x86(final IbmPcRandomAccessMemory memory) {
         this.memory = memory;
         this.active = true;
         this.stack = new X86Stack(memory, this);
         this.decoder = new DecodeProcessorImpl(this, memory);
-        this.ports = new IbmPcHardwarePorts(memory);
         this.lastTimerUpdate = System.currentTimeMillis();
         this.ipChanged = false;
     }
@@ -72,15 +61,6 @@ public class Intel80x86 extends X86RegisterSet {
         return stack;
     }
 
-    /**
-     * Returns the IBM PC System that the CPU is currently running on
-     *
-     * @return the IBM PC System instance
-     */
-    public IbmPcSystem getSystem() {
-        return system;
-    }
-
     /////////////////////////////////////////////////////////
     //		CPU Execution Method(s)
     /////////////////////////////////////////////////////////
@@ -88,10 +68,10 @@ public class Intel80x86 extends X86RegisterSet {
     /**
      * Executes the given compiled code
      *
-     * @param context the given {@link ProgramContext 80x86 execution context}
+     * @param system  the given {@link IbmPcSystem IBM PC system}
+     * @param context the given {@link ibmpc.devices.cpu.ProgramContext 80x86 execution context}
      */
-    public void execute(final ProgramContext context)
-            throws X86AssemblyException {
+    public void execute(final IbmPcSystem system, final ProgramContext context) throws X86AssemblyException {
         // cache the code segment and offset
         final int codeSegment = context.getCodeSegment();
         final int codeOffset = context.getCodeOffset();
@@ -127,7 +107,7 @@ public class Intel80x86 extends X86RegisterSet {
                 final OpCode opCode = getNextOpCode();
 
                 // execute the opCode
-                execute(opCode);
+                execute(system, opCode);
             }
         } finally {
             // shutdown the decoder
@@ -138,19 +118,19 @@ public class Intel80x86 extends X86RegisterSet {
     /**
      * Executes the given opCode
      *
+     * @param system the given {@link IbmPcSystem IBM PC system}
      * @param opCode the given {@link OpCode opCode}
      * @throws X86AssemblyException
      */
-    public void execute(final OpCode opCode)
-            throws X86AssemblyException {
+    public void execute(final IbmPcSystem system, final OpCode opCode) throws X86AssemblyException {
         // update the system timer
-        updateSystemTimer();
+        updateSystemTimer(system);
 
         // display the instruction information
         logger.info(format("E [%04X:%04X] %10X[%d] %s", CS.get(), IP.get(), opCode.getInstructionCode(), opCode.getLength(), opCode));
 
         // execute the instruction
-        opCode.execute(this);
+        opCode.execute(system, this);
 
         // advance the instruction pointer
         if (!ipChanged) {
@@ -167,13 +147,6 @@ public class Intel80x86 extends X86RegisterSet {
      */
     public OpCode getNextOpCode() {
         return decoder.decodeNext();
-    }
-
-    /**
-     * @return the hardware ports
-     */
-    public IbmPcHardwarePorts getHardwarePorts() {
-        return ports;
     }
 
     /////////////////////////////////////////////////////////
@@ -194,15 +167,6 @@ public class Intel80x86 extends X86RegisterSet {
      */
     public boolean isActive() {
         return active;
-    }
-
-    /**
-     * Indicates whether the CPU is currently in virtual x86 mode.
-     *
-     * @return true, if the CPU is currently in virtual x86 mode.
-     */
-    public boolean isVirtualMode() {
-        return FLAGS.isVM();
     }
 
     /**
@@ -283,23 +247,6 @@ public class Intel80x86 extends X86RegisterSet {
 
         // is it a 32-bit address?
         switch (destination.size()) {
-            case SIZE_32BIT:
-                // save this position?
-                if (savePoint) {
-                    logger.info(format("Storing CS:IP as %04X:%04X", CS.get(), IP.get()));
-                    stack.push(CS);
-                    stack.pushValue(IP.get() + opCode.getLength());
-                }
-
-                // get the segment and offset
-                final int offset = (pointer & 0xFFFF0000) >> 16;
-                final int segment = (pointer & 0x0000FFFF);
-
-                // jump to the position in memory
-                CS.set(segment);
-                IP.set(offset);
-                break;
-
             case SIZE_8BIT:
             case SIZE_16BIT:
                 // save this position?
@@ -313,9 +260,7 @@ public class Intel80x86 extends X86RegisterSet {
                 break;
 
             default:
-                throw new IllegalArgumentException(
-                        String.format("%d-bit memory operands are not supported", destination.size())
-                );
+                throw new IllegalArgumentException(format("%d-bit memory operands are not supported", destination.size()));
         }
     }
 
@@ -403,13 +348,14 @@ public class Intel80x86 extends X86RegisterSet {
     /**
      * Updates the system timer (18 times/sec)
      *
+     * @param system the given {@link IbmPcSystem IBM PC system}
      * @throws X86AssemblyException
      */
-    private void updateSystemTimer() throws X86AssemblyException {
+    private void updateSystemTimer(final IbmPcSystem system) throws X86AssemblyException {
         // is it time to invoke the system timer?
         final long elapsedSinceUpdate = System.currentTimeMillis() - lastTimerUpdate;
         if ((elapsedSinceUpdate >= SYSTEM_TIMER_FREQ) && FLAGS.isIF()) {
-            INT.SYSTIMR.execute(this);
+            INT.SYSTIMR.execute(system, this);
             lastTimerUpdate = System.currentTimeMillis();
             logger.info(format("SYSTIMR timer last update %d msec ago", elapsedSinceUpdate));
         }

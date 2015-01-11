@@ -6,7 +6,7 @@ import jbasic.common.util.JBasicTokenUtil;
 import jbasic.gwbasic.program.commands.GwBasicCommand;
 import jbasic.gwbasic.program.commands.system.CallOp;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * RETURN Command

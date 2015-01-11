@@ -6,6 +6,7 @@ import ibmpc.devices.cpu.x86.bios.services.VideoServices;
 import ibmpc.devices.display.IbmPcDisplay;
 import ibmpc.devices.mouse.IbmPcMouse;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * MS-DOS Mouse Services
@@ -35,9 +36,9 @@ public class MsDosMouseServices implements InterruptHandler {
      * {@inheritDoc}
      */
     @Override
-    public void process(final Intel80x86 cpu) throws X86AssemblyException {
+    public void process(final IbmPcSystem system, final Intel80x86 cpu) throws X86AssemblyException {
         // get an instance of the mouse
-        final IbmPcMouse mouse = cpu.getSystem().getMouse();
+        final IbmPcMouse mouse = system.getMouse();
 
         // determine what to do
         switch (cpu.AX.get()) {
@@ -513,15 +514,13 @@ public class MsDosMouseServices implements InterruptHandler {
      * <pre>
      * Notes:
      * 	1 Sets mouse sensitivity by setting the ratio of the mouse coordinates per screen pixel
-     * 	2 Provides same results as calls to both {@link #setMousePixelRatio()} and {@link #setMouseDoubleSpeedThresthold()}
-     * 	3 These values are not reset by {@link #resetMouse()}
+     * 	2 Provides same results as calls to both {@link #setMousePixelRatio} and {@link #setMouseDoubleSpeedThresthold}
+     * 	3 These values are not reset by {@link #resetMouse}
      * Parameters:
      * 	BX = horizontal coordinates per pixel (| 100)
      * 	CX = vertical coordinates per pixel (| 100)
      * 	DX = double speed threshold
      * </pre>
-     *
-     * @see #resetMouse()
      */
     private void setSensitivity(IbmPcMouse mouse, Intel80x86 cpu) {
         // TODO Have to figure this out

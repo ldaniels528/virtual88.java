@@ -1,7 +1,7 @@
 package jbasic.gwbasic.program.commands.system;
 
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 import jbasic.common.exceptions.JBasicException;
 import jbasic.common.exceptions.NotYetImplementedException;

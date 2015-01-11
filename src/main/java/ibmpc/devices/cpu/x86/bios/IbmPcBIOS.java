@@ -8,6 +8,7 @@ import ibmpc.devices.display.IbmPcDisplayContext;
 import ibmpc.devices.display.modes.IbmPcDisplayMode;
 import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 import ibmpc.system.IbmPcSystemInfo;
 import ibmpc.system.IbmPcSystemTypeConstants;
 import org.apache.log4j.Logger;
@@ -197,10 +198,11 @@ public class IbmPcBIOS {
     /**
      * Handles the given interrupt number
      *
-     * @param cpu       the given {@link Intel80x86 CPU} instance
-     * @param interrupt the given {@link INT interrupt opCode}
+     * @param system    the given {@link ibmpc.system.IbmPcSystem IBM PC system}
+     * @param cpu       the given {@link ibmpc.devices.cpu.Intel80x86 CPU} instance
+     * @param interrupt the given {@link ibmpc.devices.cpu.x86.opcodes.system.INT interrupt opCode}
      */
-    public void invoke(final Intel80x86 cpu, final INT interrupt) throws X86AssemblyException {
+    public void invoke(final IbmPcSystem system, final Intel80x86 cpu, final INT interrupt) throws X86AssemblyException {
         // get the interrupt #
         final int interruptNo = interrupt.getInterruptNumber();
 
@@ -213,7 +215,7 @@ public class IbmPcBIOS {
             logger.info(format("Handling interrupt %02X with %s (%s)", interruptNo, handler.getClass().getSimpleName(), address));
 
             // handle the interrupt
-            handler.process(cpu);
+            handler.process(system, cpu);
         }
 
         // otherwise, use the defined user handler

@@ -8,7 +8,7 @@ import jbasic.common.values.Value;
 import jbasic.gwbasic.program.commands.GwBasicCommand;
 import jbasic.gwbasic.values.GwBasicValues;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * LINE Command
@@ -27,7 +27,7 @@ public class DrawLineOp extends GwBasicCommand {
 	
   /**
    * Creates an instance of this {@link jbasic.common.program.OpCode opCode}
-   * @param it the given {@link com.ldaniels528.tokenizer.TokenIterator token iterator}
+   * @param it the given {@link jbasic.common.tokenizer.TokenIterator token iterator}
    * @throws JBasicException
    */
   public DrawLineOp( TokenIterator it ) throws JBasicException {

@@ -5,6 +5,7 @@ import ibmpc.devices.cpu.OpCode;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import ibmpc.devices.cpu.x86.registers.X86Register;
 import ibmpc.exceptions.X86AssemblyException;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * Segment Override OpCode (i.e. 'CS:', 'ES:', 'DS:', or 'SS:')
@@ -20,10 +21,15 @@ public abstract class SegmentOverrideOpCode extends AbstractOpCode {
         super();
     }
 
-    /* (non-Javadoc)
-     * @see ibmpc.devices.cpu.OpCode#execute(ibmpc.devices.cpu.VirtualCPU)
+    /**
+     * Provides a means to override the the next instruction using a segment register
+     *
+     * @param system   the given {@link ibmpc.system.IbmPcSystem IBM PC system}
+     * @param cpu      the given {@link ibmpc.devices.cpu.Intel80x86 Intel 8086 CPU}
+     * @param register the given {@link ibmpc.devices.cpu.x86.registers.X86Register 8086 register}
+     * @throws X86AssemblyException
      */
-    protected void override(final Intel80x86 cpu, final X86Register register) throws X86AssemblyException {
+    protected void override(final IbmPcSystem system, final Intel80x86 cpu, final X86Register register) throws X86AssemblyException {
         // save the current DS
         final int segment = cpu.DS.get();
 
@@ -32,7 +38,7 @@ public abstract class SegmentOverrideOpCode extends AbstractOpCode {
 
         // interpret the next instruction
         final OpCode opCode = cpu.getNextOpCode();
-        cpu.execute(opCode);
+        cpu.execute(system, opCode);
 
         // set DS back to it's original value
         cpu.DS.set(segment);

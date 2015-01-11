@@ -7,7 +7,7 @@ import ibmpc.system.IbmPcSystem;
 import java.io.File;
 import java.io.IOException;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 import jbasic.common.exceptions.JBasicException;
 import jbasic.common.exceptions.TypeMismatchException;

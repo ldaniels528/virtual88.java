@@ -2,6 +2,7 @@ package ibmpc.devices.cpu.x86.opcodes.bitwise;
 
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * No Operation (NOP)
@@ -29,7 +30,7 @@ public class NOP extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
         // do nothing
     }
 

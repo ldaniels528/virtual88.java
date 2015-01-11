@@ -2,9 +2,8 @@ package ibmpc.util;
 
 import org.junit.Test;
 
-import static ibmpc.util.BitMaskGenerator.turnBitOffMask;
-import static ibmpc.util.BitMaskGenerator.turnBitOnMask;
-import static org.junit.Assert.assertEquals;
+import static ibmpc.util.BitMaskGenerator.*;
+import static org.junit.Assert.*;
 
 /**
  * Bit Mask Generator Test Suite
@@ -12,6 +11,12 @@ import static org.junit.Assert.assertEquals;
  * @author lawrence.daniels@gmail.com
  */
 public class BitMaskGeneratorTest {
+
+    @Test
+    public void testIsBitSet() {
+        assertTrue(isBitSet(0b0000_0100, 2));
+        assertFalse(isBitSet(0b0000_0100, 4));
+    }
 
     @Test
     public void testTurnBitOnMask() {

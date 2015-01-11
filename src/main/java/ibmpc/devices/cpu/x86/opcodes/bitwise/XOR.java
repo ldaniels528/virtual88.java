@@ -3,6 +3,7 @@ package ibmpc.devices.cpu.x86.opcodes.bitwise;
 import ibmpc.devices.cpu.Intel80x86;
 import ibmpc.devices.cpu.operands.Operand;
 import ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
+import ibmpc.system.IbmPcSystem;
 
 /**
  * <pre>
@@ -31,13 +32,8 @@ public class XOR extends AbstractDualOperandOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Intel80x86 cpu) {
-        // cache the values (registers are slower)
-        final int value0 = dest.get();
-        final int value1 = src.get();
-
-        // set the dest
-        dest.set(value0 ^ value1);
+    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
+        dest.set(cpu.FLAGS.updateXOR(dest, src));
     }
 
 }

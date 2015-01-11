@@ -18,7 +18,7 @@ import jbasic.gwbasic.program.GwBasicCompiler;
 import jbasic.gwbasic.program.commands.GwBasicCommand;
 import jbasic.gwbasic.values.GwBasicValues;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * IF Command

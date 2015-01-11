@@ -15,7 +15,7 @@ import jbasic.common.values.Value;
 import jbasic.common.values.VariableReference;
 import jbasic.gwbasic.values.GwBasicValues;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 /**
  * Represents a basis for all Built-in GWBASIC Functions

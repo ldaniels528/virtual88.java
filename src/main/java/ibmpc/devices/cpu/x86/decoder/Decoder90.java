@@ -6,15 +6,11 @@ import ibmpc.devices.cpu.x86.opcodes.bitwise.NOP;
 import ibmpc.devices.cpu.x86.opcodes.data.CBW;
 import ibmpc.devices.cpu.x86.opcodes.data.CWD;
 import ibmpc.devices.cpu.x86.opcodes.data.XCHG;
-import ibmpc.devices.cpu.x86.opcodes.data.x386.CDQ;
-import ibmpc.devices.cpu.x86.opcodes.data.x386.CWDE;
 import ibmpc.devices.cpu.x86.opcodes.flags.LAHF;
 import ibmpc.devices.cpu.x86.opcodes.flags.SAHF;
 import ibmpc.devices.cpu.x86.opcodes.flow.callret.CALL;
 import ibmpc.devices.cpu.x86.opcodes.stack.POPF;
 import ibmpc.devices.cpu.x86.opcodes.stack.PUSHF;
-import ibmpc.devices.cpu.x86.opcodes.stack.x386.POPFD;
-import ibmpc.devices.cpu.x86.opcodes.stack.x386.PUSHFD;
 import ibmpc.devices.cpu.x86.opcodes.system.WAIT;
 import ibmpc.devices.memory.X86MemoryProxy;
 
@@ -64,9 +60,6 @@ public class Decoder90 implements Decoder {
         // get the instruction code
         final int code8 = proxy.nextByte();
 
-        // is the CPU in vitual mode
-        final boolean virtualMode = cpu.FLAGS.isVM();
-
         // evaluate the code
         switch (code8) {
             // XCHG AX,AX | NOP
@@ -95,10 +88,10 @@ public class Decoder90 implements Decoder {
                 return new XCHG(cpu.AX, cpu.DI);
             // CBW/CWDE
             case 0x98:
-                return virtualMode ? CWDE.getInstance() : CBW.getInstance();
+                return CBW.getInstance();
             // CWD/CDQ
             case 0x99:
-                return virtualMode ? CDQ.getInstance() : CWD.getInstance();
+                return CWD.getInstance();
             // CALL offset, segment
             case 0x9A:
                 return new CALL(nextAddressFar(cpu, proxy));
@@ -107,10 +100,10 @@ public class Decoder90 implements Decoder {
                 return WAIT.getInstance();
             // PUSHF
             case 0x9C:
-                return virtualMode ? PUSHFD.getInstance() : PUSHF.getInstance();
+                return PUSHF.getInstance();
             // POPF
             case 0x9D:
-                return virtualMode ? POPFD.getInstance() : POPF.getInstance();
+                return POPF.getInstance();
             // SAHF
             case 0x9E:
                 return SAHF.getInstance();

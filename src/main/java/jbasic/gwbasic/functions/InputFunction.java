@@ -3,7 +3,7 @@
  */
 package jbasic.gwbasic.functions;
 
-import com.ldaniels528.tokenizer.TokenIterator;
+import jbasic.common.tokenizer.TokenIterator;
 
 import ibmpc.devices.keyboard.IbmPcKeyboard;
 import ibmpc.devices.memory.MemoryObject;
