@@ -28,19 +28,19 @@ I've recently decided to update this project to Java 8, and improve its x86 comp
 To execute the GWBASIC/BASICA emulator:
 
 ```bash
-	$ java -cp javapc-0.431-jar-with-dependencies.jar jbasic.app.BasicEmulator
+	$ java -cp javapc-0.431-jar-with-dependencies.jar org.ldaniels528.javapc.jbasic.app.BasicEmulator
 ```
 
 To execute the IBM PC/MS-DOS emulator:
 
 ```bash
-	$ java -cp javapc-0.431-jar-with-dependencies.jar ibmpc.app.IbmPcEmulator
+	$ java -cp javapc-0.431-jar-with-dependencies.jar org.ldaniels528.javapc.ibmpc.app.IbmPcEmulator
 ```
 
 To execute the IBM PC/MS-DOS debugger:
 
 ```bash
-	$ java -cp javapc-0.431-jar-with-dependencies.jar ibmpc.app.IbmPcDebugger
+	$ java -cp javapc-0.431-jar-with-dependencies.jar org.ldaniels528.javapc.ibmpc.app.IbmPcDebugger
 ```
 
 ### Using the application(s)
