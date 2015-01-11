@@ -10,8 +10,10 @@ import ibmpc.exceptions.IbmPcException;
 import ibmpc.exceptions.X86AssemblyException;
 import ibmpc.system.IbmPcSystem;
 import msdos.storage.*;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -50,8 +52,7 @@ public class MsDosSystemServices implements InterruptHandler {
      *
      * @throws X86AssemblyException
      */
-    public void process(final IbmPcSystem system, final Intel80x86 cpu)
-            throws X86AssemblyException {
+    public void process(final IbmPcSystem system, final Intel80x86 cpu) throws X86AssemblyException {
         // get the memory, display, and storage subsystems
         final IbmPcRandomAccessMemory memory = system.getRandomAccessMemory();
         final IbmPcDisplay display = system.getDisplay();
@@ -272,14 +273,15 @@ public class MsDosSystemServices implements InterruptHandler {
     /**
      * <pre>
      * Returns a DOS string (that ends with NUL (zero))
-     * Entry: Usually DS:DX -> ASCIZ string
+     * Entry: Usually DS:DX -> ASCII string
      * </pre>
      *
+     * @param memory the given {@link IbmPcRandomAccessMemory RAM} instance
      * @param segment the given segment (usually DS)
      * @param offset  the given offset (usually DX)
      * @return the string that was found at DS:DX
      */
-    private String getASCIZString(final int segment, final int offset, final IbmPcRandomAccessMemory memory) {
+    private String getASCIIString(final IbmPcRandomAccessMemory memory, final int segment, final int offset) {
         // determine the full length of the string
         int length = 0;
         while ((offset + length < LAST_OFFSET) &&
@@ -1251,7 +1253,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * Gets the current working directory
      * Entry:
      * DL = drive number (00h = default, 01h = A:, etc)
-     * DS:SI -> 64-byte buffer for ASCIZ pathname
+     * DS:SI -> 64-byte buffer for ASCII pathname
      * Return:
      * CF clear if successful
      * CF set on error, AX = error code (0Fh)
@@ -1268,7 +1270,7 @@ public class MsDosSystemServices implements InterruptHandler {
 
     /**
      * Changes the current working directory (chdir)
-     * Entry: DS:DX -> ASCIZ pathname of directory to be removed
+     * Entry: DS:DX -> ASCII pathname of directory to be removed
      *
      * @throws IbmPcException
      */
@@ -1277,7 +1279,7 @@ public class MsDosSystemServices implements InterruptHandler {
                        final Intel80x86 cpu)
             throws IbmPcException {
         // get the filename
-        final String filename = getASCIZString(cpu.DS.get(), cpu.DX.get(), memory);
+        final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
         // change to the directory
         File directory = new File(filename);
@@ -1286,14 +1288,14 @@ public class MsDosSystemServices implements InterruptHandler {
 
     /**
      * "mkdir" Make Directory
-     * Entry: DS:DX -> ASCIZ pathname
+     * Entry: DS:DX -> ASCII pathname
      * Return:
      * CF clear if successful AX destroyed
      * CF set on error AX = error code (03h,05h)
      */
     private void mkdir(final IbmPcRandomAccessMemory memory, final Intel80x86 cpu) {
         // get the filename
-        final String filename = getASCIZString(cpu.DS.get(), cpu.DX.get(), memory);
+        final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
         // create the directory
         final File directory = new File(filename);
@@ -1303,12 +1305,12 @@ public class MsDosSystemServices implements InterruptHandler {
     }
 
     /**
-     * Removes a directory (rmdir)
-     * Entry: DS:DX -> ASCIZ pathname of directory to be removed
+     * Removes a directory
+     * Entry: DS:DX -> ASCII pathname of directory to be removed
      */
     private void rmdir(final IbmPcRandomAccessMemory memory, final Intel80x86 cpu) {
         // get the filename
-        final String filename = getASCIZString(cpu.DS.get(), cpu.DX.get(), memory);
+        final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
         // remove the directory
         File directory = new File(filename);
@@ -1328,8 +1330,8 @@ public class MsDosSystemServices implements InterruptHandler {
     /**
      * Renames a file
      * Entry:
-     * DS:DX -> ASCIZ filename of existing file (no wildcards, but see below)
-     * ES:DI -> ASCIZ new filename (no wildcards)
+     * DS:DX -> ASCII filename of existing file (no wildcards, but see below)
+     * ES:DI -> ASCII new filename (no wildcards)
      * CL = attribute mask (server call only, see below)
      * Return:
      * CF clear if successful
@@ -1343,8 +1345,8 @@ public class MsDosSystemServices implements InterruptHandler {
                             final IbmPcRandomAccessMemory memory,
                             final Intel80x86 cpu) {
         // get the source and destination file names
-        final String srcFileName = getASCIZString(cpu.DS.get(), cpu.DX.get(), memory);
-        final String dstFileName = getASCIZString(cpu.ES.get(), cpu.DI.get(), memory);
+        final String srcFileName = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
+        final String dstFileName = getASCIIString(memory, cpu.ES.get(), cpu.DI.get());
 
         // perform the rename
         final boolean renamed = disk.renameFile(srcFileName, dstFileName);
@@ -1411,7 +1413,7 @@ public class MsDosSystemServices implements InterruptHandler {
                             final IbmPcRandomAccessMemory memory,
                             final Intel80x86 cpu) {
         // get the filename
-        final String filename = getASCIZString(cpu.DS.get(), cpu.DX.get(), memory);
+        final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
         // decode the file attributes
         final MsDosFileAttributes fileAttributes = MsDosFileAttributes.decode(cpu.CX.get());
@@ -1461,7 +1463,7 @@ public class MsDosSystemServices implements InterruptHandler {
                                      final IbmPcRandomAccessMemory memory,
                                      final Intel80x86 cpu) {
         // get the filename
-        final String filename = getASCIZString(cpu.DS.get(), cpu.DX.get(), memory);
+        final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
         // get the access mode
         final MsDosFileAccessMode accessMode = MsDosFileAccessMode.decode(cpu.AL.get());
@@ -1548,7 +1550,7 @@ public class MsDosSystemServices implements InterruptHandler {
                                        final IbmPcRandomAccessMemory memory,
                                        final Intel80x86 cpu) {
         // get the filename
-        final String filename = getASCIZString(cpu.DS.get(), cpu.DX.get(), memory);
+        final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
         // decode the file attributes
         final MsDosFileAttributes fileAttributes = MsDosFileAttributes.decode(cpu.CX.get());
@@ -1695,16 +1697,16 @@ public class MsDosSystemServices implements InterruptHandler {
                                       final IbmPcRandomAccessMemory memory,
                                       final Intel80x86 cpu) {
         // get the filename
-        final String filename = getASCIZString(cpu.DS.get(), cpu.DX.get(), memory);
+        final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
         // get the file reference
         final File fileRef = new File(filename);
 
         // getting or setting the attribute?
-        final boolean getAttrib = (cpu.AL.get() == 0);
+        final boolean attributesGet = (cpu.AL.get() == 0);
 
         // get the file attributes
-        if (getAttrib) {
+        if (attributesGet) {
             // encode the file attributes
             int attributes = 0;
             if (fileRef.isHidden()) {
@@ -1886,7 +1888,7 @@ public class MsDosSystemServices implements InterruptHandler {
             throws IbmPcException {
         try {
             // get the filename
-            final String filename = getASCIZString(cpu.DS.get(), cpu.DX.get(), memory);
+            final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
             // read the contents of the file
             final byte[] x86Code = getFileContents(new File(filename));
@@ -1952,12 +1954,12 @@ public class MsDosSystemServices implements InterruptHandler {
      * @return the x86 machine code
      * @throws IOException
      */
-    private static byte[] getFileContents(final File file)
-            throws IOException {
-        final byte[] buffer = new byte[(int) file.length()];
-        FileInputStream fis = new FileInputStream(file);
-        fis.read(buffer);
-        return buffer;
+    private static byte[] getFileContents(final File file) throws IOException {
+        final ByteArrayOutputStream out = new ByteArrayOutputStream((int) file.length());
+        try (final FileInputStream in = new FileInputStream(file)) {
+            IOUtils.copy(in, out);
+            return out.toByteArray();
+        }
     }
 
 }

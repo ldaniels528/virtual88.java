@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
@@ -25,27 +24,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class Intel80x86Test {
     private final Logger logger = Logger.getLogger(getClass());
-
-    @Test
-    public void test() throws Exception {
-        final IbmPcDisplayFrame frame = new IbmPcDisplayFrame("Test PC");
-        final IbmPcSystem system = new IbmPcSystemXT(frame);
-        final Intel80x86 cpu = system.getCPU();
-
-        final List<OpCode> opCodes = Arrays.asList(
-                new MOV(cpu.AX, new WordValue(0xABCD))
-        );
-
-        for (final OpCode opCode : opCodes) {
-            cpu.execute(system, opCode);
-        }
-
-        assertEquals(cpu.AL.get(), 0xCD);
-        assertEquals(cpu.AH.get(), 0xAB);
-
-        logger.info(cpu.FLAGS);
-        frame.dispose();
-    }
 
     @Test
     public void testMsDOS_21h() throws Exception {
