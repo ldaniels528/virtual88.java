@@ -28,7 +28,7 @@ I've recently decided to update this project to Java 8, and improve its x86 comp
 To execute the GWBASIC/BASICA emulator:
 
 ```bash
-	$ java -jar javapc-0.431-jar-with-dependencies.jar
+	$ java -cp javapc-0.431-jar-with-dependencies.jar jbasic.app.BasicEmulator
 ```
 
 To execute the IBM PC/MS-DOS emulator:

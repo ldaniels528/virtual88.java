@@ -10,12 +10,12 @@ import jbasic.gwbasic.program.GwBasicRuntime;
 import jbasic.gwbasic.program.GwBasicStatement;
 
 /**
- * JBasicOS - BASICA/GWBASIC-compatible Language operating environment
+ * BASICA/GWBASIC-compatible Language operating environment
  * implemented in pure Java
  *
  * @author lawrence.daniels@gmail.com
  */
-public class JBasicOS {
+public class BasicEmulator {
     private static final String VERSION = "0.431";
     private static final String APP_TITLE = String.format("JBasicOS version %s", VERSION);
     private final GwBasicEnvironment environment;
@@ -33,7 +33,7 @@ public class JBasicOS {
     /**
      * Creates an instance of JBasic Operating System
      */
-    public JBasicOS() {
+    public BasicEmulator() {
         // create the main applications window
         this.frame = new IbmPcDisplayFrame(APP_TITLE);
 
@@ -64,7 +64,7 @@ public class JBasicOS {
      * @throws Throwable
      */
     public static void main(final String[] args) throws Throwable {
-        (new JBasicOS()).execute();
+        (new BasicEmulator()).execute();
     }
 
     // /////////////////////////////////////////////////////
