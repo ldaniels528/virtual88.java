@@ -1,6 +1,7 @@
 package ibmpc.system;
 
 import ibmpc.devices.cpu.Intel80x86;
+import ibmpc.devices.cpu.OpCode;
 import ibmpc.devices.cpu.x86.bios.IbmPcBIOS;
 import ibmpc.devices.display.IbmPcDisplay;
 import ibmpc.devices.display.IbmPcDisplayFrame;
@@ -12,6 +13,7 @@ import ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import ibmpc.devices.mouse.IbmPcMouse;
 import ibmpc.devices.ports.IbmPcHardwarePorts;
 import ibmpc.devices.storage.IbmPcStorageSystem;
+import ibmpc.exceptions.X86AssemblyException;
 import msdos.services.MsDosMouseServices;
 import msdos.services.MsDosSystemServices;
 import msdos.services.ProgramTerminateService;
@@ -19,6 +21,7 @@ import msdos.services.TerminateStayResidentServices;
 import msdos.storage.MsDosStorageSystem;
 
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import static ibmpc.devices.display.modes.IbmPcDisplayModes.CGA_80X25X16;
 
@@ -40,6 +43,7 @@ public class IbmPcSystemXT implements IbmPcSystem, IbmPcSystemTypeConstants, Ibm
 
     /**
      * Creates an instance of this {@link ibmpc.system.IbmPcSystem system}
+     *
      * @param frame the given {@link IbmPcDisplayFrame frame}
      */
     public IbmPcSystemXT(final IbmPcDisplayFrame frame) {
@@ -65,6 +69,16 @@ public class IbmPcSystemXT implements IbmPcSystem, IbmPcSystemTypeConstants, Ibm
 
         // register for specific key events
         keyboard.register(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final List<OpCode> opCodes) throws X86AssemblyException {
+        for (final OpCode opCode : opCodes) {
+            cpu.execute(this, opCode);
+        }
     }
 
     /**

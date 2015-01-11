@@ -12,10 +12,10 @@ import ibmpc.system.IbmPcSystemXT;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import static java.lang.String.format;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -54,25 +54,21 @@ public class Intel80x86Test {
         final Intel80x86 cpu = system.getCPU();
         final IbmPcRandomAccessMemory memory = system.getRandomAccessMemory();
 
-        // place a text string to print
+        // insert a text string into memory
         final int segment = 0x13CF;
         final int offset = 0x2000;
         final String text = "Hello World$";
         memory.setBytes(segment, offset, text.getBytes(), text.length());
 
-        // create the instructions to execute
-        final List<OpCode> opCodes = Arrays.asList(
+        // execute the 8086 instructions to print the text string
+        system.execute(Arrays.asList(
                 new MOV(cpu.CX, new WordValue(segment)),    // mov ax, segment
                 new PUSH(cpu.CX),                           // push ax
                 new POP(cpu.DS),                            // pop ds
                 new MOV(cpu.DX, new WordValue(offset)),     // mov dx, offset
                 new MOV(cpu.AH, new WordValue(0x09)),       // mov ah, 9h
                 new INT(0x21)                               // int 21h
-        );
-
-        for (final OpCode opCode : opCodes) {
-            cpu.execute(system, opCode);
-        }
+        ));
 
         logger.info("The registers should match the expected values:");
         logger.info(format("CX should be %04X", segment));
@@ -84,6 +80,7 @@ public class Intel80x86Test {
         logger.info(format("AH should be %04X", 0x9));
         assertEquals(cpu.AH.get(), 0x9);
         Thread.sleep(3000);
+        frame.dispose();
     }
 
 }
