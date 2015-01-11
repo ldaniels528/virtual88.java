@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.BytePtr;
@@ -69,7 +69,7 @@ public class DecoderC0 implements Decoder {
      * {@inheritDoc}
      */
     @Override
-    public OpCode decode(final Intel80x86 cpu, final X86MemoryProxy proxy) {
+    public OpCode decode(final Intel8086 cpu, final X86MemoryProxy proxy) {
         // peek at the next byte
         final int code8 = proxy.nextByte();
 
@@ -126,12 +126,12 @@ public class DecoderC0 implements Decoder {
     /**
      * Creates a new 'LDS <i>dest<i>,<i>src<i>' instruction
      *
-     * @param cpu   the given {@link Intel80x86 CPU} instance
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      * @param proxy the given {@link X86MemoryProxy memory proxy}
      * @param code8 the 8-bit instruction identifier
      * @return an {@link LDS LDS} opCode
      */
-    private LDS createLDS(final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8) {
+    private LDS createLDS(final Intel8086 cpu, final X86MemoryProxy proxy, final int code8) {
         // code: tt rrr mmm	iiiiii jj dddd
         final int code16 = proxy.nextWord(code8);
 
@@ -152,12 +152,12 @@ public class DecoderC0 implements Decoder {
     /**
      * Creates a new 'LES <i>dest<i>,<i>src<i>' instruction
      *
-     * @param cpu   the given {@link Intel80x86 CPU} instance
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      * @param proxy the given {@link X86MemoryProxy memory proxy}
      * @param code8 the 8-bit instruction identifier
      * @return an {@link LES LES} opCode
      */
-    private LES createLES(final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8) {
+    private LES createLES(final Intel8086 cpu, final X86MemoryProxy proxy, final int code8) {
         // code: tt rrr mmm	iiiiii jj dddd
         final int code16 = proxy.nextWord(code8);
 
@@ -178,12 +178,12 @@ public class DecoderC0 implements Decoder {
     /**
      * Creates a new 'MOV BYTE PTR <i>dest<i>,<i>nn</i>' instruction
      *
-     * @param cpu   the given {@link Intel80x86 CPU} instance
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      * @param proxy the given {@link X86MemoryProxy memory proxy}
      * @param code8 the 8-bit instruction identifier
      * @return an {@link MOV MOV} opCode
      */
-    private MOV createMOVBytePtr(final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8) {
+    private MOV createMOVBytePtr(final Intel8086 cpu, final X86MemoryProxy proxy, final int code8) {
         // code: tt rrr mmm	iiiiii jj dddd
         final int code16 = proxy.nextWord(code8);
 
@@ -204,12 +204,12 @@ public class DecoderC0 implements Decoder {
     /**
      * Creates a new 'MOV WORD PTR <i>dest<i>,<i>nnnn</i>' instruction
      *
-     * @param cpu   the given {@link Intel80x86 CPU} instance
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      * @param proxy the given {@link X86MemoryProxy memory proxy}
      * @param code8 the 8-bit instruction identifier
      * @return an {@link MOV MOV} opCode
      */
-    private MOV createMOVWordPtr(final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8) {
+    private MOV createMOVWordPtr(final Intel8086 cpu, final X86MemoryProxy proxy, final int code8) {
         // code: tt rrr mmm	iiiiii jj dddd
         final int code16 = proxy.nextWord(code8);
 

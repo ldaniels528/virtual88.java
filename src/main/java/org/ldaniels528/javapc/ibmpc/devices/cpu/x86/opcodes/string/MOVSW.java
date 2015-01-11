@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.string;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
@@ -42,7 +42,7 @@ public class MOVSW extends AbstractOpCode  implements MassDataOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel8086 cpu) {
         // get the register collection and memory instances
         final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
 
@@ -64,7 +64,7 @@ public class MOVSW extends AbstractOpCode  implements MassDataOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void executeEnMass(final Intel80x86 cpu, final int wordCount) {
+    public void executeEnMass(final Intel8086 cpu, final int wordCount) {
         // get the register collection and memory instances
         final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
 

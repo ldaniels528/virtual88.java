@@ -9,7 +9,7 @@ import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.compiler.InstructionEncoder;
 import org.ldaniels528.javapc.ibmpc.compiler.X86Instruction;
 import org.ldaniels528.javapc.ibmpc.compiler.element.X86DataElement;
-import org.ldaniels528.javapc.ibmpc.compiler.exception.X86MalformedInstructionException;
+import org.ldaniels528.javapc.ibmpc.compiler.X86MalformedInstructionException;
 import org.ldaniels528.javapc.ibmpc.util.X86CodeBuffer;
 
 /**

@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.callret;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
@@ -40,7 +40,7 @@ public class RETn extends AbstractOpCode {
     /* (non-Javadoc)
      * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.VirtualCPU)
      */
-    public void execute(IbmPcSystem system, final Intel80x86 cpu)
+    public void execute(IbmPcSystem system, final Intel8086 cpu)
             throws X86AssemblyException {
         cpu.returnNear(count);
     }

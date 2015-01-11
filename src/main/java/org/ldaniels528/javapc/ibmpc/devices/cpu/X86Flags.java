@@ -2,7 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 
-import static org.ldaniels528.javapc.ibmpc.util.BitMaskGenerator.*;
+import static org.ldaniels528.javapc.util.BitMaskGenerator.*;
 
 /**
  * 80x86 Flags (FLAGS) Register

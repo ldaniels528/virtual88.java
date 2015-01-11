@@ -43,7 +43,6 @@ public interface IbmPcSystemInfo {
 	/**
 	 * Returns the system type code (e.g. 0xFD = 'IBM PC jr')
 	 * @return the system type code
-	 * @see IbmPcSystemTypeConstants
 	 */
 	int getSystemType();
 	

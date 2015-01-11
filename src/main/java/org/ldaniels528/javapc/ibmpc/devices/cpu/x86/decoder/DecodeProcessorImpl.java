@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.AbstractForcedRedirectOpCode;
@@ -21,14 +21,14 @@ public class DecodeProcessorImpl implements DecodeProcessor {
 	protected final DecodeCache cache;
 	protected final X86MemoryProxy proxy;
 	private final Decoder[] decoders;
-	protected final Intel80x86 cpu;
+	protected final Intel8086 cpu;
 	
 	/**
 	 * Creates a new instance decode processor
-	 * @param cpu the given {@link Intel80x86 CPU}
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU}
 	 * @param proxy the given {@link X86MemoryProxy memory}
 	 */
-	public DecodeProcessorImpl( final Intel80x86 cpu, final X86MemoryProxy proxy ) {
+	public DecodeProcessorImpl( final Intel8086 cpu, final X86MemoryProxy proxy ) {
 		this.cpu		= cpu;
 		this.proxy		= proxy;
 		this.memory		= proxy.getMemory();
@@ -43,10 +43,10 @@ public class DecodeProcessorImpl implements DecodeProcessor {
 	
 	/**
 	 * Creates a new instance decode processor
-	 * @param cpu the given {@link Intel80x86 CPU}
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU}
 	 * @param memory the given {@link IbmPcRandomAccessMemory memory}
 	 */
-	public DecodeProcessorImpl( final Intel80x86 cpu, final IbmPcRandomAccessMemory memory ) {
+	public DecodeProcessorImpl( final Intel8086 cpu, final IbmPcRandomAccessMemory memory ) {
 		this( cpu, new X86MemoryProxy( memory, 0, 0 ) );
 	}
 

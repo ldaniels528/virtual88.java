@@ -1,6 +1,7 @@
 package org.ldaniels528.javapc.msdos.services;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.apache.log4j.Logger;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.IbmPcBIOS;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services.InterruptHandler;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
@@ -10,19 +11,18 @@ import org.ldaniels528.javapc.ibmpc.exceptions.IbmPcException;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 import org.ldaniels528.javapc.msdos.storage.*;
-import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.ldaniels528.javapc.util.ByteConversion;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Scanner;
 
 import static java.lang.String.format;
+import static org.ldaniels528.javapc.util.ResourceHelper.getBinaryContents;
 
 /**
- * MS-DOS System Services (INT 21h) Interrupt Processor
+ * MS-DOS 3.x System Services (INT 21h) Interrupt Processor
  *
  * @author lawrence.daniels@gmail.com
  */
@@ -30,6 +30,7 @@ public class MsDosSystemServices implements InterruptHandler {
     private static final MsDosSystemServices instance = new MsDosSystemServices();
     private static final int LAST_OFFSET = 0xFFFF;
     private final Logger logger = Logger.getLogger(getClass());
+    private final Scanner scanner = new Scanner(System.in);
 
     /**
      * Private constructor
@@ -52,7 +53,7 @@ public class MsDosSystemServices implements InterruptHandler {
      *
      * @throws X86AssemblyException
      */
-    public void process(final IbmPcSystem system, final Intel80x86 cpu) throws X86AssemblyException {
+    public void process(final IbmPcSystem system, final Intel8086 cpu) throws X86AssemblyException {
         // get the memory, display, and storage subsystems
         final IbmPcRandomAccessMemory memory = system.getRandomAccessMemory();
         final IbmPcDisplay display = system.getDisplay();
@@ -230,7 +231,7 @@ public class MsDosSystemServices implements InterruptHandler {
                     moveFilePointerUsingHandle(disk, memory, cpu);
                     break;
                 case 0x43:
-                    getSetFileAttributes(disk, memory, cpu);
+                    getSetFileAttributes(memory, cpu);
                     break;
                 case 0x44:
                     inputOutputControlForDevices(disk, memory, cpu);
@@ -241,7 +242,7 @@ public class MsDosSystemServices implements InterruptHandler {
                     break;
                 // TODO 48h - 4Ah
                 case 0x4B:
-                    loadAndExecuteProgram(disk, memory, cpu);
+                    loadAndExecuteProgram(memory, cpu);
                     break;
                 case 0x4C:
                     exitWithReturnCode(cpu);
@@ -258,7 +259,7 @@ public class MsDosSystemServices implements InterruptHandler {
                     break;
                 // TODO 5Ch - 66h
                 case 0x67:
-                    setHandleCount(disk, memory, cpu);
+                    setHandleCount(disk, cpu);
                     break;
 
                 // Unhandled Function
@@ -276,7 +277,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * Entry: Usually DS:DX -> ASCII string
      * </pre>
      *
-     * @param memory the given {@link IbmPcRandomAccessMemory RAM} instance
+     * @param memory  the given {@link IbmPcRandomAccessMemory RAM} instance
      * @param segment the given segment (usually DS)
      * @param offset  the given offset (usually DX)
      * @return the string that was found at DS:DX
@@ -288,8 +289,7 @@ public class MsDosSystemServices implements InterruptHandler {
                 memory.getByte(segment, offset + length) != 0) length++;
 
         // extract the string
-        final byte[] string = memory.getBytes(segment, offset, length);
-        return new String(string);
+        return new String(memory.getBytes(segment, offset, length));
     }
 
     /**
@@ -297,9 +297,7 @@ public class MsDosSystemServices implements InterruptHandler {
      *
      * @param string the given string
      */
-    private void setDosString(final IbmPcRandomAccessMemory memory,
-                              final Intel80x86 cpu,
-                              final String string) {
+    private void setDosString(final IbmPcRandomAccessMemory memory, final Intel8086 cpu, final String string) {
         // get the segment and offset of the string
         final int segment = cpu.DS.get();
         final int offset = cpu.SI.get();
@@ -317,35 +315,34 @@ public class MsDosSystemServices implements InterruptHandler {
      * Reads a character from STDIN
      * Return: AL = character read
      */
-    private void readCharacterFromSTDIN(final Intel80x86 cpu) {
-        // TODO Implement me!
-        throw new IllegalStateException("readCharacterFromSTDIN: Not Yet Implemented");
+    private void readCharacterFromSTDIN(final Intel8086 cpu) {
+        if (scanner.hasNext()) {
+            cpu.AL.set(ByteConversion.convertToInt(scanner.nextByte()));
+        }
     }
 
     /**
      * Writes a character to STDOUT
      * Entry: DL = character to write
-     * Return: AL = last character output
+     * Returns: AL = last character output
      */
-    private void writeCharacterToSTDOUT(final IbmPcDisplay display, final Intel80x86 cpu) {
+    private void writeCharacterToSTDOUT(final IbmPcDisplay display, final Intel8086 cpu) {
         // get the character from DL
-        final String chra = String.valueOf((char) cpu.DL.get());
+        final int code = cpu.DL.get();
 
         // copy the character to AL
-        cpu.DL.set(cpu.DL.get());
+        cpu.AL.set(code);
 
         // write the character to STDOUT
-        display.write(chra);
+        display.write(String.valueOf((char) code));
         display.update();
     }
 
     /**
      * Writes a character to the Printer
      * Entry: DL = character to print
-     *
-     * @throws X86AssemblyException
      */
-    private void writeCharacterToPrinter(final Intel80x86 cpu) {
+    private void writeCharacterToPrinter(final Intel8086 cpu) {
         // TODO Implement me!
         throw new IllegalStateException("writeCharacterToPrinter: Not Yet Implemented");
     }
@@ -370,7 +367,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * - ignores Ctrl-Break and Ctrl-PrtSc
      * </pre>
      */
-    private void directConsoleIO(final IbmPcSystem system, final IbmPcDisplay display, final Intel80x86 cpu) {
+    private void directConsoleIO(final IbmPcSystem system, final IbmPcDisplay display, final Intel8086 cpu) {
         // cache the value in DL
         final int _DL = cpu.DL.get();
 
@@ -420,7 +417,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * - see ~INT 21,1~
      * </pre>
      */
-    private void directConsoleInputWithoutEcho(final IbmPcSystem system, final Intel80x86 cpu) {
+    private void directConsoleInputWithoutEcho(final IbmPcSystem system, final Intel8086 cpu) {
         // TODO Implement me!
         throw new IllegalStateException("directConsoleInputWithoutEcho: Not Yet Implemented");
     }
@@ -435,7 +432,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * - waits for character from STDIN and returns data in AL
      * - if ~Ctrl-Break~ is detected, ~INT 23~ is executed
      */
-    private void consoleInputWithEcho(final IbmPcSystem system, final Intel80x86 cpu) {
+    private void consoleInputWithEcho(final IbmPcSystem system, final Intel8086 cpu) {
         // TODO Implement me!
         throw new IllegalStateException("consoleInputWithEcho: Not Yet Implemented");
     }
@@ -451,7 +448,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * - default DOS AUX parameters are 2400,N,8,1
      * </pre>
      */
-    private void waitForAuxiliaryDeviceInput(final IbmPcSystem system, final Intel80x86 cpu) {
+    private void waitForAuxiliaryDeviceInput(final IbmPcSystem system, final Intel8086 cpu) {
         // TODO Implement me!
         throw new IllegalStateException("waitForAuxiliaryDeviceInput: Not Yet Implemented");
     }
@@ -468,7 +465,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * - default DOS AUX parameters are 2400,N,8,1
      * </pre>
      */
-    private void waitForAuxiliaryDeviceOutput(final IbmPcSystem system, final Intel80x86 cpu) {
+    private void waitForAuxiliaryDeviceOutput(final IbmPcSystem system, final Intel8086 cpu) {
         // TODO Implement me!
         throw new IllegalStateException("waitForAuxiliaryDeviceOutput: Not Yet Implemented");
     }
@@ -486,22 +483,17 @@ public class MsDosSystemServices implements InterruptHandler {
      */
     private void displayString(final IbmPcDisplay display,
                                final IbmPcRandomAccessMemory memory,
-                               final Intel80x86 cpu) {
+                               final Intel8086 cpu) {
         // get the segment and offset of the start of the string
         final int segment = cpu.DS.get();
         final int offset = cpu.DX.get();
 
         // determine the full length of the string
         int length = 0;
-        while ((offset + length < LAST_OFFSET) &&
-                memory.getByte(segment, offset + length) != '$') length++;
-
-        // extract the string
-        final byte[] bytes = memory.getBytes(segment, offset, length);
-        final String string = new String(bytes);
+        while ((offset + length < LAST_OFFSET) && memory.getByte(segment, offset + length) != '$') length++;
 
         // display the string
-        display.write(string);
+        display.write(new String(memory.getBytes(segment, offset, length)));
         display.update();
     }
 
@@ -527,7 +519,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * - ~INT 23~ is called if Ctrl-Break or Ctrl-C detected
      * </pre>
      */
-    private void bufferedKeyboardInput(final IbmPcSystem system, final Intel80x86 cpu) {
+    private void bufferedKeyboardInput(final IbmPcSystem system, final Intel8086 cpu) {
         // TODO Implement me!
         throw new IllegalStateException("Not yet implemented");
     }
@@ -544,7 +536,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * - if Ctrl-Break is detected ~INT 23~ is executed
      * </pre>
      */
-    private void checkStandardInputStatus(final IbmPcSystem system, final Intel80x86 cpu) {
+    private void checkStandardInputStatus(final IbmPcSystem system, final Intel8086 cpu) {
         // TODO Implement me!
         throw new IllegalStateException("Not yet implemented");
     }
@@ -561,7 +553,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * - see ~INT 21,1~, ~INT 21,6~, ~INT 21,7~, ~INT 21,8~ & ~INT 21,A~
      * </pre>
      */
-    private void clearKeyboardBufferAndInvokeKeyboardFunction(final IbmPcSystem system, final Intel80x86 cpu) {
+    private void clearKeyboardBufferAndInvokeKeyboardFunction(final IbmPcSystem system, final Intel8086 cpu) {
         // TODO Implement me!
         throw new IllegalStateException("Not yet implemented");
     }
@@ -576,9 +568,9 @@ public class MsDosSystemServices implements InterruptHandler {
      * <pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      */
-    private void diskReset(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void diskReset(final MsDosStorageSystem disk, final Intel8086 cpu) {
         disk.reset();
     }
 
@@ -596,9 +588,9 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      */
-    private void selectDefaultDrive(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void selectDefaultDrive(final MsDosStorageSystem disk, final Intel8086 cpu) {
         disk.setDefaultDrive(cpu.DL.get());
     }
 
@@ -621,9 +613,9 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      */
-    private void openFileUsingFCB(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void openFileUsingFCB(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("not yet implemented");
         cpu.AL.set(0xFF);
@@ -643,9 +635,9 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      */
-    private void closeFileUsingFCB(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void closeFileUsingFCB(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("closeFileUsingFCB: not yet implemented");
         cpu.AL.set(0xFF);
@@ -673,10 +665,10 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
-     * @see #searchForNextEntryUsingFCB(MsDosStorageSystem, Intel80x86)
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @see #searchForNextEntryUsingFCB(MsDosStorageSystem, org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086)
      */
-    private void searchForFirstEntryUsingFCB(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void searchForFirstEntryUsingFCB(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("searchForFirstEntryUsingFCB: not yet implemented");
         cpu.AL.set(0xFF);
@@ -687,8 +679,8 @@ public class MsDosSystemServices implements InterruptHandler {
      * INT 21,12 - Search for Next Entry Using FCB
      * AH = 12h
      * DS:DX = pointer to unopened {@link MsDosFileControlBlock FCB} returned from
-     * {@link #searchForFirstEntryUsingFCB(MsDosStorageSystem, Intel80x86) INT 21,11}
-     * or {@link #searchForNextEntryUsingFCB(MsDosStorageSystem, Intel80x86) INT 21,12}
+     * {@link #searchForFirstEntryUsingFCB(MsDosStorageSystem, org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086) INT 21,11}
+     * or {@link #searchForNextEntryUsingFCB(MsDosStorageSystem, org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086) INT 21,12}
      * on return:
      * AL = 00 if file found
      *    = FF if file not found
@@ -701,10 +693,10 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
-     * @see #searchForFirstEntryUsingFCB(MsDosStorageSystem, Intel80x86)
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @see #searchForFirstEntryUsingFCB(MsDosStorageSystem, org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086)
      */
-    private void searchForNextEntryUsingFCB(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void searchForNextEntryUsingFCB(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("searchForFirstEntryUsingFCB: not yet implemented");
         cpu.AL.set(0xFF);
@@ -726,9 +718,9 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      */
-    private void deleteFileUsingFCB(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void deleteFileUsingFCB(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("deleteFileUsingFCB: not yet implemented");
         cpu.AL.set(0xFF);
@@ -751,9 +743,9 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      */
-    private void sequentialReadUsingFCB(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void sequentialReadUsingFCB(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("sequentialReadUsingFCB: not yet implemented");
         cpu.AL.set(0xFF);
@@ -774,9 +766,9 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      */
-    private void sequentialWriteUsingFCB(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void sequentialWriteUsingFCB(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("sequentialWriteUsingFCB: not yet implemented");
         cpu.AL.set(0xFF);
@@ -797,9 +789,9 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      */
-    private void createFileUsingFCB(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void createFileUsingFCB(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("createFileUsingFCB: not yet implemented");
         cpu.AL.set(0xFF);
@@ -825,9 +817,9 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      */
-    private void renameFileUsingFCB(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void renameFileUsingFCB(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("renameFileUsingFCB: not yet implemented");
         cpu.AL.set(0xFF);
@@ -850,7 +842,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * - current record position field in FCB is not updated
      * </pre>
      */
-    private void randomReadUsingFCB(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void randomReadUsingFCB(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("randomReadUsingFCB: not yet implemented");
         cpu.AL.set(0xFF);
@@ -871,7 +863,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * - current record position field in FCB is not updated
      * </pre>
      */
-    private void randomWriteUsingFCB(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void randomWriteUsingFCB(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("randomWriteUsingFCB: not yet implemented");
         cpu.AL.set(0xFF);
@@ -890,7 +882,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * - see ~INT 21,54~
      * </pre>
      */
-    private void setVerifySwitch(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void setVerifySwitch(final MsDosStorageSystem disk, final Intel8086 cpu) {
         disk.setVerify(true);
     }
 
@@ -909,7 +901,7 @@ public class MsDosSystemServices implements InterruptHandler {
      *   with file record count
      * </pre>
      */
-    private void getFileSizeUsingFCB(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void getFileSizeUsingFCB(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("getFileSizeUsingFCB: not yet implemented");
         cpu.AL.set(0xFF);
@@ -926,7 +918,7 @@ public class MsDosSystemServices implements InterruptHandler {
      *   and record fields
      * </pre>
      */
-    private void setRelativeRecordFieldInFCB(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void setRelativeRecordFieldInFCB(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("setRelativeRecordFieldInFCB: not yet implemented");
         cpu.AL.set(0xFF);
@@ -942,9 +934,9 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      */
-    private void getDefaultDrive(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void getDefaultDrive(final MsDosStorageSystem disk, final Intel8086 cpu) {
         cpu.AL.set(disk.getDefaultDrive());
     }
 
@@ -964,10 +956,10 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
-     * @see #getDiskTransferArea(MsDosStorageSystem, Intel80x86)
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @see #getDiskTransferArea(MsDosStorageSystem, org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086)
      */
-    private void setDiskTransferArea(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void setDiskTransferArea(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("setDiskTransferArea: not yet implemented");
         cpu.AL.set(0xFF);
@@ -988,9 +980,9 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      */
-    private void getAllocationTableInformation(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void getAllocationTableInformation(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("getAllocationTableInformation: not yet implemented");
         cpu.AL.set(0xFF);
@@ -1011,10 +1003,10 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
-     * @see #getAllocationTableInformation(MsDosStorageSystem, Intel80x86)
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @see #getAllocationTableInformation(MsDosStorageSystem, org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086)
      */
-    private void getAllocationTableInfoForSpecifiedDrive(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void getAllocationTableInfoForSpecifiedDrive(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("getAllocationTableInfoForSpecifiedDrive: not yet implemented");
         cpu.AL.set(0xFF);
@@ -1033,7 +1025,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * - calls ~INT 21,32~ with DL=00 for DOS version 2.x+
      * </pre>
      */
-    private void getPointerToCurrentDriveParameterTable(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void getPointerToCurrentDriveParameterTable(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("getPointerToCurrentDriveParameterTable: not yet implemented");
         cpu.AL.set(0xFF);
@@ -1050,10 +1042,10 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param system the given {@link IbmPcSystem IBM PC System} instance
-     * @param cpu    the given {@link Intel80x86 CPU} instance
-     * @see #setInterruptVector(IbmPcRandomAccessMemory, IbmPcSystem, Intel80x86)
+     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @see #setInterruptVector(IbmPcRandomAccessMemory, IbmPcSystem, org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086)
      */
-    private void getInterruptVector(final IbmPcSystem system, final Intel80x86 cpu) {
+    private void getInterruptVector(final IbmPcSystem system, final Intel8086 cpu) {
         // get the BIOS
         final IbmPcBIOS bios = system.getBIOS();
 
@@ -1080,12 +1072,12 @@ public class MsDosSystemServices implements InterruptHandler {
      *
      * @param memory the given {@link IbmPcRandomAccessMemory memory} instance
      * @param system the given {@link IbmPcSystem IBM PC System} instance
-     * @param cpu    the given {@link Intel80x86 CPU} instance
-     * @see #getInterruptVector(IbmPcSystem, Intel80x86)
+     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @see #getInterruptVector(IbmPcSystem, org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086)
      */
     private void setInterruptVector(final IbmPcRandomAccessMemory memory,
                                     final IbmPcSystem system,
-                                    final Intel80x86 cpu) {
+                                    final Intel8086 cpu) {
         // get the input parameters
         final int interruptNum = cpu.AL.get();
         final int baseSegment = cpu.DS.get();
@@ -1118,7 +1110,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      */
     private void createNewProgramSegmentPrefix(final IbmPcSystem system,
-                                               final Intel80x86 cpu) {
+                                               final Intel8086 cpu) {
         // TODO Implement me!
         throw new IllegalStateException("Not yet implemented");
     }
@@ -1137,10 +1129,10 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      *
      * @param disk the given {@link MsDosStorageSystem storage device} instance
-     * @param cpu  the given {@link Intel80x86 CPU} instance
-     * @see #setDiskTransferArea(MsDosStorageSystem, Intel80x86)
+     * @param cpu  the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @see #setDiskTransferArea(MsDosStorageSystem, org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086)
      */
-    private void getDiskTransferArea(final MsDosStorageSystem disk, final Intel80x86 cpu) {
+    private void getDiskTransferArea(final MsDosStorageSystem disk, final Intel8086 cpu) {
         // TODO Implement me!
         logger.error("getDiskTransferArea: not yet implemented");
         cpu.AL.set(0xFF);
@@ -1150,7 +1142,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * Get System Date
      * Return: CX = year (1980-2099), DH = month, DL = day, AL = day of week (00h=Sunday)
      */
-    private void getSystemDate(final Intel80x86 cpu) {
+    private void getSystemDate(final Intel8086 cpu) {
         Calendar calendar = Calendar.getInstance();
         cpu.CX.set(calendar.get(Calendar.YEAR));
         cpu.DH.set(calendar.get(Calendar.MONTH));
@@ -1162,7 +1154,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * Set System Date
      * Entry: CX = year (1980-2099) DH = month DL = day
      */
-    private void setSystemDate(final Intel80x86 cpu) {
+    private void setSystemDate(final Intel8086 cpu) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, cpu.CX.get());
         calendar.set(Calendar.MONTH, cpu.DH.get());
@@ -1173,7 +1165,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * Get System Time
      * Return: CH = hour CL = minute DH = second DL = 1/100 seconds
      */
-    private void getSystemTime(Intel80x86 cpu) {
+    private void getSystemTime(Intel8086 cpu) {
         Calendar calendar = Calendar.getInstance();
         cpu.CH.set(calendar.get(Calendar.HOUR));
         cpu.CL.set(calendar.get(Calendar.MINUTE));
@@ -1185,7 +1177,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * Sets System Time
      * Entry: CH = hour CL = minute DH = second DL = 1/100 seconds
      */
-    private void setSystemTime(Intel80x86 cpu) {
+    private void setSystemTime(Intel8086 cpu) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR, cpu.CH.get());
         calendar.set(Calendar.MINUTE, cpu.CL.get());
@@ -1203,7 +1195,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * BH = MS-DOS OEM number if DOS 5+ and AL=01h
      * BH = version flag bit 3: DOS is in ROM other: reserved (0)
      */
-    private void getDOSVersion(final Intel80x86 cpu) {
+    private void getDOSVersion(final Intel8086 cpu) {
         // AL = major version
         // AH = minor version
         cpu.AL.set(3);
@@ -1230,9 +1222,9 @@ public class MsDosSystemServices implements InterruptHandler {
      * - see ~INT 27~
      * </pre>
      *
-     * @param cpu the given {@link Intel80x86 CPU} instance
+     * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      */
-    private void terminateProcessAndRemainResident(final Intel80x86 cpu) {
+    private void terminateProcessAndRemainResident(final Intel8086 cpu) {
         // TODO figure out what to do
     }
 
@@ -1246,7 +1238,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * CX = bytes per sector
      * DX = total clusters on drive
      */
-    private void getFreeDiskSpace(final Intel80x86 cpu) {
+    private void getFreeDiskSpace(final Intel8086 cpu) {
         cpu.AX.set(0xFFFF);
     }
 
@@ -1261,9 +1253,9 @@ public class MsDosSystemServices implements InterruptHandler {
      */
     private void getCurrentWorkingDirectory(final MsDosStorageSystem disk,
                                             final IbmPcRandomAccessMemory memory,
-                                            final Intel80x86 cpu) {
+                                            final Intel8086 cpu) {
         // get the current working directory
-        File directory = disk.getCurrentdirectory();
+        File directory = disk.getCurrentDirectory();
 
         // write the directory to DS:SI
         setDosString(memory, cpu, directory.getAbsolutePath());
@@ -1277,14 +1269,14 @@ public class MsDosSystemServices implements InterruptHandler {
      */
     private void chdir(final MsDosStorageSystem disk,
                        final IbmPcRandomAccessMemory memory,
-                       final Intel80x86 cpu)
+                       final Intel8086 cpu)
             throws IbmPcException {
         // get the filename
         final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
         // change to the directory
         File directory = new File(filename);
-        disk.setCurrentdirectory(directory);
+        disk.setCurrentDirectory(directory);
     }
 
     /**
@@ -1294,7 +1286,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * CF clear if successful AX destroyed
      * CF set on error AX = error code (03h,05h)
      */
-    private void mkdir(final IbmPcRandomAccessMemory memory, final Intel80x86 cpu) {
+    private void mkdir(final IbmPcRandomAccessMemory memory, final Intel8086 cpu) {
         // get the filename
         final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
@@ -1309,7 +1301,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * Removes a directory
      * Entry: DS:DX -> ASCII pathname of directory to be removed
      */
-    private void rmdir(final IbmPcRandomAccessMemory memory, final Intel80x86 cpu) {
+    private void rmdir(final IbmPcRandomAccessMemory memory, final Intel8086 cpu) {
         // get the filename
         final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
@@ -1324,7 +1316,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * Entry: AL = return code
      * Return: never returns
      */
-    private void exitWithReturnCode(final Intel80x86 cpu) {
+    private void exitWithReturnCode(final Intel8086 cpu) {
         cpu.halt();
     }
 
@@ -1340,11 +1332,11 @@ public class MsDosSystemServices implements InterruptHandler {
      *
      * @param disk   the given {@link MsDosStorageSystem storage device} instance
      * @param memory the given {@link IbmPcRandomAccessMemory RAM} instance
-     * @param cpu    the given {@link Intel80x86 CPU} instance
+     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      */
     private void renameFile(final MsDosStorageSystem disk,
                             final IbmPcRandomAccessMemory memory,
-                            final Intel80x86 cpu) {
+                            final Intel8086 cpu) {
         // get the source and destination file names
         final String srcFileName = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
         final String dstFileName = getASCIIString(memory, cpu.ES.get(), cpu.DI.get());
@@ -1391,7 +1383,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * +-------------------------------- year - 1980
      * </pre>
      */
-    private void getOrSetFileLastModifiedDateTime(final Intel80x86 cpu) {
+    private void getOrSetFileLastModifiedDateTime(final Intel8086 cpu) {
         // TODO Must finish file handle code first
         cpu.FLAGS.setCF(true);
     }
@@ -1399,20 +1391,20 @@ public class MsDosSystemServices implements InterruptHandler {
     /**
      * <pre>
      * INT 21,5B - Create File (DOS 3.0+)
-     * AH = 5B
-     * CX = attribute
-     * DS:DX = pointer to ASCIIZ path/filename
+     *  AH = 5B
+     *  CX = attribute
+     *  DS:DX = pointer to ASCII path/filename
      * on return:
-     * AX = handle if CF not set
-     *    = error code if CF set (see ~DOS ERROR CODES~)
-     * - standard method of opening files
-     * - returns a file handle of a file opened with specified
+     *  AX = handle if CF not set
+     *     = error code if CF set (see ~DOS ERROR CODES~)
+     *  - standard method of opening files
+     *  - returns a file handle of a file opened with specified
      *   attributes (combinations of normal, system and hidden)
      * </pre>
      */
     private void createFile(final MsDosStorageSystem disk,
                             final IbmPcRandomAccessMemory memory,
-                            final Intel80x86 cpu) {
+                            final Intel8086 cpu) {
         // get the filename
         final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
@@ -1421,8 +1413,10 @@ public class MsDosSystemServices implements InterruptHandler {
 
         // create the file
         try {
-            disk.createFile(filename, fileAttributes);
+            final MsDosFileHandle handler = disk.createFile(filename, fileAttributes);
+            cpu.AX.set(handler.getHandleID());
             cpu.FLAGS.setCF(false);
+
         } catch (final IbmPcException e) {
             cpu.FLAGS.setCF(true);
         }
@@ -1436,7 +1430,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * 	00 read only
      * 	01 write only
      * 	02 read/write
-     * DS:DX = pointer to an ASCIIZ file name
+     * DS:DX = pointer to an ASCII file name
      * on return:
      * AX = file handle if CF not set
      * 	  = error code if CF set (see ~DOS ERROR CODES~)
@@ -1462,7 +1456,7 @@ public class MsDosSystemServices implements InterruptHandler {
      */
     private void openFileUsingHandle(final MsDosStorageSystem disk,
                                      final IbmPcRandomAccessMemory memory,
-                                     final Intel80x86 cpu) {
+                                     final Intel8086 cpu) {
         // get the filename
         final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
@@ -1472,7 +1466,7 @@ public class MsDosSystemServices implements InterruptHandler {
         logger.info(format("openFileUsingHandle: DS:DX = [%04X:%04X], accessMode = %s, file = '%s'", cpu.DS.get(), cpu.DX.get(), accessMode, filename));
 
         try {
-            // open the file
+            // open the file and retrieve the file handle
             final MsDosFileHandle handle = disk.openDevice(filename, accessMode);
 
             // set AX = file handle and CF = 0
@@ -1503,7 +1497,7 @@ public class MsDosSystemServices implements InterruptHandler {
      */
     private void readFromFileOrDeviceUsingHandle(final MsDosStorageSystem disk,
                                                  final IbmPcRandomAccessMemory memory,
-                                                 final Intel80x86 cpu) {
+                                                 final Intel8086 cpu) {
         // get the number of bytes to read
         final int count = cpu.CX.get();
 
@@ -1518,7 +1512,6 @@ public class MsDosSystemServices implements InterruptHandler {
         try {
             // read the block from the file
             final int bytesRead = disk.readFromDevice(handleID, block, count);
-
             logger.info(format("readFromFileOrDeviceUsingHandle: bytesRead = %d", bytesRead));
 
             // put the block into memory
@@ -1537,7 +1530,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * INT 21,3C - Create File Using Handle
      * AH = 3C
      * CX = file attribute (see ~FILE ATTRIBUTES~)
-     * DS:DX = pointer to ASCIIZ path name
+     * DS:DX = pointer to ASCII path name
      * on return:
      * 	CF = 0 if successful
      * 	   = 1 if error
@@ -1549,7 +1542,7 @@ public class MsDosSystemServices implements InterruptHandler {
      */
     private void createFileUsingHandle(final MsDosStorageSystem disk,
                                        final IbmPcRandomAccessMemory memory,
-                                       final Intel80x86 cpu) {
+                                       final Intel8086 cpu) {
         // get the filename
         final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
@@ -1586,7 +1579,7 @@ public class MsDosSystemServices implements InterruptHandler {
      */
     private void closeFileUsingHandle(final MsDosStorageSystem disk,
                                       final IbmPcRandomAccessMemory memory,
-                                      final Intel80x86 cpu)
+                                      final Intel8086 cpu)
             throws IbmPcException {
         // get the handle ID
         final int handle = cpu.BX.get();
@@ -1614,7 +1607,7 @@ public class MsDosSystemServices implements InterruptHandler {
      */
     private void writeToFileOrDeviceUsingHandle(final MsDosStorageSystem disk,
                                                 final IbmPcRandomAccessMemory memory,
-                                                final Intel80x86 cpu)
+                                                final Intel8086 cpu)
             throws IbmPcException {
         // get the file handle
         final int fileHandle = cpu.BX.get();
@@ -1630,7 +1623,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * <pre>
      * INT 21,41 - Delete File
      * AH = 41h
-     * DS:DX = pointer to an ASCIIZ filename
+     * DS:DX = pointer to an ASCII filename
      * on return:
      * AX = error code if CF set (see DOS ERROR CODES)
      * 	- marks first byte of file directory entry with E5 to indicate
@@ -1642,7 +1635,7 @@ public class MsDosSystemServices implements InterruptHandler {
      */
     private void deleteFile(final MsDosStorageSystem disk,
                             final IbmPcRandomAccessMemory memory,
-                            final Intel80x86 cpu)
+                            final Intel8086 cpu)
             throws IbmPcException {
         // TODO Implement me!
         throw new IllegalStateException("Not yet implemented");
@@ -1651,25 +1644,39 @@ public class MsDosSystemServices implements InterruptHandler {
     /**
      * <pre>
      * INT 21,42 - Move File Pointer Using Handle
-     * AH = 42h
-     * AL = origin of move:
+     *  AH = 42h
+     *  AL = origin of move:
      * 		00 = beginning of file plus offset (SEEK_SET)
      * 		01 = current location plus offset (SEEK_CUR)
      * 		02 = end of file plus offset (SEEK_END)
-     * BX = file handle
-     * CX = high order word of number of bytes to move
-     * DX = low order word of number of bytes to move
+     *  BX = file handle
+     *  CX = high order word of number of bytes to move
+     *  DX = low order word of number of bytes to move
      * on return:
-     * AX = error code if CF set (see ~DOS ERROR CODES~)
-     * DX:AX = new pointer location if CF not set
+     *  AX = error code if CF set (see ~DOS ERROR CODES~)
+     *  DX:AX = new pointer location if CF not set
      * 	- seeks to specified location in file
      */
     private void moveFilePointerUsingHandle(final MsDosStorageSystem disk,
                                             final IbmPcRandomAccessMemory memory,
-                                            final Intel80x86 cpu) {
+                                            final Intel8086 cpu) {
+        final int handleID = cpu.BX.get();
+        final int count = (cpu.CX.get() << 16) | cpu.DX.get();
+        final int function = cpu.AL.get();
+
+        switch (function) {
+            case SEEK_SET:
+            case SEEK_CUR:
+            case SEEK_END:
+        }
+
         // TODO Implement me!
-        throw new IllegalStateException("Not yet implemented");
+        cpu.FLAGS.setCF(false);
     }
+
+    private static final int SEEK_SET = 0;
+    private static final int SEEK_CUR = 1;
+    private static final int SEEK_END = 2;
 
     /**
      * <pre>
@@ -1677,7 +1684,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * AH = 43h
      * AL = 00 to get attribute
      * 	  = 01 to set attribute
-     * DS:DX = pointer to an ASCIIZ path name
+     * DS:DX = pointer to an ASCII path name
      * CX = attribute to set
      *
      * Valid file attributes
@@ -1694,25 +1701,21 @@ public class MsDosSystemServices implements InterruptHandler {
      * - see ~DIRECTORY~
      * </pre>
      */
-    private void getSetFileAttributes(final MsDosStorageSystem disk,
-                                      final IbmPcRandomAccessMemory memory,
-                                      final Intel80x86 cpu) {
-        // get the filename
+    private void getSetFileAttributes(final IbmPcRandomAccessMemory memory, final Intel8086 cpu) {
+        // get the filename at DS:DX
         final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
         // get the file reference
-        final File fileRef = new File(filename);
+        final File file = new File(filename);
 
         // getting or setting the attribute?
-        final boolean attributesGet = (cpu.AL.get() == 0);
+        final boolean attributesGet = cpu.AL.get() == 0;
 
         // get the file attributes
         if (attributesGet) {
             // encode the file attributes
             int attributes = 0;
-            if (fileRef.isHidden()) {
-                attributes |= 0x02;
-            }    // 000010
+            if (file.isHidden()) attributes |= 0b000010;
 
             // put the file attributes into CX
             cpu.CX.set(attributes);
@@ -1725,15 +1728,15 @@ public class MsDosSystemServices implements InterruptHandler {
             final MsDosFileAttributes attributes = MsDosFileAttributes.decode(cpu.CX.get());
 
             // set the file attributes
-            if (attributes.isArchive()) {
-            }
-            if (attributes.isSystem()) {
-            }
-            if (attributes.isHidden()) {
-            }
-            if (attributes.isReadOnly()) {
-                fileRef.setReadOnly();
-            }
+            if (attributes.isArchive()) ; // TODO can/should we change file attributes?
+            if (attributes.isSystem()) ;
+            if (attributes.isHidden()) ;
+
+            // make read-only or writable?
+            if (attributes.isReadOnly())
+                file.setReadOnly();
+            else
+                file.setWritable(true);
 
             // unset CF
             cpu.FLAGS.setCF(false);
@@ -1744,15 +1747,15 @@ public class MsDosSystemServices implements InterruptHandler {
      * <pre>
      * INT 21,44 - I/O Control for Devices (IOCTL)
      * % Standard Call Format
-     * AH = 44h
-     * AL = function value
-     * BX = file handle
-     * BL = logical device number (0=default, 1=A:, 2=B:, 3=C:, ...)
-     * CX = number of bytes to read or write
-     * DS:DX = data or buffer
+     *  AH = 44h
+     *  AL = function value
+     *  BX = file handle
+     *  BL = logical device number (0=default, 1=A:, 2=B:, 3=C:, ...)
+     *  CX = number of bytes to read or write
+     *  DS:DX = data or buffer
      * on return:
-     * AX = error code if CF set
-     * AX = # of bytes transferred if CF not set
+     *  AX = error code if CF set
+     *  AX = # of bytes transferred if CF not set
      *
      * % For more information, see the following topics:
      * ~IOCTL,0~ Get Device Information
@@ -1780,12 +1783,12 @@ public class MsDosSystemServices implements InterruptHandler {
      */
     private void inputOutputControlForDevices(final MsDosStorageSystem disk,
                                               final IbmPcRandomAccessMemory memory,
-                                              final Intel80x86 cpu) {
+                                              final Intel8086 cpu) {
         // get sub-function
         final int subCode = cpu.AL.get();
         switch (subCode) {
             case 0x00:
-                ioctrl_getDeviceInformation(disk, memory, cpu);
+                IOCTL_getDeviceInformation(disk, memory, cpu);
                 break;
             // TODO Implement me!
             default:
@@ -1798,7 +1801,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * AH = 44h
      * AL = 00
      * BX = handle (must be an opened device)
-     * on return
+     * on return:
      * AX = error code if CF set (see ~DOS ERROR CODES~)
      * DX = device information (see tables below)
      * <p/>
@@ -1840,9 +1843,10 @@ public class MsDosSystemServices implements InterruptHandler {
      * - BIT B of register DX can be used to determine if a drive is
      * removable.
      */
-    private void ioctrl_getDeviceInformation(final MsDosStorageSystem disk,
-                                             final IbmPcRandomAccessMemory memory,
-                                             final Intel80x86 cpu) {
+    private void IOCTL_getDeviceInformation(final MsDosStorageSystem disk,
+                                            final IbmPcRandomAccessMemory memory,
+                                            final Intel8086 cpu) {
+        final int handle = cpu.BX.get();
         // TODO Implement me!
         throw new IllegalStateException("Not yet implemented");
     }
@@ -1857,7 +1861,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * 			program is placed in parameter block. Used by debuggers
      * 		= 03 load program only
      * 		= 04 called by MSC spawn() when P_NOWAIT is specified
-     * DS:DX = pointer to an ASCIIZ filename
+     * DS:DX = pointer to an ASCII filename
      * ES:BX = pointer to a parameter block
      * on return:
      * 	AX = error code if CF set (see ~DOS ERROR CODES~)
@@ -1883,24 +1887,21 @@ public class MsDosSystemServices implements InterruptHandler {
      * 			- see also ~INT 21,26~
      * </pre>
      */
-    private void loadAndExecuteProgram(final MsDosStorageSystem disk,
-                                       final IbmPcRandomAccessMemory memory,
-                                       final Intel80x86 cpu)
-            throws IbmPcException {
+    private void loadAndExecuteProgram(final IbmPcRandomAccessMemory memory, final Intel8086 cpu) throws IbmPcException {
         try {
             // get the filename
             final String filename = getASCIIString(memory, cpu.DS.get(), cpu.DX.get());
 
             // read the contents of the file
-            final byte[] x86Code = getFileContents(new File(filename));
+            final byte[] x86Code = getBinaryContents(new File(filename));
 
-            // get the parameter address
+            // get the parameter address at ES:BX
             final int paramSeg = cpu.ES.get();
             final int paramOfs = cpu.BX.get();
 
             // get the parameters
-            final int stckSeg = memory.getWord(paramSeg, paramOfs + 0x0E);
-            final int stckOfs = memory.getWord(paramSeg, paramOfs + 0x10);
+            final int stackSeg = memory.getWord(paramSeg, paramOfs + 0x0E);
+            final int stackOfs = memory.getWord(paramSeg, paramOfs + 0x10);
             final int codeSeg = memory.getWord(paramSeg, paramOfs + 0x12);
             final int codeOfs = memory.getWord(paramSeg, paramOfs + 0x14);
 
@@ -1908,8 +1909,8 @@ public class MsDosSystemServices implements InterruptHandler {
             memory.setBytes(codeSeg, codeOfs, x86Code, x86Code.length);
 
             // point to the new stack (SS:SP)
-            cpu.SS.set(stckSeg);
-            cpu.SP.set(stckOfs);
+            cpu.SS.set(stackSeg);
+            cpu.SP.set(stackOfs);
 
             // point to the new code (CS:IP)
             cpu.CS.set(codeSeg);
@@ -1921,46 +1922,27 @@ public class MsDosSystemServices implements InterruptHandler {
 
     /**
      * INT 21,67 - Set Handle Count (DOS 3.3+)
-     * AH = 67h
-     * BX = new maximum open handles allowed
+     * <pre>
+     *      AH = 67h
+     *      BX = new maximum open handles allowed
      * on return
-     * CF = 0 if successful
-     * = 1 if error
-     * AX = error code if CF is set (see ~DOS ERROR CODES~)
-     * - gives program control of the number of files simultaneously open
-     * - if CX is less than the current number of open files the change
-     * will take effect when the number of open handles falls below
-     * the new limit
-     * - this function allows the application to use more than 20 files,
-     * up to the FILES=N limit
-     * - earlier copies of IBM DOS 3.3 sometimes incorrectly allocates
-     * memory (up to 64K) if an even number of handles is requested
-     * - only the first 20 files handles are copied to a child process
-     * regardless of the max number of files
-     * - it is possible to allocate more than 255 file handles but it is
-     * difficult to use more than 255
-     * - see ~SFT~ ~FILE HANDLES~
+     *      CF = 0 if successful
+     *         = 1 if error
+     *      AX = error code if CF is set (see ~DOS ERROR CODES~)
+     *      - gives program control of the number of files simultaneously open
+     *      - if CX is less than the current number of open files the change will take effect
+     *          when the number of open handles falls below the new limit
+     *      - this function allows the application to use more than 20 files, up to the FILES=N limit
+     *      - earlier copies of IBM DOS 3.3 sometimes incorrectly allocates memory (up to 64K) if an even number of handles is requested
+     *      - only the first 20 files handles are copied to a child process regardless of the max number of files
+     *      - it is possible to allocate more than 255 file handles but it is difficult to use more than 255
+     *      - see ~SFT~ ~FILE HANDLES~
+     * </pre>
      */
-    private void setHandleCount(final MsDosStorageSystem disk,
-                                final IbmPcRandomAccessMemory memory,
-                                final Intel80x86 cpu) {
-        // TODO Implement me!
-        throw new IllegalStateException("Not yet implemented");
+    private void setHandleCount(final MsDosStorageSystem disk, final Intel8086 cpu) {
+        disk.setMaximumHandleCount(cpu.BX.get());
+        cpu.FLAGS.setCF(false);
     }
 
-    /**
-     * Reads the executable file from the disk
-     *
-     * @param file the given {@link File executable file}
-     * @return the x86 machine code
-     * @throws IOException
-     */
-    private static byte[] getFileContents(final File file) throws IOException {
-        final ByteArrayOutputStream out = new ByteArrayOutputStream((int) file.length());
-        try (final FileInputStream in = new FileInputStream(file)) {
-            IOUtils.copy(in, out);
-            return out.toByteArray();
-        }
-    }
 
 }

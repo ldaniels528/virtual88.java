@@ -4,7 +4,7 @@ import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.n
 import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.nextAddressNear;
 import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.nextAddressShort;
 import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.nextValue8;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.callret.CALL;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.jump.JCXZ;
@@ -61,7 +61,7 @@ public class DecoderE0 implements Decoder {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public OpCode decode( final Intel80x86 cpu, final X86MemoryProxy proxy ) {
+	public OpCode decode( final Intel8086 cpu, final X86MemoryProxy proxy ) {
 		// peek at the next byte
 		final int code8 = proxy.nextByte();
 		

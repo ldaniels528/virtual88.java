@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.math;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
@@ -47,7 +47,7 @@ public class TEST extends AbstractOpCode {
      * (non-Javadoc)
      * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86)
      */
-    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel8086 cpu) {
         cpu.FLAGS.updateAND(src, dest);
     }
 

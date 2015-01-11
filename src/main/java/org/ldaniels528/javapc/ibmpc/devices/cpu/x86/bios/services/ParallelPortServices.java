@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -31,7 +31,7 @@ public class ParallelPortServices implements InterruptHandler {
 	 * Process the Parallel Port Services Interrupt (INT 17h)
 	 * @throws X86AssemblyException
 	 */
-	public void process(IbmPcSystem system, final Intel80x86 cpu)
+	public void process(IbmPcSystem system, final Intel8086 cpu)
 	throws X86AssemblyException {
 		// determine what to do
 		switch( cpu.AH.get() ) {

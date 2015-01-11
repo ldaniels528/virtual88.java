@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.msdos.storage;
 
-import static org.ldaniels528.javapc.ibmpc.util.BitMaskGenerator.turnBitOnMask;
+import static org.ldaniels528.javapc.util.BitMaskGenerator.turnBitOnMask;
 
 /**
  * Represents an MS-DOS Device Information

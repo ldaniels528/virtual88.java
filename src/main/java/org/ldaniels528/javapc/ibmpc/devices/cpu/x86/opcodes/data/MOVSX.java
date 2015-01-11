@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.data;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers.X86Register;
@@ -45,7 +45,7 @@ public class MOVSX extends AbstractDualOperandOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(IbmPcSystem system, final Intel80x86 cpu) {
+    public void execute(IbmPcSystem system, final Intel8086 cpu) {
         // get the source and destination operand sizes
         final int destSize = dest.size();
         final int srcSize = src.size();

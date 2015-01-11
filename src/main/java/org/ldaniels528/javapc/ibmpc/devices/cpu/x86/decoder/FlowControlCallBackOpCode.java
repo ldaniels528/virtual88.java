@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
@@ -29,7 +29,7 @@ public class FlowControlCallBackOpCode implements OpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(IbmPcSystem system, final Intel80x86 cpu) throws X86AssemblyException {
+    public void execute(IbmPcSystem system, final Intel8086 cpu) throws X86AssemblyException {
         // capture the initial CS and IP
         final int cs0 = cpu.CS.get();
         final int ip0 = cpu.IP.get();

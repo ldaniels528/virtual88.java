@@ -1,6 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.apache.log4j.Logger;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryAddressFAR32;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services.*;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system.INT;
@@ -10,14 +11,12 @@ import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemInfo;
-import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemTypeConstants;
-import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.ldaniels528.javapc.ibmpc.devices.display.fonts.IbmPcFont8x8.FONTS_8X8;
 import static java.lang.String.format;
+import static org.ldaniels528.javapc.ibmpc.devices.display.fonts.IbmPcFont8x8.FONTS_8X8;
 
 /**
  * Represents the memory resident portion of the
@@ -123,7 +122,7 @@ import static java.lang.String.format;
  *     				(after a hard reset, the CPU jumps here)
  * 	f000:fff5	8  	ROM-BIOS release date in ASCII (eg, "04/24/81" is original PC)
  * 	f000:fffc 	2  	(unused)
- * 	f000:fffe 	1  	IBM computer-type code (See {@link IbmPcSystemTypeConstants})
+ * 	f000:fffe 	1  	IBM computer-type code (See {@link IbmPcSystem})
  * </pre>
  *
  * @author ldaniels
@@ -199,10 +198,10 @@ public class IbmPcBIOS {
      * Handles the given interrupt number
      *
      * @param system    the given {@link org.ldaniels528.javapc.ibmpc.system.IbmPcSystem IBM PC system}
-     * @param cpu       the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86 CPU} instance
+     * @param cpu       the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      * @param interrupt the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system.INT interrupt opCode}
      */
-    public void invoke(final IbmPcSystem system, final Intel80x86 cpu, final INT interrupt) throws X86AssemblyException {
+    public void invoke(final IbmPcSystem system, final Intel8086 cpu, final INT interrupt) throws X86AssemblyException {
         // get the interrupt #
         final int interruptNo = interrupt.getInterruptNumber();
 
@@ -294,7 +293,7 @@ public class IbmPcBIOS {
      * Updates the the system information area of BIOS memory
      *
      * @param systemInfo the {@link IbmPcSystemInfo system information}
-     * @see IbmPcSystemTypeConstants
+     * @see IbmPcSystem
      */
     public void updateSystemInfo(final IbmPcSystemInfo systemInfo) {
         // Conventional memory size (640K)

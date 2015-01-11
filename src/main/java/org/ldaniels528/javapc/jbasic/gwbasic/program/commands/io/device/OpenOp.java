@@ -73,7 +73,7 @@ public class OpenOp extends AbstactFileOpCode {
 		  
 		  // open the file
 		  try {
-			storage.openDevice( file.getAbsolutePath(), accessMode );
+			storage.openDevice(file.getAbsolutePath(), accessMode );
 		  } 
 		  catch( final IbmPcException e ) {
 			throw new JBasicException( e );

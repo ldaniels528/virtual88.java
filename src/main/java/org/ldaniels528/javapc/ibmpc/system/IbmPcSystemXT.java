@@ -1,7 +1,8 @@
 package org.ldaniels528.javapc.ibmpc.system;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramContext;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.IbmPcBIOS;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplayFrame;
@@ -30,7 +31,7 @@ import static org.ldaniels528.javapc.ibmpc.devices.display.modes.IbmPcDisplayMod
  *
  * @author lawrence.daniels@gmail.com
  */
-public class IbmPcSystemXT implements IbmPcSystem, IbmPcSystemTypeConstants, IbmPcKeyEventListener {
+public class IbmPcSystemXT implements IbmPcSystem, IbmPcKeyEventListener {
     protected final IbmPcRandomAccessMemory memory;
     protected final IbmPcStorageSystem storageSystem;
     protected final IbmPcDisplay display;
@@ -39,7 +40,7 @@ public class IbmPcSystemXT implements IbmPcSystem, IbmPcSystemTypeConstants, Ibm
     protected final IbmPcSystemInfo systemInfo;
     protected final IbmPcMouse mouse;
     protected final IbmPcBIOS bios;
-    protected final Intel80x86 cpu;
+    protected final Intel8086 cpu;
 
     /**
      * Creates an instance of this {@link org.ldaniels528.javapc.ibmpc.system.IbmPcSystem system}
@@ -50,7 +51,7 @@ public class IbmPcSystemXT implements IbmPcSystem, IbmPcSystemTypeConstants, Ibm
         this.systemInfo = new IbmPcSystemInfoXT();
         this.memory = new IbmPcRandomAccessMemory();
         this.bios = new IbmPcBIOS(memory);
-        this.cpu = new Intel80x86(memory);
+        this.cpu = new Intel8086(memory);
         this.display = new IbmPcVideoDisplay(bios, systemInfo.getInitialDisplayMode());
         this.hardwarePorts = new IbmPcHardwarePorts(memory);
         this.keyboard = new IbmPcKeyboard(display);
@@ -69,6 +70,10 @@ public class IbmPcSystemXT implements IbmPcSystem, IbmPcSystemTypeConstants, Ibm
 
         // register for specific key events
         keyboard.register(this);
+    }
+
+    public void execute(final ProgramContext context) throws X86AssemblyException {
+        cpu.execute(this, context);
     }
 
     /**
@@ -93,7 +98,7 @@ public class IbmPcSystemXT implements IbmPcSystem, IbmPcSystemTypeConstants, Ibm
      * {@inheritDoc}
      */
     @Override
-    public Intel80x86 getCPU() {
+    public Intel8086 getCPU() {
         return cpu;
     }
 
@@ -202,7 +207,7 @@ public class IbmPcSystemXT implements IbmPcSystem, IbmPcSystemTypeConstants, Ibm
          */
         @Override
         public int getFloppyDrives() {
-            return 0;
+            return 1;
         }
 
         /**

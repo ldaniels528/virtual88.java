@@ -39,30 +39,30 @@ public class IbmPcFont8x8 implements IbmPcFont {
 	public static IbmPcFont8x8 getInstance() {
 		return instance;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.display.fonts.IbmPcFont#getData(int)
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public byte[] getData( final int font ) {
 		final int start = font << 3;
 		final byte[] data = new byte[8];
 		System.arraycopy( FONTS_8X8, start, data, 0, data.length );
 		return data;
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.display.fonts.IbmPcFont#getWidth()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int getWidth() {
 		return WIDTH;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.display.fonts.IbmPcFont#getHeight()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int getHeight() {
 		return HEIGHT;
 	}

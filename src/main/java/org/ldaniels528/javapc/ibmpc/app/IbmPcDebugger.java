@@ -1,6 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.app;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.JavaPCConstants;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramContext;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.*;
@@ -15,31 +16,30 @@ import org.ldaniels528.javapc.ibmpc.exceptions.IbmPcException;
 import org.ldaniels528.javapc.ibmpc.exceptions.IbmPcNumericFormatException;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemXT;
+import org.ldaniels528.javapc.util.ResourceHelper;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.ldaniels528.javapc.ibmpc.util.IbmPcValues.parseHexadecimalString;
 import static java.lang.String.format;
+import static org.ldaniels528.javapc.ibmpc.util.IbmPcValues.parseHexadecimalString;
 
 /**
  * IBM PC/MS-DOS Debugger
  *
  * @author lawrence.daniels@gmail.com
  */
-public class IbmPcDebugger {
-    private static final String VERSION = "0.431";
+public class IbmPcDebugger implements JavaPCConstants {
     private final IbmPcRandomAccessMemory memory;
     private final X86MemoryProxy proxy;
     private final DebugDecoder decoder;
     private final IbmPcSystemXT system;
     private final IbmPcDisplay display;
     private final IbmPcKeyboard keyboard;
-    private final Intel80x86 cpu;
+    private final Intel8086 cpu;
     private String filename;
     private boolean alive;
 
@@ -47,12 +47,7 @@ public class IbmPcDebugger {
      * Default constructor
      */
     public IbmPcDebugger() {
-        // create the display frame and system
-        final IbmPcDisplayFrame frame = new IbmPcDisplayFrame(String.format("JDebug v%s", VERSION));
-        final IbmPcSystemXT system = new IbmPcSystemXT(frame);
-
-        // get references to all devices
-        this.system = system;
+        this.system = new IbmPcSystemXT(new IbmPcDisplayFrame(String.format("Java PC - Debugger v%s", VERSION)));
         this.cpu = system.getCPU();
         this.memory = system.getRandomAccessMemory();
         this.display = system.getDisplay();
@@ -67,16 +62,14 @@ public class IbmPcDebugger {
      * For standalone operation
      *
      * @param args the given commandline arguments
-     * @throws IbmPcException
+     * @throws Throwable
      */
-    public static void main(final String[] args)
-            throws IbmPcException {
+    public static void main(final String[] args) throws Throwable {
         // start the application
         final IbmPcDebugger app = new IbmPcDebugger();
 
         // display title
-        app.outputln(format("JBasic/IBM PC Debugger v%s", VERSION));
-        app.outputln("IntelligentXChange (c) Oct 2006");
+        app.outputln(format("JavaPC/Debugger v%s", VERSION));
         app.outputln("");
 
         // was an executable file specified?
@@ -92,11 +85,12 @@ public class IbmPcDebugger {
         app.run();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Runnable#run()
+    /**
+     * Runs the debugger
+     * @throws org.ldaniels528.javapc.ibmpc.exceptions.IbmPcException
+     * @throws java.lang.InterruptedException
      */
-    public void run() throws IbmPcException {
+    public void run() throws IbmPcException, InterruptedException {
         alive = true;
         while (alive) {
             output("- ");
@@ -118,38 +112,30 @@ public class IbmPcDebugger {
 
     /**
      * Interprets and executes the given command
+     * Commands:
+     * <pre>
+     *   [d]ump - dump the contents of memory at the current IP position
+     *   [f]lags - displays the current state of all flags
+     *   [g]o - starts executing code at the current IP position
+     *   [n]ame - sets the current file name (for reading or saving)
+     *   [q]uit - exits the Debugger
+     *   [r]egisters - displays the current state of all registers
+     *   [u]nassemble - decodes assembly code at the current IP position
+     * </pre>
      *
      * @param command the given command
      */
     private void interpret(final String command) {
-        // [d]ump
-        if (command.startsWith("d")) {
-            dump(128);
-        }
-
-        // [g]o
-        else if (command.startsWith("g")) {
-            executeCode(cpu.IP.get());
-        }
-
-        // [n]ame
-        else if (command.startsWith("n")) {
-            name(command);
-        }
-
-        // [q]uit
-        else if (command.startsWith("q")) {
-            stop();
-        }
-
-        // [r]egisters
-        else if (command.startsWith("r")) {
-            System.out.println(cpu);
-        }
-
-        // [u]nassemble
-        else if (command.startsWith("u")) {
-            unassemble(command, 10);
+        try {
+            if (command.startsWith("d")) dump(128);
+            else if (command.startsWith("f")) System.out.println(cpu.FLAGS);
+            else if (command.startsWith("g")) executeCode(cpu.IP.get());
+            else if (command.startsWith("n")) name(command);
+            else if (command.startsWith("q")) stop();
+            else if (command.startsWith("r")) System.out.println(cpu);
+            else if (command.startsWith("u")) unassemble(command, 10);
+        } catch (X86AssemblyException | IbmPcNumericFormatException e) {
+            System.err.printf("Run-time error: %s\n", e.getMessage());
         }
     }
 
@@ -162,36 +148,26 @@ public class IbmPcDebugger {
         final int DUMP_LENGTH = 16;
 
         // create a container for lines of data
-        final List<String> data = new LinkedList<String>();
+        final List<String> lines = new LinkedList<>();
 
         // determine how many lines to display
-        final int lines = count / DUMP_LENGTH;
+        final int nLines = count / DUMP_LENGTH;
 
         // display each line of binary data
-        for (int n = 0; n < lines; n++) {
-            final List<Integer> bytes = new ArrayList<Integer>(DUMP_LENGTH);
+        for (int n = 0; n < nLines; n++) {
+            final List<Integer> bytes = new ArrayList<>(DUMP_LENGTH);
             for (int m = 0; m < DUMP_LENGTH; m++) {
                 bytes.add(proxy.nextByte());
             }
-            data.add(layoutBytes(bytes));
+            lines.add(layoutBytes(bytes));
         }
 
         // display the results
-        for (final String instruction : data) {
-            outputln(instruction);
-        }
+        lines.forEach(this::outputln);
     }
 
-    private void executeCode(final int offset) {
-        try {
-            // create the program context
-            final ProgramContext context = new ProgramContext(proxy.getSegment(), offset, proxy.getSegment(), null);
-
-            // execute the code
-            cpu.execute(system, context);
-        } catch (X86AssemblyException e) {
-            outputln(e.getMessage());
-        }
+    private void executeCode(final int offset) throws X86AssemblyException {
+        system.execute(new ProgramContext(proxy.getSegment(), offset, proxy.getSegment(), null));
     }
 
     /**
@@ -220,23 +196,9 @@ public class IbmPcDebugger {
      * @param filename the file name of the executable to load
      */
     private void loadExecutable(final String filename) {
-        FileInputStream fis = null;
         try {
-            // open the file for reading
-            fis = new FileInputStream(filename);
-
-            // load the contents into a buffer
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream(65536);
-            final byte[] buf = new byte[1024];
-            int count;
-            int total = 0;
-            while ((count = fis.read(buf)) != -1) {
-                baos.write(buf);
-                total += count;
-            }
-
             // dump the content into a buffer
-            final byte[] code = baos.toByteArray();
+            final byte[] code = ResourceHelper.getBinaryContents(new File(filename));
 
             // copy the program into memory
             final int codeSegment = proxy.getSegment();
@@ -250,16 +212,9 @@ public class IbmPcDebugger {
             cpu.SS.set(codeSegment);
             cpu.IP.set(codeOffset);
 
-            outputln(String.format("Loaded %s: %d bytes", filename, total));
+            outputln(String.format("Loaded %s: %d bytes", filename, code.length));
         } catch (final IOException e) {
             outputln(String.format("Unable to load '%s'", filename));
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (Exception e) {
-                }
-            }
         }
     }
 
@@ -279,40 +234,33 @@ public class IbmPcDebugger {
      *
      * @param command the given command to disassemble
      * @param count   the specified number of instructions to unassemble.
+     * @throws IbmPcNumericFormatException
      */
-    private void unassemble(final String command, final int count) {
+    private void unassemble(final String command, final int count) throws IbmPcNumericFormatException {
         // check the command arguments
         final String[] args = command.split("[ ]");
-        int origin = -1;
-        try {
-            origin = (args.length > 1) ? parseHexadecimalString(args[1]) : -1;
-        } catch (final IbmPcNumericFormatException e) {
-        }
+        final int origin = (args.length > 1) ? parseHexadecimalString(args[1]) : -1;
 
         // change the origin?
         if (origin != -1) {
             proxy.setOffset(origin);
         }
 
-        // begin unassembling
+        // begin reverse engineering the byte code
         int n = 0;
-        try {
-            while (n++ < count) {
-                // capture the segment and offset
-                final int segment = proxy.getSegment();
-                final int offset = proxy.getOffset();
+        while (n++ < count) {
+            // capture the segment and offset
+            final int segment = proxy.getSegment();
+            final int offset = proxy.getOffset();
 
-                // get the next instruction
-                final OpCode instruction = decoder.decodeNext();
+            // get the next instruction
+            final OpCode instruction = decoder.decodeNext();
 
-                // get the byte code for the current instruction
-                final String byteCodeString = getByteCodeString(segment, offset);
+            // get the byte code for the current instruction
+            final String byteCodeString = getByteCodeString(segment, offset);
 
-                // display the instruction
-                outputln(String.format("%04X:%04X %s %s", segment, offset, byteCodeString, instruction));
-            }
-        } catch (final RuntimeException e) {
-            e.printStackTrace();
+            // display the instruction
+            outputln(String.format("%04X:%04X %s %s", segment, offset, byteCodeString, instruction));
         }
     }
 
@@ -337,7 +285,7 @@ public class IbmPcDebugger {
             sb.append(String.format("%02X", b));
         }
 
-        // pad upto the maximum size
+        // pad up to the maximum size
         while (sb.length() < MAX_LEN) {
             sb.append(' ');
         }
@@ -367,15 +315,15 @@ public class IbmPcDebugger {
     private class DebugDecoder implements DecodeProcessor {
         private final X86MemoryProxy proxy;
         private final Decoder[] decoders;
-        private final Intel80x86 cpu;
+        private final Intel8086 cpu;
 
         /**
          * Creates a new instance decode processor
          *
-         * @param cpu   the given {@link Intel80x86 CPU} instance
+         * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
          * @param proxy the given {@link X86MemoryProxy memory proxy} instance
          */
-        public DebugDecoder(final Intel80x86 cpu, final X86MemoryProxy proxy) {
+        public DebugDecoder(final Intel8086 cpu, final X86MemoryProxy proxy) {
             this.cpu = cpu;
             this.proxy = proxy;
             this.decoders =
@@ -441,8 +389,6 @@ public class IbmPcDebugger {
         public void shutdown() {
             // no shutdown needed
         }
-
     }
-
 
 }

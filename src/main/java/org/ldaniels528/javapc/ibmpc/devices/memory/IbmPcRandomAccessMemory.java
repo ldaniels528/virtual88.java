@@ -1,9 +1,10 @@
 package org.ldaniels528.javapc.ibmpc.devices.memory;
 
+import org.apache.log4j.Logger;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.ByteValue;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.WordValue;
-import org.apache.log4j.Logger;
+import org.ldaniels528.javapc.util.ByteConversion;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,8 +12,8 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
 
-import static org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryUtil.computePhysicalAddress;
 import static java.lang.String.format;
+import static org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryUtil.computePhysicalAddress;
 
 /**
  * Represents IBM PC-style segmented random access memory.
@@ -120,8 +121,7 @@ public class IbmPcRandomAccessMemory {
         final int physicalAddress = computePhysicalAddress(segment, offset);
 
         // retrieve the byte from memory
-        final byte b = systemMemory[physicalAddress];
-        return (b < 0) ? b + 256 : b;
+        return ByteConversion.convertToInt(systemMemory[physicalAddress]);
     }
 
     /**

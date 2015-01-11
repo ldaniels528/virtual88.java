@@ -1,5 +1,8 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers;
 
+import static org.ldaniels528.javapc.util.BitMaskGenerator.turnBitOffMask;
+import static org.ldaniels528.javapc.util.BitMaskGenerator.turnBitOnMask;
+
 /**
  * Represents a composite register; a register composed of
  * two parts, high and low respectively. (e.g. AX = AH:AL)
@@ -59,31 +62,10 @@ public abstract class X86CompositeRegister implements X86Register {
      * {@inheritDoc}
      */
     @Override
-    public void setBit(int bitNum, boolean on) {
-        // get the current value
-        final int oldValue = get();
-
-        // turn the bit on?
-        if (on) {
-            final int mask = bitNum << 1;
-            set(oldValue | mask);
-        }
-        // turn the bit off...
-        else {
-            final int mask = 0xFFFF - (bitNum << 1);
-            set(oldValue & mask);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public int add(int delta) {
-        final int value0 = get();
-        final int value1 = value0 + delta;
-        set(value1);
-        return value1;
+        final int value0 = get() + delta;
+        set(value0);
+        return value0;
     }
 
     /**
@@ -91,14 +73,11 @@ public abstract class X86CompositeRegister implements X86Register {
      */
     @Override
     public void and(int mask) {
-        // get the current value in the register
-        final int value0 = get();
-
         // calculate the AND'ed value
-        final int value1 = (value0 & mask);
+        final int value0 = get() & mask;
 
         // put the AND'ed value back into the register
-        set(value1);
+        set(value0);
     }
 
     /**
@@ -106,44 +85,48 @@ public abstract class X86CompositeRegister implements X86Register {
      */
     @Override
     public void or(int mask) {
-        // get the current value in the register
-        final int value0 = get();
-
         // calculate the OR'ed value
-        final int value1 = (value0 | mask);
+        final int value0 = (get() | mask);
 
         // put the OR'ed value back into the register
-        set(value1);
+        set(value0);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void lshift(int bits) {
-        // get the current value in the register
-        final int value0 = get();
-
+    public void lshift(final int bits) {
         // calculate the shifted value
-        final int value1 = (value0 << bits);
+        final int value0 = (get() << bits);
 
         // put the shifted value back into the register
-        set(value1);
+        set(value0);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void rshift(int bits) {
-        // get the current value in the register
-        final int value0 = get();
-
+    public void rshift(final int bits) {
         // calculate the shifted value
-        final int value1 = (value0 >> bits);
+        final int value0 = (get() >> bits);
 
         // put the shifted value back into the register
-        set(value1);
+        set(value0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setBit(final int bitNum, final boolean on) {
+        // get the current value
+        final int value0 = get();
+
+        // turn on/off the bit
+        if (on) set(value0 | turnBitOnMask(bitNum));
+        else set(value0 & turnBitOffMask(2 * shift, bitNum));
     }
 
     /*

@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.ldaniels528.javapc.ibmpc.compiler.element.values.X86ByteValue;
 import org.ldaniels528.javapc.ibmpc.compiler.element.values.X86WordValue;
-import org.ldaniels528.javapc.ibmpc.compiler.exception.X86MalformedInstructionException;
+import org.ldaniels528.javapc.ibmpc.compiler.X86MalformedInstructionException;
 import org.ldaniels528.javapc.jbasic.gwbasic.values.GwBasicValues;
 
 import org.ldaniels528.javapc.jbasic.common.tokenizer.TokenIterator;

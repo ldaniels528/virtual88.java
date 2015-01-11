@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -30,7 +30,7 @@ public class DiskServices implements InterruptHandler {
 	 * Process the Disk Services Interrupt (INT 13h)
 	 * @throws X86AssemblyException
 	 */
-	public void process(IbmPcSystem system, final Intel80x86 cpu)
+	public void process(IbmPcSystem system, final Intel8086 cpu)
 	throws X86AssemblyException {
 		// determine what to do
 		switch( cpu.AH.get() ) {
@@ -75,7 +75,7 @@ public class DiskServices implements InterruptHandler {
 	 *	CF 	= 0 if successful
 	 *		= 1 if error
 	 */
-	private void resetDiskSystem( Intel80x86 cpu ) {
+	private void resetDiskSystem( Intel8086 cpu ) {
 		cpu.AH.set( 0 );
 		cpu.FLAGS.setCF( false );
 	}
@@ -115,7 +115,7 @@ public class DiskServices implements InterruptHandler {
 	 *		FF sense operation failed
 	 * </pre>
 	 */
-	private void getDiskStatus( Intel80x86 cpu ) {
+	private void getDiskStatus( Intel8086 cpu ) {
 		cpu.AL.set( 0x00 );
 	}
 	
@@ -140,7 +140,7 @@ public class DiskServices implements InterruptHandler {
 	 *	CF 	= 0 if successful
 	 *		= 1 if error
 	 */
-	private void readDiskSectors( Intel80x86 cpu ) {
+	private void readDiskSectors( Intel8086 cpu ) {
 		cpu.AH.set( 0 );
 		cpu.AL.set( 1 );
 		cpu.FLAGS.setCF( false );
@@ -167,7 +167,7 @@ public class DiskServices implements InterruptHandler {
 	 * 	CF 	= 0 if successful
 	 * 		= 1 if error
 	 */
-	private void writeDiskSectors( Intel80x86 cpu ) {
+	private void writeDiskSectors( Intel8086 cpu ) {
 		cpu.AH.set( 0 );
 		cpu.AL.set( 1 );
 		cpu.FLAGS.setCF( false );
@@ -194,7 +194,7 @@ public class DiskServices implements InterruptHandler {
 	 * 	CF 	= 0 if successful
 	 * 		= 1 if error
 	 */
-	private void verifySectors( Intel80x86 cpu ) {
+	private void verifySectors( Intel8086 cpu ) {
 		cpu.AH.set( 0 );
 		cpu.AL.set( 1 );
 		cpu.FLAGS.setCF( false );
@@ -226,7 +226,7 @@ public class DiskServices implements InterruptHandler {
 	 * 	CF 	= 0 if successful
 	 * 		= 1 if error
 	 */
-	private void formatTrack( Intel80x86 cpu ) {
+	private void formatTrack( Intel8086 cpu ) {
 		cpu.AH.set( 0 );
 		cpu.FLAGS.setCF( false );
 	}
@@ -247,7 +247,7 @@ public class DiskServices implements InterruptHandler {
 	 * 		= 1 if error
 	 *
 	 */
-	private void formatTrackAndSetBadSectors( Intel80x86 cpu ) {
+	private void formatTrackAndSetBadSectors( Intel8086 cpu ) {
 		cpu.AH.set( 0 );
 		cpu.FLAGS.setCF( false );
 	}
@@ -267,7 +267,7 @@ public class DiskServices implements InterruptHandler {
 	 *	CF 	= 0 if successful
 	 *		= 1 if error
 	 */
-	private void formatDriveStartingAtSpecifiedTrack( Intel80x86 cpu ) {
+	private void formatDriveStartingAtSpecifiedTrack( Intel8086 cpu ) {
 		cpu.AH.set( 0 );
 		cpu.FLAGS.setCF( false );
 	}
@@ -290,7 +290,7 @@ public class DiskServices implements InterruptHandler {
 	 *	CF 	= 0 if successful
 	 *		= 1 if error
 	 */
-	private void getCurrentDriveAndParameters( Intel80x86 cpu ) {
+	private void getCurrentDriveAndParameters( Intel8086 cpu ) {
 		cpu.FLAGS.setCF( false );
 	}
 	
@@ -310,7 +310,7 @@ public class DiskServices implements InterruptHandler {
 	 * 	CF 	= 0 if successful
 	 * 		= 1 if error
 	 */
-	private void readLongSector( Intel80x86 cpu ) {
+	private void readLongSector( Intel8086 cpu ) {
 		cpu.AH.set( 0 );
 		cpu.FLAGS.setCF( false );
 	}
@@ -331,7 +331,7 @@ public class DiskServices implements InterruptHandler {
 	 * 	CF 	= 0 if successful
 	 * 		= 1 if error
 	 */
-	private void writeLongSectors( Intel80x86 cpu ) {
+	private void writeLongSectors( Intel8086 cpu ) {
 		cpu.AH.set( 0 );
 		cpu.FLAGS.setCF( false );
 	}
@@ -349,7 +349,7 @@ public class DiskServices implements InterruptHandler {
 	 *	CF 	= 0 if successful
 	 *		= 1 if error
 	 */
-	private void seekToCylinder( Intel80x86 cpu ) {
+	private void seekToCylinder( Intel8086 cpu ) {
 		cpu.AH.set( 0 );
 		cpu.FLAGS.setCF( false );
 	}
@@ -371,7 +371,7 @@ public class DiskServices implements InterruptHandler {
 	 *	CF 	= 0 if successful
 	 *		= 1 if error
 	 */
-	private void alternateDiskReset( Intel80x86 cpu ) {
+	private void alternateDiskReset( Intel8086 cpu ) {
 		cpu.AH.set( 0 );
 		cpu.FLAGS.setCF( false );
 	}
@@ -386,7 +386,7 @@ public class DiskServices implements InterruptHandler {
 	 * 	CF 	= 0 if successful
 	 * 		= 1 if error
 	 */
-	private void readSectorBuffer( Intel80x86 cpu ) {
+	private void readSectorBuffer( Intel8086 cpu ) {
 		cpu.AH.set( 0 );
 		cpu.FLAGS.setCF( false );
 	}
@@ -401,7 +401,7 @@ public class DiskServices implements InterruptHandler {
 	 *	CF 	= 0 if successful
 	 *		= 1 if error
 	 */
-	private void writeSectorBuffer( Intel80x86 cpu ) {
+	private void writeSectorBuffer( Intel8086 cpu ) {
 		// TODO finish this method
 	}
 	
@@ -420,7 +420,7 @@ public class DiskServices implements InterruptHandler {
 	 * 	CF 	= 0 if successful
 	 * 		= 1 if error
 	 */
-	private void testForDriveReady( Intel80x86 cpu ) {
+	private void testForDriveReady( Intel8086 cpu ) {
 		// TODO finish this method
 	}
 	
@@ -439,7 +439,7 @@ public class DiskServices implements InterruptHandler {
 	 *	CF 	= 0 if successful
 	 *		= 1 if error
 	 */
-	private void recalibrateDrive( Intel80x86 cpu ) {
+	private void recalibrateDrive( Intel8086 cpu ) {
 		// TODO finish this method
 	}
 	
@@ -454,7 +454,7 @@ public class DiskServices implements InterruptHandler {
 	 * 		= 1 if error
 	 * </pre>
 	 */
-	private void controllerRamDiagnostic( Intel80x86 cpu ) {
+	private void controllerRamDiagnostic( Intel8086 cpu ) {
 		// TODO finish this method
 	}
 	
@@ -467,7 +467,7 @@ public class DiskServices implements InterruptHandler {
 	 *	CF 	= 0 if successful
 	 *		= 1 if error
 	 */
-	private void driveDiagnostic( Intel80x86 cpu ) {
+	private void driveDiagnostic( Intel8086 cpu ) {
 		// TODO finish this method
 	}
 	
@@ -486,7 +486,7 @@ public class DiskServices implements InterruptHandler {
 	 *		= 1 if error
 	 * </pre>
 	 */
-	private void controllerInternalDiagnostic( Intel80x86 cpu ) {
+	private void controllerInternalDiagnostic( Intel8086 cpu ) {
 		// TODO finish this method
 	}
 	
@@ -509,7 +509,7 @@ public class DiskServices implements InterruptHandler {
 	 *		= 1 if error
 	 * </pre>
 	 */
-	private void readDasdType( Intel80x86 cpu ) {
+	private void readDasdType( Intel8086 cpu ) {
 		// TODO finish this method
 	}
 	
@@ -527,7 +527,7 @@ public class DiskServices implements InterruptHandler {
 	 *	CF = set if disk has been removed or an error occurred
 	 * </pre>
 	 */
-	private void ChangeOfDiskStatus( Intel80x86 cpu ) {
+	private void ChangeOfDiskStatus( Intel8086 cpu ) {
 		// TODO finish this method
 	}
 	
@@ -548,7 +548,7 @@ public class DiskServices implements InterruptHandler {
 	 *	DL 	= drive number (0=A:, 1=2nd floppy, 80h=drive 0, 81h=drive 1)
 	 * </pre>
 	 */
-	private void setDasdType( Intel80x86 cpu ) {
+	private void setDasdType( Intel8086 cpu ) {
 		// TODO finish this method
 	}
 	
@@ -569,7 +569,7 @@ public class DiskServices implements InterruptHandler {
 	 *		= 1 if error
 	 * </pre>
 	 */
-	private void setMediaTypeForFormat( Intel80x86 cpu ) {
+	private void setMediaTypeForFormat( Intel8086 cpu ) {
 		// TODO finish this method
 	}
 	
@@ -584,7 +584,7 @@ public class DiskServices implements InterruptHandler {
 	 *	CF 	= 0 if successful
 	 *		= 1 if error
 	 */
-	private void parkFixedDiskHeads( Intel80x86 cpu ) {
+	private void parkFixedDiskHeads( Intel8086 cpu ) {
 		// TODO finish this method
 	}
 	
@@ -605,7 +605,7 @@ public class DiskServices implements InterruptHandler {
 	 *		| | | +-------- 1=periodic interrupt status on, 0=off
 	 *		+------------- reserved
 	 */
-	private void formatUnit( Intel80x86 cpu ) {
+	private void formatUnit( Intel8086 cpu ) {
 		// TODO finish this method
 	}
 	

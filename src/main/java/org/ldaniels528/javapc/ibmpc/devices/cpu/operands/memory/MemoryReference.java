@@ -3,7 +3,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.X86RegisterSet;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 
@@ -83,17 +83,17 @@ public class MemoryReference {
 	// build the string mappings
 	public static final Map<Integer,String> REFERENCE_MAPPING = createReferenceMapping();
 	// fields
-	private final Intel80x86 cpu;
+	private final Intel8086 cpu;
 	private final int refCode;
 	private final int relOffset;
 	
 	/**
 	 * Creates a new memory reference
-	 * @param cpu the given {@link Intel80x86 CPU} instance
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
 	 * @param refCode the given compsite element code and reference code
 	 * @param relOffset the relative offset
 	 */
-	public MemoryReference( final Intel80x86 cpu,
+	public MemoryReference( final Intel8086 cpu,
 					  		final int refCode, 
 					  		final int relOffset ) {
 		this.cpu	 	= cpu;
@@ -103,9 +103,9 @@ public class MemoryReference {
 	
 	/**
 	 * Returns the CPU reference
-	 * @return the {@link Intel80x86 CPU} reference
+	 * @return the {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} reference
 	 */
-	public Intel80x86 getCPU() {
+	public Intel8086 getCPU() {
 		return cpu;
 	}
 	

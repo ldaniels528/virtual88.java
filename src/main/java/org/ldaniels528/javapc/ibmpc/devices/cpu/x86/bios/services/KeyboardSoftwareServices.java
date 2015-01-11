@@ -1,10 +1,10 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.apache.log4j.Logger;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.keyboard.IbmPcKeyboard;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
-import org.apache.log4j.Logger;
 
 import static java.lang.String.format;
 
@@ -38,30 +38,33 @@ public class KeyboardSoftwareServices implements InterruptHandler {
      *
      * @throws X86AssemblyException
      */
-    public void process(final IbmPcSystem system, final Intel80x86 cpu)
-            throws X86AssemblyException {
-        // get the keyboard instance
-        final IbmPcKeyboard keyboard = system.getKeyboard();
+    public void process(final IbmPcSystem system, final Intel8086 cpu) throws X86AssemblyException {
+        try {
+            // get the keyboard instance
+            final IbmPcKeyboard keyboard = system.getKeyboard();
 
-        // determine what to do
-        switch (cpu.AH.get()) {
-            case 0x00:
-                waitForKeyPress(cpu, keyboard);
-                break;
-            case 0x01:
-                getKeyboardStatus(cpu, keyboard);
-                break;
-            case 0x02:
-                readKeyboardFlags(cpu, keyboard);
-                break;
-            case 0x03:
-                setTypematicRate(cpu);
-                break;
-            case 0x04:
-                setKeyboardClickAdjustment(cpu);
-                break;
-            default:
-                throw new X86AssemblyException(String.format("Invalid call (AH = %02X)", cpu.AH.get()));
+            // determine what to do
+            switch (cpu.AH.get()) {
+                case 0x00:
+                    waitForKeyPress(cpu, keyboard);
+                    break;
+                case 0x01:
+                    getKeyboardStatus(cpu, keyboard);
+                    break;
+                case 0x02:
+                    readKeyboardFlags(cpu, keyboard);
+                    break;
+                case 0x03:
+                    setTypematicRate(cpu);
+                    break;
+                case 0x04:
+                    setKeyboardClickAdjustment(cpu);
+                    break;
+                default:
+                    throw new X86AssemblyException(String.format("Invalid call (AH = %02X)", cpu.AH.get()));
+            }
+        } catch (InterruptedException e) {
+            throw new X86AssemblyException(e);
         }
     }
 
@@ -76,10 +79,10 @@ public class KeyboardSoftwareServices implements InterruptHandler {
      * 	- see ~SCAN CODES~
      * </pre>
      *
-     * @param cpu      the given {@link Intel80x86 CPU} instance
+     * @param cpu      the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      * @param keyboard the given {@link IbmPcKeyboard keyboard} instance
      */
-    private void waitForKeyPress(final Intel80x86 cpu, final IbmPcKeyboard keyboard) {
+    private void waitForKeyPress(final Intel8086 cpu, final IbmPcKeyboard keyboard) throws InterruptedException {
         // block read a character
         final String s = keyboard.next(1);
         if (s.length() != 0) {
@@ -105,10 +108,10 @@ public class KeyboardSoftwareServices implements InterruptHandler {
      * register a keypress.
      * </pre>
      *
-     * @param cpu      the given {@link Intel80x86 CPU} instance
+     * @param cpu      the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      * @param keyboard the given {@link IbmPcKeyboard keyboard} instance
      */
-    private void getKeyboardStatus(final Intel80x86 cpu, final IbmPcKeyboard keyboard) {
+    private void getKeyboardStatus(final Intel8086 cpu, final IbmPcKeyboard keyboard) {
         // are keystrokes waiting?
         final boolean keystrokesWaiting = keyboard.keyStrokesWaiting();
 
@@ -147,19 +150,19 @@ public class KeyboardSoftwareServices implements InterruptHandler {
      * 		+----------- insert is active
      * </pre>
      *
-     * @param cpu      the given {@link Intel80x86 CPU} instance
+     * @param cpu      the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      * @param keyboard the given {@link IbmPcKeyboard keyboard} instance
      */
-    private void readKeyboardFlags(final Intel80x86 cpu, final IbmPcKeyboard keyboard) {
+    private void readKeyboardFlags(final Intel8086 cpu, final IbmPcKeyboard keyboard) {
         // put the key flags in AL
         cpu.AL.set(keyboard.getKeyFlags());
     }
 
-    private void setTypematicRate(final Intel80x86 cpu) {
+    private void setTypematicRate(final Intel8086 cpu) {
 
     }
 
-    private void setKeyboardClickAdjustment(final Intel80x86 cpu) {
+    private void setKeyboardClickAdjustment(final Intel8086 cpu) {
 
     }
 

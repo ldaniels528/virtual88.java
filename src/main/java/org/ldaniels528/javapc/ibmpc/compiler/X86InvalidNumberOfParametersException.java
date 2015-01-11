@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.ldaniels528.javapc.ibmpc.compiler.exception;
+package org.ldaniels528.javapc.ibmpc.compiler;
 
 /**
  * 80x86 Malformed Instruction Exception - Invalid number of parameters 

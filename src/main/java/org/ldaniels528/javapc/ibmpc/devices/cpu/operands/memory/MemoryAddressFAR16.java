@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 
 /**
@@ -14,10 +14,10 @@ public class MemoryAddressFAR16 implements OperandAddress {
 	
 	/**
 	 * Creates a FAR pointer to a 16-bit memory address
-	 * @param cpu the given {@link Intel80x86 CPU} instance
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
 	 * @param offset the offset portion of the address
 	 */
-	public MemoryAddressFAR16( final Intel80x86 cpu, final int segment, final int offset ) {
+	public MemoryAddressFAR16( final Intel8086 cpu, final int segment, final int offset ) {
 		this.memory	= cpu.getRandomAccessMemory();
 		this.segment= segment;
 		this.offset = offset;

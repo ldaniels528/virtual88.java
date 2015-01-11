@@ -1,6 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.app;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.JavaPCConstants;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramArguments;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramContext;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
@@ -11,33 +12,31 @@ import org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryProxy;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemXT;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import static java.lang.String.format;
+import static org.ldaniels528.javapc.util.ResourceHelper.getBinaryContents;
 
 /**
- * IBM PC MS-DOS Emulator
+ * IBM PC/MS-DOS Emulator
  *
  * @author lawrence.daniels@gmail.com
  */
-public class IbmPcEmulator {
-    private static final String VERSION = "0.431";
+public class IbmPcEmulator implements JavaPCConstants {
     private final IbmPcDisplayFrame frame;
     private final IbmPcSystemXT system;
     private final IbmPcRandomAccessMemory memory;
     private final X86MemoryProxy proxy;
     private final IbmPcDisplay display;
     private final IbmPcKeyboard keyboard;
-    private final Intel80x86 cpu;
+    private final Intel8086 cpu;
 
     /**
      * Default constructor
      */
     public IbmPcEmulator() {
-        this.frame = new IbmPcDisplayFrame(String.format("JBasic - IBM PC Emulation Mode v%s", VERSION));
+        this.frame = new IbmPcDisplayFrame(String.format("JavaPC - IBM PC Emulation Mode v%s", VERSION));
         this.system = new IbmPcSystemXT(frame);
 
         // get references to all devices
@@ -74,31 +73,15 @@ public class IbmPcEmulator {
      */
     public void execute(final File binaryFile) throws IOException, X86AssemblyException {
         // load the MS-DOS .COM binary file from disk
-        final byte[] code = loadBinary(binaryFile);
+        final byte[] code = getBinaryContents(binaryFile);
+
+        // update the display
+        display.update();
 
         // initialize the CPU
         final ProgramContext pc = new ProgramContext(proxy.getSegment(), proxy.getSegment(), proxy.getOffset(), new ProgramArguments[0]);
         memory.setBytes(proxy.getSegment(), proxy.getOffset(), code, code.length);
         cpu.execute(system, pc);
-    }
-
-    /**
-     * Loads the binary from disk
-     *
-     * @param binaryFile the given MS-DOS .COM binary file
-     * @return the contents of the file
-     * @throws IOException
-     */
-    private byte[] loadBinary(final File binaryFile) throws IOException {
-        try (FileInputStream in = new FileInputStream(binaryFile)) {
-            ByteArrayOutputStream out = new ByteArrayOutputStream((int) binaryFile.length());
-            byte[] buf = new byte[1024];
-            int count;
-            while ((count = in.read(buf)) != -1) {
-                out.write(buf, 0, count);
-            }
-            return out.toByteArray();
-        }
     }
 
 }

@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.bitwise.NOP;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.data.CBW;
@@ -56,7 +56,7 @@ public class Decoder90 implements Decoder {
      * {@inheritDoc}
      */
     @Override
-    public OpCode decode(final Intel80x86 cpu, final X86MemoryProxy proxy) {
+    public OpCode decode(final Intel8086 cpu, final X86MemoryProxy proxy) {
         // get the instruction code
         final int code8 = proxy.nextByte();
 

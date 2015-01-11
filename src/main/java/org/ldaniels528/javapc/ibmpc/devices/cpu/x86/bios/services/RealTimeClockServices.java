@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -35,7 +35,7 @@ public class RealTimeClockServices implements InterruptHandler {
 	 * Process the Time Services Interrupt (INT 1Ah)
 	 * @throws X86AssemblyException
 	 */
-	public void process(IbmPcSystem system, final Intel80x86 cpu)
+	public void process(IbmPcSystem system, final Intel8086 cpu)
 	throws X86AssemblyException {
 		switch( cpu.AH.get() ) {
 			case 0x00:	readSystemClockCounter( cpu ); break;
@@ -58,9 +58,9 @@ public class RealTimeClockServices implements InterruptHandler {
 	 * updated after midnight; this will avoid the passing two midnights
 	 * date problem
 	 * </pre>
-	 * @param cpu the given {@link Intel80x86 CPU} instance
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
 	 */
-	private void readSystemClockCounter( final Intel80x86 cpu ) {
+	private void readSystemClockCounter( final Intel8086 cpu ) {
 		// get midnight in milliseconds
 		final long midnightMillis = getMidnightTimeInMillis();
 		
@@ -92,9 +92,9 @@ public class RealTimeClockServices implements InterruptHandler {
 	 * - CX:DX should be set to the number of seconds past
 	 * midnight multiplied by approximately 18.206
 	 * </pre>
-	 * @param cpu the given {@link Intel80x86 CPU} instance
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
 	 */
-	private void setSystemClockCounter( final Intel80x86 cpu ) {
+	private void setSystemClockCounter( final Intel8086 cpu ) {
 		// get the time since midnight from CX:DX
 		final int timeSinceMidnight = ( cpu.CX.get() << 16 ) | cpu.DX.get();
 		

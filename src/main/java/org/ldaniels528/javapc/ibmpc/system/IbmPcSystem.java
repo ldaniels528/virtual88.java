@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.system;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.IbmPcBIOS;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
@@ -15,10 +15,29 @@ import java.util.List;
 
 /**
  * Represents an IBM PC/XT/AT Compatible System
+ * <pre>
+ * IBM computer-type code; see also BIOS INT 15H C0H:
+ *  0ffH = original PC
+ *  0feH = XT or Portable PC
+ *  0fdH = PCjr
+ *  0fcH = AT (or XT model 286) (or PS/2 Model 50/60)
+ *  0fbH = XT with 640K motherboard
+ *  0faH = PS/2 Model 30
+ *  0f9H = Convertible PC (easily converts into a paperweight)
+ *  0f8H = PS/2 Model 80
+ * </pre>
  *
  * @author lawrence.daniels@gmail.com
  */
 public interface IbmPcSystem {
+    int IBM_PC = 0xFF;
+    int XT_OR_PORTABLE_PC = 0XFE;
+    int IBM_PCjr = 0xFD;
+    int IBM_PC_AT = 0xFC;
+    int IBM_PC_XT = 0xFB;
+    int IBM_PS_2_MODEL30 = 0xFA;
+    int CONVERTIBLE_PC = 0xF9;
+    int IBM_PS_2_MODEL80 = 0xF8;
 
     /**
      * Executes the given collection of opCodes
@@ -36,7 +55,7 @@ public interface IbmPcSystem {
     /**
      * @return the IBM PC-compatible central processing unit (CPU)
      */
-    Intel80x86 getCPU();
+    Intel8086 getCPU();
 
     /**
      * @return the graphical display manager.

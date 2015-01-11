@@ -61,7 +61,7 @@ public abstract class AbstactFileOpCode extends GwBasicCommand {
 	  // determine the full path of the file
 	  final StringBuilder thePath;
 	  try {
-		thePath = new StringBuilder( storage.getCurrentdirectory().getCanonicalPath() )
+		thePath = new StringBuilder( storage.getCurrentDirectory().getCanonicalPath() )
 		  								.append( File.separator )
 		  								.append( object.toString() );
 	  } catch( final IOException e ) {

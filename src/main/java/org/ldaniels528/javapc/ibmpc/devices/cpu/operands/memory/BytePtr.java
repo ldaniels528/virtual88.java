@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 
 /**
@@ -11,7 +11,7 @@ import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 public class BytePtr implements MemoryPointer {
     private final IbmPcRandomAccessMemory memory;
     private final MemoryReference memoryRef;
-    private final Intel80x86 cpu;
+    private final Intel8086 cpu;
 
     /**
      * Creates a pointer to a 8-bit memory address

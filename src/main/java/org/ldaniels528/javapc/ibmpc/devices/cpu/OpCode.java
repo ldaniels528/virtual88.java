@@ -14,10 +14,10 @@ public interface OpCode {
      * Executes the opCode
      *
      * @param system the given {@ink IbmPcSystem IBM PC system}
-     * @param cpu    the {@link Intel80x86 Intel 8086} instance
+     * @param cpu    the {@link Intel8086 Intel 8086} instance
      * @throws X86AssemblyException
      */
-    void execute(IbmPcSystem system, Intel80x86 cpu) throws X86AssemblyException;
+    void execute(IbmPcSystem system, Intel8086 cpu) throws X86AssemblyException;
 
     /**
      * Indicates that this instruction is a conditional instruction

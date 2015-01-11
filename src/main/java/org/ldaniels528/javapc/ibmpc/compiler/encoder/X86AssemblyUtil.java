@@ -9,8 +9,8 @@ import org.ldaniels528.javapc.ibmpc.compiler.element.X86DataElement;
 import org.ldaniels528.javapc.ibmpc.compiler.element.addressing.X86MemoryAddress;
 import org.ldaniels528.javapc.ibmpc.compiler.element.addressing.X86MemoryPointer;
 import org.ldaniels528.javapc.ibmpc.compiler.element.registers.X86RegisterRef;
-import org.ldaniels528.javapc.ibmpc.compiler.exception.X86InvalidNumberOfParametersException;
-import org.ldaniels528.javapc.ibmpc.compiler.exception.X86MalformedInstructionException;
+import org.ldaniels528.javapc.ibmpc.compiler.X86InvalidNumberOfParametersException;
+import org.ldaniels528.javapc.ibmpc.compiler.X86MalformedInstructionException;
 
 /**
  * 80x86 Instruction Encode Utility

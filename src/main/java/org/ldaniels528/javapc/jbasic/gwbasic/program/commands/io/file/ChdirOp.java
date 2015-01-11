@@ -42,7 +42,7 @@ public class ChdirOp extends AbstactFileOpCode {
 	  
 	  // set it as the new current directory
 	  try {
-		storage.setCurrentdirectory( directory );
+		storage.setCurrentDirectory(directory);
 	  } 
 	  catch( final IbmPcException e ) {
 		throw new JBasicException( e );

@@ -15,11 +15,11 @@ import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_8BI
 import static java.lang.String.format;
 
 /**
- * Emulates an Intel 80x86 16/32-bit microprocessor
+ * Emulates an Intel 8086 8/16-bit microprocessor
  *
  * @author lawrence.daniels@gmail.com
  */
-public class Intel80x86 extends X86RegisterSet {
+public class Intel8086 extends X86RegisterSet {
     // system timer frequency
     private static final long SYSTEM_TIMER_FREQ = 1000 / 18; // 18 times/sec
 
@@ -41,7 +41,7 @@ public class Intel80x86 extends X86RegisterSet {
      *
      * @param memory the {@link org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory random access memory} instance
      */
-    public Intel80x86(final IbmPcRandomAccessMemory memory) {
+    public Intel8086(final IbmPcRandomAccessMemory memory) {
         this.memory = memory;
         this.active = true;
         this.stack = new X86Stack(memory, this);

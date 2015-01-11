@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
@@ -27,7 +27,7 @@ public abstract class AbstractFlowControlOpCode extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(IbmPcSystem system, final Intel80x86 cpu) throws X86AssemblyException {
+    public void execute(IbmPcSystem system, final Intel8086 cpu) throws X86AssemblyException {
         if (redirectsFlow(cpu)) {
             cpu.jumpTo(this, destination, false);
         }
@@ -46,10 +46,10 @@ public abstract class AbstractFlowControlOpCode extends AbstractOpCode {
      * is "code fallthru" meaning no adjustment
      * is need to the queued opCodes.
      *
-     * @param cpu the given {@link Intel80x86 Intel 8086 CPU}
+     * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 Intel 8086 CPU}
      * @return the result of evaluate the opCode's condition
      */
-    protected abstract boolean redirectsFlow(Intel80x86 cpu);
+    protected abstract boolean redirectsFlow(Intel8086 cpu);
 
     /**
      * {@inheritDoc}

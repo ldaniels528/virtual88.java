@@ -1,5 +1,6 @@
 package org.ldaniels528.javapc.jbasic.app;
 
+import org.ldaniels528.javapc.JavaPCConstants;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplayFrame;
 import org.ldaniels528.javapc.ibmpc.devices.keyboard.IbmPcKeyboard;
@@ -15,8 +16,7 @@ import org.ldaniels528.javapc.jbasic.gwbasic.program.GwBasicStatement;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class BasicEmulator {
-    private static final String VERSION = "0.431";
+public class BasicEmulator implements JavaPCConstants {
     private static final String APP_TITLE = String.format("JBasicOS version %s", VERSION);
     private final GwBasicEnvironment environment;
     private final GwBasicProgram program;
@@ -74,7 +74,7 @@ public class BasicEmulator {
     /**
      * Orchestrates the execution process
      */
-    public void execute() {
+    public void execute() throws InterruptedException {
         // show the program header
         displayVersionAndCopyright();
 
@@ -117,7 +117,7 @@ public class BasicEmulator {
     /**
      * Interactive session with user (Main Loop)
      */
-    private void interactive() {
+    private void interactive() throws InterruptedException {
         // cycle indefinitely
         this.alive = true;
         while (alive) {

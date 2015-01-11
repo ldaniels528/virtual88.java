@@ -1,7 +1,7 @@
 package org.ldaniels528.javapc.jbasic.gwbasic.program;
 
 import org.ldaniels528.javapc.ibmpc.app.IbmPcAssemblyLanguageCompiler;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramContext;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
 import org.ldaniels528.javapc.ibmpc.devices.keyboard.IbmPcKeyEventListener;
@@ -415,7 +415,7 @@ public class GwBasicCompiledCode implements JBasicCompiledCode, IbmPcKeyEventLis
 
         try {
             // get the CPU instance
-            final Intel80x86 cpu = environment.getCPU();
+            final Intel8086 cpu = environment.getCPU();
 
             // execute the code
             cpu.execute(environment, context);

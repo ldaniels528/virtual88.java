@@ -37,7 +37,7 @@ public class X86RegisterSet {
     public final X86Register16bit SS;            // 16-bit stack segment register
 
     // status and control registers
-    public final X86Flags FLAGS;        // 16-bit flags register
+    public final X86Flags FLAGS;                // 16-bit flags register
 
     // instruction pointers
     public final X86RegisterIP IP;                // 16-bit instruction pointer register

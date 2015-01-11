@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.jbasic.common.exceptions;
 
-import org.ldaniels528.javapc.ibmpc.compiler.exception.X86IllegalNumericFormatException;
+import org.ldaniels528.javapc.ibmpc.compiler.X86IllegalNumericFormatException;
 
 /**
  * Represents an "Illegal number format" Exception

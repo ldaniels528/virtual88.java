@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.bitwise.NEG;
@@ -107,7 +107,7 @@ public class DecoderF0 implements Decoder {
      * {@inheritDoc}
      */
     @Override
-    public OpCode decode(final Intel80x86 cpu, final X86MemoryProxy proxy) {
+    public OpCode decode(final Intel8086 cpu, final X86MemoryProxy proxy) {
         // peek at the next word
         final int code8 = proxy.nextByte();
 
@@ -158,12 +158,12 @@ public class DecoderF0 implements Decoder {
     /**
      * Decodes a complex F6, F7, FE, or FF instruction
      *
-     * @param cpu   the given {@link Intel80x86 CPU} instance
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      * @param proxy the given {@link X86MemoryProxy memory proxy} instance
      * @param code8 the given 8-bit instruction code
      * @return an {@link OpCode opCode}
      */
-    private OpCode decodeComplexCode(final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8) {
+    private OpCode decodeComplexCode(final Intel8086 cpu, final X86MemoryProxy proxy, final int code8) {
         // get the 16-bit code
         // code: ttjj jmmm iiii iixc
         final int code16 = proxy.nextWord(code8);
@@ -190,13 +190,13 @@ public class DecoderF0 implements Decoder {
     /**
      * Decodes the given Type A (TEST,NOT,NEG,MUL,IMUL,DIV,IDIV) instruction
      *
-     * @param cpu     the given {@link Intel80x86 CPU} instance
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      * @param proxy   the given {@link X86MemoryProxy memory proxy} instance
      * @param code16  the given 16-bit instruction code
      * @param subCode the given 3-bit instruction sub-code
      * @return the {@link OpCode decoded instruction}
      */
-    private OpCode decodeTypeA(final Intel80x86 cpu, final X86MemoryProxy proxy, final int code16, final int subCode) {
+    private OpCode decodeTypeA(final Intel8086 cpu, final X86MemoryProxy proxy, final int code16, final int subCode) {
         // extract the memory class
         // code: .... .... .... ...c (mask = 0000 0000 0000 0001)
         final int memClass = (code16 & 0x0001);
@@ -228,13 +228,13 @@ public class DecoderF0 implements Decoder {
     /**
      * Decodes the given Type B (CALL,JMP,PUSH,INC,DEC) instruction
      *
-     * @param cpu     the given {@link Intel80x86 CPU} instance
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
      * @param proxy   the given {@link X86MemoryProxy memory proxy} instance
      * @param code16  the given 16-bit instruction code
      * @param subCode the given 3-bit instruction sub-code
      * @return the {@link OpCode decoded instruction}
      */
-    private OpCode decodeTypeB(final Intel80x86 cpu, final X86MemoryProxy proxy, int code16, final int subCode) {
+    private OpCode decodeTypeB(final Intel8086 cpu, final X86MemoryProxy proxy, int code16, final int subCode) {
         // decode the instruction
         switch (subCode) {
             case INS_TYPE_B_CALL:

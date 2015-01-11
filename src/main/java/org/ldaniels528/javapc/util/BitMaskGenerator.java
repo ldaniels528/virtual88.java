@@ -1,4 +1,4 @@
-package org.ldaniels528.javapc.ibmpc.util;
+package org.ldaniels528.javapc.util;
 
 /**
  * This class generates bit masks for turning bits on or off
@@ -10,12 +10,12 @@ public class BitMaskGenerator {
     /**
      * Indicates whether the bit is set for the given value and specified bit number
      *
-     * @param value the given value
+     * @param width the given width in bits of the target value
      * @param nth   the specified bit number (starts at zero)
      * @return true, if the nth bit is set.
      */
-    public static boolean isBitSet(final int value, final int nth) {
-        return (value & turnBitOnMask(nth)) > 0;
+    public static boolean isBitSet(final int width, final int nth) {
+        return (width & turnBitOnMask(nth)) > 0;
     }
 
     /**

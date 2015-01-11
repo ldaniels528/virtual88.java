@@ -2,7 +2,7 @@ package org.ldaniels528.javapc.ibmpc.util;
 
 import org.junit.Test;
 
-import static org.ldaniels528.javapc.ibmpc.util.BitMaskGenerator.*;
+import static org.ldaniels528.javapc.util.BitMaskGenerator.*;
 import static org.junit.Assert.*;
 
 /**

@@ -54,7 +54,7 @@ public class X86CodeBuffer {
 	 * Sets the given bytes starting at the next memory offset
 	 * @param opCodes the given byte codes
 	 */
-	public X86CodeBuffer setBytes( final int ... opCodes ) {
+	public X86CodeBuffer setBytes( final int ... opCodes ) throws IOException {
 		// create the byte code from the opCodes
 		final byte[] byteCode = new byte[ opCodes.length ];
 		for( int n = 0; n < byteCode.length; n++ ) {
@@ -70,14 +70,8 @@ public class X86CodeBuffer {
 	 * Sets the given bytes starting at the next memory offset
 	 * @param bytecodes the given byte codes
 	 */
-	public X86CodeBuffer setBytes( final byte ... bytecodes ) {
-		try {
-			bytes.write( bytecodes );
-		} 
-		catch ( final IOException e ) {
-			e.printStackTrace();
-		}
-
+	public X86CodeBuffer setBytes( final byte ... bytecodes ) throws IOException {
+		bytes.write( bytecodes );
 		logger.debug( bytecodes );
 		return this;
 	}

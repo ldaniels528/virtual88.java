@@ -13,8 +13,8 @@ import org.ldaniels528.javapc.ibmpc.compiler.element.X86DataElement;
 import org.ldaniels528.javapc.ibmpc.compiler.element.values.X86ByteValue;
 import org.ldaniels528.javapc.ibmpc.compiler.element.values.X86NumericValue;
 import org.ldaniels528.javapc.ibmpc.compiler.element.values.X86Value;
-import org.ldaniels528.javapc.ibmpc.compiler.exception.X86InvalidNumberOfParametersException;
-import org.ldaniels528.javapc.ibmpc.compiler.exception.X86MalformedInstructionException;
+import org.ldaniels528.javapc.ibmpc.compiler.X86InvalidNumberOfParametersException;
+import org.ldaniels528.javapc.ibmpc.compiler.X86MalformedInstructionException;
 import org.ldaniels528.javapc.ibmpc.util.X86CodeBuffer;
 
 /**

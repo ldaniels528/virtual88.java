@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.addressing;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers.X86Register;
@@ -25,11 +25,11 @@ public abstract class SegmentOverrideOpCode extends AbstractOpCode {
      * Provides a means to override the the next instruction using a segment register
      *
      * @param system   the given {@link org.ldaniels528.javapc.ibmpc.system.IbmPcSystem IBM PC system}
-     * @param cpu      the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86 Intel 8086 CPU}
+     * @param cpu      the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 Intel 8086 CPU}
      * @param register the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers.X86Register 8086 register}
      * @throws X86AssemblyException
      */
-    protected void override(final IbmPcSystem system, final Intel80x86 cpu, final X86Register register) throws X86AssemblyException {
+    protected void override(final IbmPcSystem system, final Intel8086 cpu, final X86Register register) throws X86AssemblyException {
         // save the current DS
         final int segment = cpu.DS.get();
 

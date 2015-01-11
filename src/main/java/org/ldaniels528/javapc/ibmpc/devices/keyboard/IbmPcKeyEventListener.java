@@ -3,7 +3,7 @@ package org.ldaniels528.javapc.ibmpc.devices.keyboard;
 import java.awt.event.KeyEvent;
 
 /**
- * JBasic Key Pressed Event Listener
+ * JavaPC Key Pressed Event Listener
  * @author lawrence.daniels@gmail.com
  */
 public interface IbmPcKeyEventListener {

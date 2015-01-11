@@ -16,20 +16,22 @@ public abstract class X86MemoryAddress implements X86DataElement {
 		super();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.machinecode.encoder.X86DataElement#getSequence()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int getSequence() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.machinecode.encoder.X86DataElement#isMemoryReference()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isMemoryReference() {
 		return true;
 	}
-	
+
 	/**
 	 * Indicates whether the memory address is a pointer
 	 * @return true, if memory address is a pointer
@@ -38,16 +40,18 @@ public abstract class X86MemoryAddress implements X86DataElement {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.machinecode.encoder.X86DataElement#isRegister()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isRegister() {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.machinecode.encoder.X86DataElement#isValue()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isValue() {
 		return false;
 	}

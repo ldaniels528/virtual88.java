@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -30,7 +30,7 @@ public class ATSystemServices implements InterruptHandler {
 	 * Process the Disk Services Interrupt (INT 15h)
 	 * @throws X86AssemblyException
 	 */
-	public void process(IbmPcSystem system, final Intel80x86 cpu) throws X86AssemblyException {
+	public void process(IbmPcSystem system, final Intel8086 cpu) throws X86AssemblyException {
 		// determine what to do
 		switch( cpu.AH.get() ) {
 			default:

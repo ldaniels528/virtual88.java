@@ -1,7 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder;
 
 import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.*;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.addressing.CS;
@@ -63,7 +63,7 @@ public class Decoder20 implements Decoder {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public OpCode decode( final Intel80x86 cpu, X86MemoryProxy proxy ) {
+	public OpCode decode( final Intel8086 cpu, X86MemoryProxy proxy ) {
 		// get the 8-bit instruction
 		final int code8 = proxy.nextByte();
 		
@@ -92,13 +92,13 @@ public class Decoder20 implements Decoder {
 	
 	/**
 	 * Decodes complex instruction codes between 00h and 0Fh
-	 * @param cpu the given {@link Intel80x86 CPU} instance 
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
 	 * @param proxy the given {@link X86MemoryProxy memory proxy}
 	 * @param code8 the given 8-bit instruction code
 	 * @return the resultant {@link OpCode opCode}, 
 	 * or <tt>null</tt> if not found
 	 */
-	private OpCode decodeComplexCode( final Intel80x86 cpu, final X86MemoryProxy proxy, final int code8 ) {
+	private OpCode decodeComplexCode( final Intel8086 cpu, final X86MemoryProxy proxy, final int code8 ) {
 		// instruction code layout
 		// -----------------------------
 		// fedc ba98 7654 3210 (16 bits)

@@ -1,4 +1,4 @@
-package org.ldaniels528.javapc.ibmpc.compiler.exception;
+package org.ldaniels528.javapc.ibmpc.compiler;
 
 
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;

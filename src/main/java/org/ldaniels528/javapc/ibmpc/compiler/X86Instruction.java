@@ -53,7 +53,7 @@ public class X86Instruction {
      */
     public static X86Instruction create(final String instructionName, final List<X86DataElement> params) {
         // convert the list of parameters into an array
-        final X86DataElement[] elements = (X86DataElement[]) params.toArray(new X86DataElement[params.size()]);
+        final X86DataElement[] elements = params.toArray(new X86DataElement[params.size()]);
 
         // create the new instruction
         return new X86Instruction(instructionName, elements);
