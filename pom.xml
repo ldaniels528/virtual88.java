@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ldaniels528</groupId>
-	<artifactId>jbasic</artifactId>
+	<artifactId>javapc</artifactId>
 	<version>0.431</version>
-	<name>jbasic</name>
-	<description>A GWBASIC interpreter and IBM PC emulator</description>
+	<name>javapc</name>
+	<description>IBM PC emulator and GWBASIC interpreter implemented in Java</description>
 
 	<dependencies>
 		<dependency>
@@ -48,18 +48,13 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.2</version>
 				<configuration>
-					<source />
-					<target />
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
-				<configuration>
+					<verbose>true</verbose>
 					<source>1.8</source>
 					<target>1.8</target>
+					<fork>false</fork>
+					<encoding>utf-8</encoding>
+					<meminitial>256m</meminitial>
+					<maxmem>1024m</maxmem>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -1,6 +1,6 @@
-# JBasic
+# JavaPC
 
-GWBASIC interpreter and IBM PC emulator
+IBM PC emulator and GWBASIC interpreter implemented in Java (Java2D, Swing)
 
 ### Motivations
 
@@ -28,27 +28,27 @@ I've recently decided to update this project to Java 8, and improve its x86 comp
 To execute the GWBASIC/BASICA emulator:
 
 ```bash
-	$ java -jar jbasic-0.431-jar-with-dependencies.jar
+	$ java -jar javapc-0.431-jar-with-dependencies.jar
 ```
 
 To execute the IBM PC/MS-DOS emulator:
 
 ```bash
-	$ java -cp jbasic-0.431-jar-with-dependencies.jar ibmpc.app.IbmPcEmulator
+	$ java -cp javapc-0.431-jar-with-dependencies.jar ibmpc.app.IbmPcEmulator
 ```
 
 To execute the IBM PC/MS-DOS debugger:
 
 ```bash
-	$ java -cp jbasic-0.431-jar-with-dependencies.jar ibmpc.app.IbmPcDebugger
+	$ java -cp javapc-0.431-jar-with-dependencies.jar ibmpc.app.IbmPcDebugger
 ```
 
 ### Using the application(s)
 
 One of the goals of this project is to satisfy three distinct use cases:
-* Ability to run GWBASIC/BASICA programs in the JBasic emulator (**works**)
-* Ability to run MS-DOS .com executables in the JBasic/PC emulator (**wip**)
-* Ability to execute hand written assembly code in the JBasic/PC emulator (**works**)
+* Ability to run GWBASIC/BASICA programs via the JavaPC/BASIC emulator (**works**)
+* Ability to run MS-DOS .com executables via the JavaPC/PC emulator (**wip**)
+* Ability to execute hand written assembly code via the JavaPC/PC emulator (**works**)
 
 The following is a working example of the third use case:
 
