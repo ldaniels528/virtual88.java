@@ -11,7 +11,7 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system.INT;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplayFrame;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
-import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemXT;
+import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemPCjr;
 
 import java.util.Calendar;
 
@@ -30,7 +30,7 @@ public class MsDosSystemServicesTest {
     @Test
     public void testGetSystemDate() throws Exception {
         final IbmPcDisplayFrame frame = new IbmPcDisplayFrame("Test PC");
-        final IbmPcSystem system = new IbmPcSystemXT(frame);
+        final IbmPcSystem system = new IbmPcSystemPCjr(frame);
         final Intel8086 cpu = system.getCPU();
 
         // execute the 8086 instructions to print the text string
@@ -67,7 +67,7 @@ public class MsDosSystemServicesTest {
     @Test
     public void testMsDOS_21h() throws Exception {
         final IbmPcDisplayFrame frame = new IbmPcDisplayFrame("Test PC");
-        final IbmPcSystem system = new IbmPcSystemXT(frame);
+        final IbmPcSystem system = new IbmPcSystemPCjr(frame);
         final Intel8086 cpu = system.getCPU();
         final IbmPcRandomAccessMemory memory = system.getRandomAccessMemory();
 

@@ -1,18 +1,19 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu;
 
+import org.apache.log4j.Logger;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryAddressFAR32;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecodeProcessor;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecodeProcessorImpl;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system.INT;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
+import org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryProxy;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
-import org.apache.log4j.Logger;
 
+import static java.lang.String.format;
 import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_16BIT;
 import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_8BIT;
-import static java.lang.String.format;
 
 /**
  * Emulates an Intel 8086 8/16-bit microprocessor
@@ -28,6 +29,7 @@ public class Intel8086 extends X86RegisterSet {
     private final IbmPcRandomAccessMemory memory;
     private final DecodeProcessor decoder;
     private final X86Stack stack;
+    private X86Register16bit XDS; // 16-bit data segment override register
     private long lastTimerUpdate;
     private boolean ipChanged;
     private boolean active;
@@ -39,13 +41,14 @@ public class Intel8086 extends X86RegisterSet {
     /**
      * Creates a new i8086 instance
      *
-     * @param memory the {@link org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory random access memory} instance
+     * @param proxy the {@link X86MemoryProxy memory proxy} instance
      */
-    public Intel8086(final IbmPcRandomAccessMemory memory) {
-        this.memory = memory;
+    public Intel8086(final X86MemoryProxy proxy) {
+        this.XDS = DS;
+        this.memory = proxy.getMemory();
         this.active = true;
         this.stack = new X86Stack(memory, this);
-        this.decoder = new DecodeProcessorImpl(this, memory);
+        this.decoder = new DecodeProcessorImpl(this, proxy);
         this.lastTimerUpdate = System.currentTimeMillis();
         this.ipChanged = false;
     }
@@ -72,10 +75,6 @@ public class Intel8086 extends X86RegisterSet {
      * @param context the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramContext 80x86 execution context}
      */
     public void execute(final IbmPcSystem system, final ProgramContext context) throws X86AssemblyException {
-        // cache the code segment and offset
-        final int codeSegment = context.getCodeSegment();
-        final int codeOffset = context.getCodeOffset();
-
         // setup the segments
         CS.set(context.getCodeSegment());
         DS.set(context.getDataSegment());
@@ -95,23 +94,11 @@ public class Intel8086 extends X86RegisterSet {
         }
 
         // point the decoder to the code segment and offset
-        decoder.redirect(codeSegment, codeOffset);
+        decoder.redirect(context.getCodeSegment(), context.getCodeOffset());
 
-        try {
-            // initialize the decoder
-            decoder.init();
-
-            // continue to execute while active
-            while (isActive()) {
-                // decode the next opCode
-                final OpCode opCode = getNextOpCode();
-
-                // execute the opCode
-                execute(system, opCode);
-            }
-        } finally {
-            // shutdown the decoder
-            decoder.shutdown();
+        // continue to decode and execute while active
+        while (isActive()) {
+            execute(system, getNextOpCode());
         }
     }
 
@@ -188,13 +175,41 @@ public class Intel8086 extends X86RegisterSet {
     }
 
     /**
+     * Resets the register override; pointing back to DS as the default data segment register
+     */
+    public void resetOverrideRegister() {
+        XDS = DS;
+    }
+
+    /**
+     * Sets the default data segment register as the given register; overriding DS.
+     *
+     * @param register the given segment register (CS, DS, ES or SS)
+     */
+    public void setOverrideRegister(final X86Register16bit register) {
+        XDS = register;
+    }
+
+    /**
      * Retrieves a byte from [DS:offset] in memory
      *
      * @param offset the given offset
      * @return an 8-bit value from memory
      */
     public int getByte(final int offset) {
-        return memory.getByte(DS.get(), offset);
+        final int value = memory.getByte(XDS.get(), offset);
+        logger.info(format("D [%04X:%04X] %13s %02X", XDS.get(), offset, "", value));
+        return value;
+    }
+
+    /**
+     * Sets the byte found at the given offset within the DS segment
+     *
+     * @param offset the given offset within the DS segment
+     * @param value  the 8-bit value to set
+     */
+    public void setByte(final int offset, final int value) {
+        memory.setByte(XDS.get(), offset, (byte) value);
     }
 
     /**
@@ -204,18 +219,31 @@ public class Intel8086 extends X86RegisterSet {
      * @return a 16-bit value from memory
      */
     public int getWord(final int offset) {
-        return memory.getWord(DS.get(), offset);
+        final int value = memory.getWord(XDS.get(), offset);
+        logger.info(format("D [%04X:%04X] %13s data = %04X (%d)", XDS.get(), offset, "", value, value));
+        return value;
     }
 
     /**
-     * Sets the byte found at the given offset
-     * within the DS segment
+     * Sets the word found at the given offset within the DS segment
      *
      * @param offset the given offset within the DS segment
-     * @param value  the 8-bit value to set
+     * @param value  the 16-bit value to set
      */
-    public void setByte(final int offset, final int value) {
-        memory.setByte(DS.get(), offset, (byte) value);
+    public void setWord(final int offset, final int value) {
+        memory.setWord(XDS.get(), offset, value);
+    }
+
+    /**
+     * Retrieves a word from [DS:offset] in memory
+     *
+     * @param offset the given offset
+     * @return a 16-bit value from memory
+     */
+    public int getDoubleWord(final int offset) {
+        final int value = memory.getDoubleWord(XDS.get(), offset);
+        logger.info(format("D [%04X:%04X] %08X", XDS.get(), offset, value));
+        return value;
     }
 
     /**
@@ -225,8 +253,8 @@ public class Intel8086 extends X86RegisterSet {
      * @param offset the given offset within the DS segment
      * @param value  the 16-bit value to set
      */
-    public void setWord(final int offset, final int value) {
-        memory.setWord(DS.get(), offset, value);
+    public void setDoubleWord(final int offset, final int value) {
+        memory.setDoubleWord(XDS.get(), offset, value);
     }
 
     /**
@@ -293,7 +321,7 @@ public class Intel8086 extends X86RegisterSet {
     public void returnNear(final int count) {
         // is the stack is empty, stop executing
         if (stack.isEmpty()) {
-            this.halt();
+            halt();
             return;
         }
 
@@ -346,7 +374,7 @@ public class Intel8086 extends X86RegisterSet {
     }
 
     /**
-     * Updates the system timer (18 times/sec)
+     * Updates the system timer (every 55 milliseconds - 18 times/sec)
      *
      * @param system the given {@link IbmPcSystem IBM PC system}
      * @throws X86AssemblyException
@@ -355,9 +383,9 @@ public class Intel8086 extends X86RegisterSet {
         // is it time to invoke the system timer?
         final long elapsedSinceUpdate = System.currentTimeMillis() - lastTimerUpdate;
         if ((elapsedSinceUpdate >= SYSTEM_TIMER_FREQ) && FLAGS.isIF()) {
+            logger.info(format("SYSTIMR timer last update %d msec ago", elapsedSinceUpdate));
             INT.SYSTIMR.execute(system, this);
             lastTimerUpdate = System.currentTimeMillis();
-            logger.info(format("SYSTIMR timer last update %d msec ago", elapsedSinceUpdate));
         }
     }
 

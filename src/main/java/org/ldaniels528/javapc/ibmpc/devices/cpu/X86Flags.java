@@ -25,6 +25,11 @@ import static org.ldaniels528.javapc.util.BitMaskGenerator.*;
  * @author lawrence.daniels@gmail.com
  */
 public class X86Flags implements Operand {
+    // setup the default state of the flags
+    // 		                                fedc ba98 7654 3210
+    //                                 mask .... odit sz0a 0p1c
+    private static final int FIXED_BITS = 0b0000_0010_0000_0010;
+
     // Flag bit number constants
     private static final int FLAG_LEN = 16;
     private static final int CF_BIT = 0;
@@ -44,10 +49,7 @@ public class X86Flags implements Operand {
      * Default constructor
      */
     public X86Flags() {
-        // set the default state of the flags
-        // 		fedc ba98 7654 3210
-        // mask .... odit sz0a 0p1c
-        this.value = 0b0000_0010_0000_0010;
+        this.value = FIXED_BITS;
     }
 
     /**
@@ -88,6 +90,40 @@ public class X86Flags implements Operand {
         setSF(isBitSet(andValue, dest.size() - 1));
         setZF(andValue == 0);
         return andValue;
+    }
+
+    /**
+     * Performs an DEC on the given operand value
+     *
+     * @param dest the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand operand}
+     */
+    public int updateDEC(final Operand dest) {
+        // perform the DEC operation
+        final int decValue = dest.get() - 1;
+
+        // update the flags
+        setOF(isBitSet(decValue, dest.size() - 1));
+        setPF(determineParityState(decValue));
+        setSF(isBitSet(decValue, dest.size() - 1));
+        setZF(decValue == 0);
+        return decValue;
+    }
+
+    /**
+     * Performs an INC on the given operand value
+     *
+     * @param dest the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand operand}
+     */
+    public int updateINC(final Operand dest) {
+        // perform the INC operation
+        final int incValue = dest.get() + 1;
+
+        // update the flags
+        setOF(isBitSet(incValue, dest.size() - 1));
+        setPF(determineParityState(incValue));
+        setSF(isBitSet(incValue, dest.size() - 1));
+        setZF(incValue == 0);
+        return incValue;
     }
 
     /**
@@ -187,23 +223,6 @@ public class X86Flags implements Operand {
     }
 
     /**
-     * Returns the maximum positive signed integer value for the operand width
-     *
-     * @param op the given {@link Operand 8- or 16-bit operand}
-     * @return the maximum positive signed integer value
-     */
-    private int highWaterMark(final Operand op) {
-        switch (op.size()) {
-            case SIZE_8BIT:
-                return 0x80;
-            case SIZE_16BIT:
-                return 0x8000;
-            default:
-                throw new IllegalArgumentException(String.format("Size type %d is unrecognized", op.size()));
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -233,7 +252,7 @@ public class X86Flags implements Operand {
      * @param value8 the given 8-bit register
      */
     public void overlay(final int value8) {
-        this.value = (value & 0xFF00) | (value8 & 0x00FF);
+        this.value |= (value8 & 0b0111_1111) | FIXED_BITS;
     }
 
     /**

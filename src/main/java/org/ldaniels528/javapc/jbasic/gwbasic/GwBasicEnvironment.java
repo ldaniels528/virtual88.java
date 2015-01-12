@@ -5,7 +5,7 @@ import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplayFrame;
 import org.ldaniels528.javapc.ibmpc.devices.keyboard.IbmPcKeyConstants;
 import org.ldaniels528.javapc.ibmpc.devices.keyboard.IbmPcKeyboard;
 import org.ldaniels528.javapc.ibmpc.devices.memory.MemoryManager;
-import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemXT;
+import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemPCjr;
 import org.ldaniels528.javapc.jbasic.common.JBasicDisplayWrapper;
 import org.ldaniels528.javapc.jbasic.common.JBasicKeyLabels;
 import org.ldaniels528.javapc.jbasic.common.JBasicMemoryManager;
@@ -24,7 +24,7 @@ import static org.ldaniels528.javapc.jbasic.common.JBasicDisplayModes.MODE0b;
  * @see org.ldaniels528.javapc.jbasic.common.JBasicDisplayWrapper
  * @see org.ldaniels528.javapc.jbasic.gwbasic.program.GwBasicProgram
  */
-public class GwBasicEnvironment extends IbmPcSystemXT {
+public class GwBasicEnvironment extends IbmPcSystemPCjr {
     public static final int PROGRAM_SEGEMENT = 0x1000;
     private final JBasicDisplayWrapper displayWrapper;
     private final MemoryManager memoryManager;

@@ -61,7 +61,6 @@ public class IbmPcRandomAccessMemory {
     public void copyBytes(final int sourceAddress,
                           final int destinationAddress,
                           final int count) {
-        // copy the data
         System.arraycopy(systemMemory, sourceAddress, systemMemory, destinationAddress, count);
     }
 
@@ -238,23 +237,6 @@ public class IbmPcRandomAccessMemory {
     }
 
     /**
-     * Retrieves a quad word (two double words) from memory at
-     * the given segment and offset.
-     *
-     * @param segment the segment of the memory location
-     * @param offset  the offset of the memory location
-     * @return the word read from memory
-     */
-    public long getQuadWord(final int segment, final int offset) {
-        // get the high and low order words
-        final long hiWord = getDoubleWord(segment, offset);
-        final long loWord = getDoubleWord(segment, offset + 4);
-
-        // convert the bytes to a double word
-        return (hiWord << 32) | loWord;
-    }
-
-    /**
      * Guarantees that the each set bit within the mask sets the
      * corresponding bit within the referenced byte of memory.
      *
@@ -294,7 +276,7 @@ public class IbmPcRandomAccessMemory {
      * @param length          the length of the memory block
      */
     public void setBytes(final int physicalAddress, final byte[] block, final int length) {
-        // failsafe check
+        // fail-safe check
         if (physicalAddress + length > SYSTEM_MEMORY_SIZE) {
             logger.debug(format("Warning physical address (%x) is outside of maximum (%x)", physicalAddress + length, SYSTEM_MEMORY_SIZE));
         }

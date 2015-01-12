@@ -28,7 +28,7 @@ public class JPE extends AbstractFlowControlOpCode {
      */
     @Override
     protected boolean redirectsFlow(final Intel8086 cpu) {
-        return (cpu.FLAGS.isPF());
+        return cpu.FLAGS.isPF();
     }
 
 }

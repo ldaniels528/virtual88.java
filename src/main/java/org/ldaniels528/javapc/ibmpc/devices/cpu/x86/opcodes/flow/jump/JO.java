@@ -28,7 +28,7 @@ public class JO extends AbstractFlowControlOpCode {
      */
     @Override
     protected boolean redirectsFlow(final Intel8086 cpu) {
-        return (!cpu.FLAGS.isOF());
+        return cpu.FLAGS.isOF();
     }
 
 }

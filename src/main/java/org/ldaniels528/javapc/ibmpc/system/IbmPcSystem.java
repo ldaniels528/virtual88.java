@@ -6,6 +6,7 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.IbmPcBIOS;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
 import org.ldaniels528.javapc.ibmpc.devices.keyboard.IbmPcKeyboard;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
+import org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryProxy;
 import org.ldaniels528.javapc.ibmpc.devices.mouse.IbmPcMouse;
 import org.ldaniels528.javapc.ibmpc.devices.ports.IbmPcHardwarePorts;
 import org.ldaniels528.javapc.ibmpc.devices.storage.IbmPcStorageSystem;
@@ -71,6 +72,11 @@ public interface IbmPcSystem {
      * @return the console input device associated to this environment.
      */
     IbmPcKeyboard getKeyboard();
+
+    /**
+     * @return the memory proxy instance
+     */
+    X86MemoryProxy getMemoryProxy();
 
     /**
      * @return the mouse input device associated to this environment.

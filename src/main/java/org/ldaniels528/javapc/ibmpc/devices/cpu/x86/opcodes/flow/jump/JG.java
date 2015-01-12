@@ -28,7 +28,7 @@ public class JG extends AbstractFlowControlOpCode {
      */
     @Override
     protected boolean redirectsFlow(final Intel8086 cpu) {
-        return (!cpu.FLAGS.isZF() && (cpu.FLAGS.isSF() == cpu.FLAGS.isOF()));
+        return !cpu.FLAGS.isZF() && (cpu.FLAGS.isSF() == cpu.FLAGS.isOF());
     }
 
 }

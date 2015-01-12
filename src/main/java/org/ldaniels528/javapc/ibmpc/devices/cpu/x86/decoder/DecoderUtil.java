@@ -455,7 +455,7 @@ public class DecoderUtil {
         }
 
         // return the memory reference
-        return new MemoryReference(cpu, compCode, offset);
+        return new MemoryReference(cpu, proxy, compCode, offset);
     }
 
     /**

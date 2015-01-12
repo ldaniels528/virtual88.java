@@ -51,7 +51,7 @@ public class LOOPNZ extends AbstractFlowControlOpCode {
      */
     @Override
     protected boolean redirectsFlow(final Intel8086 cpu) {
-        final boolean ok = (cpu.CX.get() > 0) && (!cpu.FLAGS.isZF());
+        final boolean ok = (cpu.CX.get() > 0) && !cpu.FLAGS.isZF();
         if (ok) {
             // decrement cx
             cpu.CX.add(-1);

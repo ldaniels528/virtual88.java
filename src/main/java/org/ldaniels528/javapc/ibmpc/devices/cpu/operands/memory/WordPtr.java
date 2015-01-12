@@ -1,7 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
-import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 
 /**
  * Represents a pointer to a 16-bit (word) memory address
@@ -9,7 +8,6 @@ import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
  * @author lawrence.daniels@gmail.com
  */
 public class WordPtr implements MemoryPointer {
-    private final IbmPcRandomAccessMemory memory;
     private final MemoryReference memoryRef;
     private final Intel8086 cpu;
 
@@ -19,9 +17,8 @@ public class WordPtr implements MemoryPointer {
      * @param memoryRef the given {@link MemoryReference memory reference}
      */
     public WordPtr(final MemoryReference memoryRef) {
-        this.cpu = memoryRef.getCPU();
-        this.memory = cpu.getRandomAccessMemory();
         this.memoryRef = memoryRef;
+        this.cpu = memoryRef.getCPU();
     }
 
     /**
@@ -29,7 +26,7 @@ public class WordPtr implements MemoryPointer {
      */
     @Override
     public int get() {
-        return memory.getWord(cpu.DS.get(), memoryRef.getOffset());
+        return cpu.getWord(memoryRef.getOffset());
     }
 
     /**
@@ -41,7 +38,7 @@ public class WordPtr implements MemoryPointer {
         final int offset = memoryRef.getOffset();
 
         // set the value
-        memory.setWord(cpu.DS.get(), offset, value);
+        cpu.setWord(offset, value);
     }
 
     /**

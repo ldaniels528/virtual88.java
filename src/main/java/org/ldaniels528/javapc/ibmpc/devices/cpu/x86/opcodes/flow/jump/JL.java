@@ -6,7 +6,7 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.AbstractFlowCon
 
 /**
  * <pre>
- * Jump if Lower
+ * Jump if Less (JL) / Jump if Not Greater or Equal (JNGE)
  * Jump Condition: SF != OF
  * </pre>
  *
@@ -28,7 +28,7 @@ public class JL extends AbstractFlowControlOpCode {
      */
     @Override
     protected boolean redirectsFlow(final Intel8086 cpu) {
-        return (cpu.FLAGS.isSF() != cpu.FLAGS.isOF());
+        return cpu.FLAGS.isSF() || cpu.FLAGS.isOF();
     }
 
 }

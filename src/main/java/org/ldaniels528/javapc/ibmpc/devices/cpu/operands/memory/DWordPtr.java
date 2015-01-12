@@ -1,7 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
-import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 
 /**
  * Represents a pointer to a 32-bit (double word) memory address
@@ -9,7 +8,6 @@ import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
  * @author lawrence.daniels@gmail.com
  */
 public class DWordPtr implements MemoryPointer {
-    private final IbmPcRandomAccessMemory memory;
     private final MemoryReference memoryRef;
     private final Intel8086 cpu;
 
@@ -20,7 +18,6 @@ public class DWordPtr implements MemoryPointer {
      */
     public DWordPtr(final MemoryReference memoryRef) {
         this.cpu = memoryRef.getCPU();
-        this.memory = cpu.getRandomAccessMemory();
         this.memoryRef = memoryRef;
     }
 
@@ -29,7 +26,7 @@ public class DWordPtr implements MemoryPointer {
      */
     @Override
     public int get() {
-        return memory.getDoubleWord(cpu.DS.get(), memoryRef.getOffset());
+        return cpu.getDoubleWord(memoryRef.getOffset());
     }
 
     /**
@@ -41,7 +38,7 @@ public class DWordPtr implements MemoryPointer {
         final int offset = memoryRef.getOffset();
 
         // set the value
-        memory.setDoubleWord(cpu.DS.get(), offset, value);
+        cpu.setDoubleWord(offset, value);
     }
 
     /**

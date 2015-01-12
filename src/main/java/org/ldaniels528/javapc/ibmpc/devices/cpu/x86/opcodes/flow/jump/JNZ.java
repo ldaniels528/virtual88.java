@@ -6,7 +6,7 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.AbstractFlowCon
 
 /**
  * <pre>
- * Jump if Not Zero
+ * Jump if Not Zero (JNZ) / Jump if Not Equal (JNE)
  * Jump Condition: ZF=0
  * </pre>
  *
@@ -28,7 +28,7 @@ public class JNZ extends AbstractFlowControlOpCode {
      */
     @Override
     protected boolean redirectsFlow(final Intel8086 cpu) {
-        return (!cpu.FLAGS.isZF());
+        return !cpu.FLAGS.isZF();
     }
 
 }

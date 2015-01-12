@@ -73,11 +73,7 @@ public abstract class X86CompositeRegister implements X86Register {
      */
     @Override
     public void and(final int mask) {
-        // calculate the AND'ed value
-        final int value0 = get() & mask;
-
-        // put the AND'ed value back into the register
-        set(value0);
+        set(get() & mask);
     }
 
     /**
@@ -85,11 +81,7 @@ public abstract class X86CompositeRegister implements X86Register {
      */
     @Override
     public void or(final int mask) {
-        // calculate the OR'ed value
-        final int value0 = (get() | mask);
-
-        // put the OR'ed value back into the register
-        set(value0);
+        set(get() | mask);
     }
 
     /**
@@ -97,11 +89,7 @@ public abstract class X86CompositeRegister implements X86Register {
      */
     @Override
     public void lshift(final int bits) {
-        // calculate the shifted value
-        final int value0 = (get() << bits);
-
-        // put the shifted value back into the register
-        set(value0);
+        set(get() << bits);
     }
 
     /**
@@ -109,11 +97,7 @@ public abstract class X86CompositeRegister implements X86Register {
      */
     @Override
     public void rshift(final int bits) {
-        // calculate the shifted value
-        final int value0 = (get() >> bits);
-
-        // put the shifted value back into the register
-        set(value0);
+        set(get() >> bits);
     }
 
     /**

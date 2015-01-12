@@ -1,25 +1,17 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.addressing;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.X86Register16bit;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers.X86Register;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
 /**
- * Segment Override OpCode (i.e. 'CS:', 'ES:', 'DS:', or 'SS:')
+ * Segment Override OpCode (e.g. 'CS:', 'ES:', 'DS:', or 'SS:')
  *
  * @author lawrence.daniels@gmail.com
  */
 public abstract class SegmentOverrideOpCode extends AbstractOpCode {
-
-    /**
-     * Default constructor
-     */
-    protected SegmentOverrideOpCode() {
-        super();
-    }
 
     /**
      * Provides a means to override the the next instruction using a segment register
@@ -29,19 +21,17 @@ public abstract class SegmentOverrideOpCode extends AbstractOpCode {
      * @param register the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers.X86Register 8086 register}
      * @throws X86AssemblyException
      */
-    protected void override(final IbmPcSystem system, final Intel8086 cpu, final X86Register register) throws X86AssemblyException {
-        // save the current DS
-        final int segment = cpu.DS.get();
-
-        // set DS to the referenced register
-        cpu.DS.set(register.get());
+    protected void override(final IbmPcSystem system,
+                            final Intel8086 cpu,
+                            final X86Register16bit register) throws X86AssemblyException {
+        // set the DS-override register
+        cpu.setOverrideRegister(register);
 
         // interpret the next instruction
-        final OpCode opCode = cpu.getNextOpCode();
-        cpu.execute(system, opCode);
+        cpu.execute(system, cpu.getNextOpCode());
 
-        // set DS back to it's original value
-        cpu.DS.set(segment);
+        // reset the DS override
+        cpu.resetOverrideRegister();
     }
 
 }

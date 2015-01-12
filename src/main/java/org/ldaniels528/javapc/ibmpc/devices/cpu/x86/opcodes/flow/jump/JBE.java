@@ -6,7 +6,7 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.AbstractFlowCon
 
 /**
  * <pre>
- * Jump if Below or Equal
+ * Jump if Below or Equal (JBE) / Jump if Not Above (JNA)
  * Jump Condition: CF=1 or ZF=1
  * </pre>
  *
@@ -28,7 +28,7 @@ public class JBE extends AbstractFlowControlOpCode {
      */
     @Override
     protected boolean redirectsFlow(final Intel8086 cpu) {
-        return (cpu.FLAGS.isCF() || cpu.FLAGS.isZF());
+        return cpu.FLAGS.isCF() || cpu.FLAGS.isZF();
     }
 
 }

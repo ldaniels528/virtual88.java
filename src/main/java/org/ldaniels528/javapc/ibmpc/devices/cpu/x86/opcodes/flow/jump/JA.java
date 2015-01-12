@@ -6,7 +6,7 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.AbstractFlowCon
 
 /**
  * <pre>
- * Jump if Above
+ * Jump if Above (JA) / Jump if Not Below or Equal (JNBE)
  * Jump Condition: CF=0 and ZF=0
  * </pre>
  *

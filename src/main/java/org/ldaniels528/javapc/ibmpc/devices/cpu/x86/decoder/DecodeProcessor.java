@@ -17,16 +17,6 @@ public interface DecodeProcessor {
     OpCode decodeNext();
 
     /**
-     * Initializes the decoder before decoding starts
-     */
-    void init();
-
-    /**
-     * Shutsdown the decoder after processing has completed
-     */
-    void shutdown();
-
-    /**
      * Clears the queue as a result of a branch change,
      * and pointers the decoder to the new segment and offset.
      *

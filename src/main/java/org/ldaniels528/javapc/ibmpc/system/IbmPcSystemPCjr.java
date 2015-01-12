@@ -11,6 +11,7 @@ import org.ldaniels528.javapc.ibmpc.devices.display.modes.IbmPcDisplayMode;
 import org.ldaniels528.javapc.ibmpc.devices.keyboard.IbmPcKeyEventListener;
 import org.ldaniels528.javapc.ibmpc.devices.keyboard.IbmPcKeyboard;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
+import org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryProxy;
 import org.ldaniels528.javapc.ibmpc.devices.mouse.IbmPcMouse;
 import org.ldaniels528.javapc.ibmpc.devices.ports.IbmPcHardwarePorts;
 import org.ldaniels528.javapc.ibmpc.devices.storage.IbmPcStorageSystem;
@@ -27,12 +28,13 @@ import java.util.List;
 import static org.ldaniels528.javapc.ibmpc.devices.display.modes.IbmPcDisplayModes.CGA_80X25X16;
 
 /**
- * Represents an IBM PC/XT System which used an 4.77MHz Intel 8086 CPU.
+ * Represents an IBM PCjr System which used an 4.77MHz Intel 8086 CPU.
  *
  * @author lawrence.daniels@gmail.com
  */
-public class IbmPcSystemXT implements IbmPcSystem, IbmPcKeyEventListener {
+public class IbmPcSystemPCjr implements IbmPcSystem, IbmPcKeyEventListener {
     protected final IbmPcRandomAccessMemory memory;
+    protected final X86MemoryProxy proxy;
     protected final IbmPcStorageSystem storageSystem;
     protected final IbmPcDisplay display;
     protected final IbmPcHardwarePorts hardwarePorts;
@@ -47,16 +49,20 @@ public class IbmPcSystemXT implements IbmPcSystem, IbmPcKeyEventListener {
      *
      * @param frame the given {@link IbmPcDisplayFrame frame}
      */
-    public IbmPcSystemXT(final IbmPcDisplayFrame frame) {
+    public IbmPcSystemPCjr(final IbmPcDisplayFrame frame) {
         this.systemInfo = new IbmPcSystemInfoXT();
         this.memory = new IbmPcRandomAccessMemory();
+        this.proxy = new X86MemoryProxy(memory, 0, 0);
         this.bios = new IbmPcBIOS(memory);
-        this.cpu = new Intel8086(memory);
+        this.cpu = new Intel8086(proxy);
         this.display = new IbmPcVideoDisplay(bios, systemInfo.getInitialDisplayMode());
         this.hardwarePorts = new IbmPcHardwarePorts(memory);
         this.keyboard = new IbmPcKeyboard(display);
         this.storageSystem = new MsDosStorageSystem();
         this.mouse = new IbmPcMouse();
+
+        // set the PC identifier byte at F000:FFFE
+        memory.setByte(0xF000, 0xFFFE, IBM_PCjr);
 
         // initialize the virtual BIOS
         initializeBIOS(systemInfo);
@@ -124,6 +130,14 @@ public class IbmPcSystemXT implements IbmPcSystem, IbmPcKeyEventListener {
     @Override
     public IbmPcKeyboard getKeyboard() {
         return keyboard;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public X86MemoryProxy getMemoryProxy() {
+        return proxy;
     }
 
     /**
@@ -247,7 +261,7 @@ public class IbmPcSystemXT implements IbmPcSystem, IbmPcKeyEventListener {
          */
         @Override
         public int getSystemType() {
-            return IBM_PCjr;
+            return memory.getByte(0xF000, 0xFFFE);
         }
 
         /**

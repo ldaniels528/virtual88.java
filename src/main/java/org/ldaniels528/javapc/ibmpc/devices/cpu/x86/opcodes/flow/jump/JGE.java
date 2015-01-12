@@ -28,7 +28,7 @@ public class JGE extends AbstractFlowControlOpCode {
      */
     @Override
     protected boolean redirectsFlow(Intel8086 cpu) {
-        return (cpu.FLAGS.isSF() == cpu.FLAGS.isOF());
+        return cpu.FLAGS.isSF() == cpu.FLAGS.isOF();
     }
 
 }

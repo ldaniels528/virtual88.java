@@ -10,7 +10,7 @@ import org.ldaniels528.javapc.ibmpc.devices.keyboard.IbmPcKeyboard;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryProxy;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
-import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemXT;
+import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemPCjr;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import static org.ldaniels528.javapc.util.ResourceHelper.getBinaryContents;
  */
 public class IbmPcEmulator implements JavaPCConstants {
     private final IbmPcDisplayFrame frame;
-    private final IbmPcSystemXT system;
+    private final IbmPcSystemPCjr system;
     private final IbmPcRandomAccessMemory memory;
     private final X86MemoryProxy proxy;
     private final IbmPcDisplay display;
@@ -37,7 +37,7 @@ public class IbmPcEmulator implements JavaPCConstants {
      */
     public IbmPcEmulator() {
         this.frame = new IbmPcDisplayFrame(String.format("JavaPC - IBM PC Emulation Mode v%s", VERSION));
-        this.system = new IbmPcSystemXT(frame);
+        this.system = new IbmPcSystemPCjr(frame);
 
         // get references to all devices
         this.cpu = system.getCPU();
@@ -46,7 +46,9 @@ public class IbmPcEmulator implements JavaPCConstants {
         this.keyboard = system.getKeyboard();
 
         // create debug helper objects
-        this.proxy = new X86MemoryProxy(memory, 0x13F0, 0x0100);
+        this.proxy = system.getMemoryProxy();
+        proxy.setSegment(0x13F0);
+        proxy.setOffset(0x100);
     }
 
     /**

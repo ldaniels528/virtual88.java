@@ -31,7 +31,7 @@ public class JCXZ extends AbstractFlowControlOpCode {
      */
     @Override
     protected boolean redirectsFlow(final Intel8086 cpu) {
-        return (cpu.CX.get() == 0);
+        return cpu.CX.get() == 0;
     }
 
 }

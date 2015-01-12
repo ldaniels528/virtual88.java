@@ -1,7 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.devices.memory;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.apache.log4j.Logger;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 
 import static java.lang.String.format;
 

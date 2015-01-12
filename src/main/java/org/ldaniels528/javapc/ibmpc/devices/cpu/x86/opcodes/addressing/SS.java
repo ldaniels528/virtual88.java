@@ -5,7 +5,7 @@ import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
 /**
- * SS:
+ * SS: Override
  *
  * @author lawrence.daniels@gmail.com
  */

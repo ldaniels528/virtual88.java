@@ -63,7 +63,7 @@ public class MOV extends AbstractDualOperandOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(IbmPcSystem system, final Intel8086 cpu) {
+    public void execute(final IbmPcSystem system, final Intel8086 cpu) {
         dest.set(src.get());
     }
 

@@ -15,7 +15,7 @@ import org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryProxy;
 import org.ldaniels528.javapc.ibmpc.exceptions.IbmPcException;
 import org.ldaniels528.javapc.ibmpc.exceptions.IbmPcNumericFormatException;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
-import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemXT;
+import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemPCjr;
 import org.ldaniels528.javapc.util.ResourceHelper;
 
 import java.io.File;
@@ -36,7 +36,7 @@ public class IbmPcDebugger implements JavaPCConstants {
     private final IbmPcRandomAccessMemory memory;
     private final X86MemoryProxy proxy;
     private final DebugDecoder decoder;
-    private final IbmPcSystemXT system;
+    private final IbmPcSystemPCjr system;
     private final IbmPcDisplay display;
     private final IbmPcKeyboard keyboard;
     private final Intel8086 cpu;
@@ -47,15 +47,17 @@ public class IbmPcDebugger implements JavaPCConstants {
      * Default constructor
      */
     public IbmPcDebugger() {
-        this.system = new IbmPcSystemXT(new IbmPcDisplayFrame(String.format("Java PC - Debugger v%s", VERSION)));
+        this.system = new IbmPcSystemPCjr(new IbmPcDisplayFrame(String.format("Java PC - Debugger v%s", VERSION)));
         this.cpu = system.getCPU();
         this.memory = system.getRandomAccessMemory();
         this.display = system.getDisplay();
         this.keyboard = system.getKeyboard();
 
         // create debug helper objects
-        this.proxy = new X86MemoryProxy(memory, 0x13F0, 0x0100);
+        this.proxy = system.getMemoryProxy();
         this.decoder = new DebugDecoder(cpu, proxy);
+        proxy.setSegment(0x13F0);
+        proxy.setOffset(0x100);
     }
 
     /**
@@ -338,6 +340,7 @@ public class IbmPcDebugger implements JavaPCConstants {
         /**
          * {@inheritDoc}
          */
+        @Override
         public OpCode decodeNext() {
             // capture the current offset
             final int offset0 = proxy.getOffset();
@@ -372,23 +375,11 @@ public class IbmPcDebugger implements JavaPCConstants {
         /**
          * {@inheritDoc}
          */
-        public void init() {
-            // no initialization needed
-        }
-
-        /**
-         * {@inheritDoc}
-         */
+        @Override
         public void redirect(final int segment, final int offset) {
             // no redirection needed
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        public void shutdown() {
-            // no shutdown needed
-        }
     }
 
 }

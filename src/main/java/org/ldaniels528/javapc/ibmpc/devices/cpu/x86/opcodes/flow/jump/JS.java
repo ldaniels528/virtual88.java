@@ -28,7 +28,7 @@ public class JS extends AbstractFlowControlOpCode {
      */
     @Override
     protected boolean redirectsFlow(final Intel8086 cpu) {
-        return (cpu.FLAGS.isSF());
+        return cpu.FLAGS.isSF();
     }
 
 }

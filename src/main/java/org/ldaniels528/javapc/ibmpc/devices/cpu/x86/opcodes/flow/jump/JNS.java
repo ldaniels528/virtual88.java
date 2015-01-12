@@ -28,7 +28,7 @@ public class JNS extends AbstractFlowControlOpCode {
      */
     @Override
     protected boolean redirectsFlow(Intel8086 cpu) {
-        return (!cpu.FLAGS.isSF());
+        return !cpu.FLAGS.isSF();
     }
 
 }

@@ -27,8 +27,8 @@ public class JPO extends AbstractFlowControlOpCode {
      * {@inheritDoc}
      */
     @Override
-    protected boolean redirectsFlow(Intel8086 cpu) {
-        return (!cpu.FLAGS.isPF());
+    protected boolean redirectsFlow(final Intel8086 cpu) {
+        return !cpu.FLAGS.isPF();
     }
 
 }

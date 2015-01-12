@@ -17,9 +17,10 @@ public class WordValue implements OperandValue {
         this.value = (value & 0xFFFF);
     }
 
-    /* (non-Javadoc)
-     * @see org.ldaniels528.javapc.ibmpc.devices.cpu.opcode.X86Operand#get()
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public int get() {
         return value;
     }
