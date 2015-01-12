@@ -1,17 +1,18 @@
-package org.ldaniels528.javapc.ibmpc.devices.cpu;
+package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.X86RegisterSet;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 
 /**
- * i8086 Register Set Test Suite
+ * i8086 Composite Register Test Suite
  *
  * @author lawrence.daniels@gmail.com
  */
-public class X86RegisterSetTest {
+public class X86CompositeRegisterTest {
     private final Logger logger = Logger.getLogger(getClass());
 
     @Test
@@ -24,6 +25,21 @@ public class X86RegisterSetTest {
         assertEquals(rs.AH.get(), 0xAB);
         logger.info(format("AL should be 0xCD"));
         assertEquals(rs.AL.get(), 0xCD);
+    }
+
+    @Test
+    public void testAX_ADD() {
+        final X86RegisterSet rs = new X86RegisterSet();
+        final int value = 0x1234;
+        final int delta = 5;
+        rs.AX.set(value);
+
+        logger.info(format("When AX = %04Xh and %d is added", value, delta));
+        rs.AX.add(delta);
+        logger.info(format("AH should be 12h"));
+        assertEquals(rs.AH.get(), 0x12);
+        logger.info(format("AL should be 39h"));
+        assertEquals(rs.AL.get(), 0x39);
     }
 
     @Test

@@ -22,35 +22,35 @@ public abstract class X86GenericRegister implements X86Register {
 		this.index	= index;
 		this.value	= 0;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.ldaniels528.javapc.jbasic.assembly.JBasicRegister#get()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int get() {
 		return value;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.ldaniels528.javapc.jbasic.assembly.JBasicRegister#set(int)
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void set( int value ) {
 		this.value = ( value & mask);
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.assembly.intepreter.registers.X86Register#getIndex()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int getIndex() {
 		return index;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.assembly.registers.X86Register#setBit(int, boolean)
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setBit( int bitNum, boolean on ) {
 		// turn the bit on?
 		if( on ) {
@@ -64,51 +64,51 @@ public abstract class X86GenericRegister implements X86Register {
 		}
 	}
 
-	/* 
-	 * (non-Javadoc)
-	 * @see org.ldaniels528.javapc.jbasic.assembly.JBasicRegister#delta(int)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int add(int delta) {
 		this.value = ( ( value + delta ) & mask );
 		return value;
-	}		
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.assembly.registers.X86Register#and(int)
+	}
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void and( int mask ) {
 		this.value &= mask;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.assembly.registers.X86Register#or(int)
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void or( int mask ) {
 		this.value |= mask;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.assembly.registers.X86Register#lshift(int)
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void lshift( int bits ) {
 		this.value <<= bits;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.assembly.registers.X86Register#rshift(int)
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void rshift( int bits ) {
 		this.value >>= bits;
 	}
-	
-	/* 
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
+
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		return name;
 	}

@@ -45,7 +45,7 @@ public abstract class X86CompositeRegister implements X86Register {
      * {@inheritDoc}
      */
     @Override
-    public void set(int value) {
+    public void set(final int value) {
         hi.set((value & 0xff00) >> shift);
         lo.set(value & 0x00ff);
     }
@@ -62,7 +62,7 @@ public abstract class X86CompositeRegister implements X86Register {
      * {@inheritDoc}
      */
     @Override
-    public int add(int delta) {
+    public int add(final int delta) {
         final int value0 = get() + delta;
         set(value0);
         return value0;
@@ -72,7 +72,7 @@ public abstract class X86CompositeRegister implements X86Register {
      * {@inheritDoc}
      */
     @Override
-    public void and(int mask) {
+    public void and(final int mask) {
         // calculate the AND'ed value
         final int value0 = get() & mask;
 
@@ -84,7 +84,7 @@ public abstract class X86CompositeRegister implements X86Register {
      * {@inheritDoc}
      */
     @Override
-    public void or(int mask) {
+    public void or(final int mask) {
         // calculate the OR'ed value
         final int value0 = (get() | mask);
 
