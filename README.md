@@ -1,6 +1,6 @@
 # JavaPC
 
-IBM PC emulator and GWBASIC interpreter implemented in Java (Java2D, Swing)
+IBM PC emulator and GWBASIC interpreter implemented in Java and Scala (Java2D, Swing)
 
 ### Motivations
 
@@ -8,39 +8,41 @@ My first programming language was GWBASIC. As such, BASIC remains my first love;
 programming in the little language that could, and quite a few old programs that I can no longer run because I've 
 switched to Mac OS X. I started JavaPC in 2004 (as a hobby project) to be able to run those old programs on via the JVM.
 
-I've recently decided to update this project to Java 8, and improve its x86 compatibility and performance in the process.
+I've recently decided to update this project to Java 8 (with a few components moved to Scala), and improve its
+8086 compatibility and performance in the process.
 
 ### Build Requirements
 
-* Java 8 SDK 
-* Apache Maven 3.0+
+* Java 8 SDK
+* Scala 2.11.x
+* SBT 13.x
 
 ### Building the code
 
-    $ mvn clean package
+    $ sbt clean assembly
       
 ### Running the tests
 
-    $ mvn test    
+    $ sbt test
 
 ### Run the application(s)
 
 To execute the GWBASIC/BASICA emulator:
 
 ```bash
-	$ java -cp javapc-0.431-jar-with-dependencies.jar org.ldaniels528.javapc.jbasic.app.BasicEmulator
+	$ java -cp javapc-assembly-0.431.jar org.ldaniels528.javapc.jbasic.app.BasicEmulator
 ```
 
 To execute the IBM PC/MS-DOS emulator:
 
 ```bash
-	$ java -cp javapc-0.431-jar-with-dependencies.jar org.ldaniels528.javapc.ibmpc.app.IbmPcEmulator
+	$ java -cp javapc-assembly-0.431.jar org.ldaniels528.javapc.ibmpc.app.IbmPcEmulator
 ```
 
 To execute the IBM PC/MS-DOS debugger:
 
 ```bash
-	$ java -cp javapc-0.431-jar-with-dependencies.jar org.ldaniels528.javapc.ibmpc.app.IbmPcDebugger
+	$ java -cp javapc-assembly-0.431.jar com.ldaniels528.javapc.ibmpc.app.Debugger
 ```
 
 ### Using the application(s)
@@ -52,11 +54,11 @@ One of the goals of this project is to satisfy three distinct use cases:
 
 The following is a working example of the third use case:
 
-```scala
+```java
 
 	final IbmPcDisplayFrame frame = new IbmPcDisplayFrame("Test PC");
-	final IbmPcSystem system = new IbmPcSystemXT(frame);
-	final Intel80x86 cpu = system.getCPU();
+	final IbmPcSystem system = new IbmPcSystemPCjr(frame);
+	final I8086 cpu = system.getCPU();
 	final IbmPcRandomAccessMemory memory = system.getRandomAccessMemory();
 
 	// insert a text string into memory
@@ -66,7 +68,7 @@ The following is a working example of the third use case:
 	memory.setBytes(segment, offset, text.getBytes(), text.length());
 
 	// execute the 8086 instructions to print the text string
-	system.execute(Arrays.asList(
+	system.execute(asList(
 			new MOV(cpu.CX, new WordValue(segment)),    // mov ax, segment
 			new PUSH(cpu.CX),                           // push ax
 			new POP(cpu.DS),                            // pop ds
