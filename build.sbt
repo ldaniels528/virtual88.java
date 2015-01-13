@@ -1,9 +1,7 @@
+import sbt.Keys._
 import sbt._
-import Keys._
+import sbtassembly.Plugin.AssemblyKeys._
 import sbtassembly.Plugin._
-import AssemblyKeys._
-import com.typesafe.sbt.SbtNativePackager._
-import NativePackagerKeys._
 
 assemblySettings
 
@@ -13,7 +11,7 @@ organization := "com.ldaniels528"
 
 version := "0.431"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.4"
 
 scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked",
   "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint")
@@ -28,8 +26,8 @@ test in assembly := {}
 libraryDependencies ++= Seq(
   "commons-io" % "commons-io" % "2.4",
   "log4j" % "log4j" % "1.2.17"
-//"org.slf4j" % "slf4j-api" % "1.7.7",
-//"org.slf4j" % "slf4j-log4j12" % "1.7.7"
+  //"org.slf4j" % "slf4j-api" % "1.7.7",
+  //"org.slf4j" % "slf4j-log4j12" % "1.7.7"
 )
 
 // Testing Dependencies
