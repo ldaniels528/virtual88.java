@@ -1,10 +1,9 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.addressing.CS;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.addressing.ES;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.addressing.DataSegmentOverride;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.bitwise.AND;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.math.DAA;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.math.DAS;
@@ -58,14 +57,14 @@ import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.*
  */
 public class Decoder20 implements Decoder {
     // define the complex instruction code constants
-    private static final int AND_CODE = 0x04;    // 00100
-    private static final int SUB_CODE = 0x05;    // 00101
+    private static final int AND_CODE = 0b0_0100;
+    private static final int SUB_CODE = 0b0_0101;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public OpCode decode(final Intel8086 cpu, final X86MemoryProxy proxy) {
+    public OpCode decode(final I8086 cpu, final X86MemoryProxy proxy, final DecodeProcessor processor) {
         // get the 8-bit instruction
         final int code8 = proxy.nextByte();
 
@@ -79,7 +78,7 @@ public class Decoder20 implements Decoder {
                 return new AND(cpu.AX, nextValue16(proxy));
             // ES:
             case 0x26:
-                return ES.getInstance();
+                return new DataSegmentOverride(cpu.ES, processor.decodeNext());
             // DAA
             case 0x27:
                 return DAA.getInstance();
@@ -91,7 +90,7 @@ public class Decoder20 implements Decoder {
                 return new SUB(cpu.AX, nextValue16(proxy));
             // CS:
             case 0x2E:
-                return CS.getInstance();
+                return new DataSegmentOverride(cpu.CS, processor.decodeNext());
             // DAS
             case 0x2F:
                 return DAS.getInstance();
@@ -104,13 +103,13 @@ public class Decoder20 implements Decoder {
     /**
      * Decodes complex instruction codes between 00h and 0Fh
      *
-     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param proxy the given {@link X86MemoryProxy memory proxy}
      * @param code8 the given 8-bit instruction code
      * @return the resultant {@link OpCode opCode},
      * or <tt>null</tt> if not found
      */
-    private OpCode decodeComplexCode(final Intel8086 cpu, final X86MemoryProxy proxy, final int code8) {
+    private OpCode decodeComplexCode(final I8086 cpu, final X86MemoryProxy proxy, final int code8) {
         // instruction code layout
         // -----------------------------
         // fedc ba98 7654 3210 (16 bits)

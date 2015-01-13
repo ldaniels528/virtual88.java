@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.data;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
@@ -63,7 +63,7 @@ public class MOV extends AbstractDualOperandOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final IbmPcSystem system, final Intel8086 cpu) {
+    public void execute(final IbmPcSystem system, final I8086 cpu) {
         dest.set(src.get());
     }
 

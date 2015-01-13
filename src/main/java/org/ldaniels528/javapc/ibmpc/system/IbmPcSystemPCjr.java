@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.system;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramContext;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.IbmPcBIOS;
@@ -42,7 +42,7 @@ public class IbmPcSystemPCjr implements IbmPcSystem, IbmPcKeyEventListener {
     protected final IbmPcSystemInfo systemInfo;
     protected final IbmPcMouse mouse;
     protected final IbmPcBIOS bios;
-    protected final Intel8086 cpu;
+    protected final I8086 cpu;
 
     /**
      * Creates an instance of this {@link org.ldaniels528.javapc.ibmpc.system.IbmPcSystem system}
@@ -54,7 +54,7 @@ public class IbmPcSystemPCjr implements IbmPcSystem, IbmPcKeyEventListener {
         this.memory = new IbmPcRandomAccessMemory();
         this.proxy = new X86MemoryProxy(memory, 0, 0);
         this.bios = new IbmPcBIOS(memory);
-        this.cpu = new Intel8086(proxy);
+        this.cpu = new I8086(proxy);
         this.display = new IbmPcVideoDisplay(bios, systemInfo.getInitialDisplayMode());
         this.hardwarePorts = new IbmPcHardwarePorts(memory);
         this.keyboard = new IbmPcKeyboard(display);
@@ -104,7 +104,7 @@ public class IbmPcSystemPCjr implements IbmPcSystem, IbmPcKeyEventListener {
      * {@inheritDoc}
      */
     @Override
-    public Intel8086 getCPU() {
+    public I8086 getCPU() {
         return cpu;
     }
 

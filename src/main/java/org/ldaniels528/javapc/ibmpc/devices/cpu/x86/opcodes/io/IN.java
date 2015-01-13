@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.io;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers.X86Register;
@@ -46,7 +46,7 @@ public class IN extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(IbmPcSystem system, final Intel8086 cpu) {
+    public void execute(IbmPcSystem system, final I8086 cpu) {
         // get the port number
         final int portNum = port.get();
 

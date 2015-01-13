@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.X86RegisterSet;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
@@ -86,19 +86,19 @@ public class MemoryReference {
     // build the string mappings
     public static final Map<Integer, String> REFERENCE_MAPPING = createReferenceMapping();
     // fields
-    private final Intel8086 cpu;
+    private final I8086 cpu;
     private final X86MemoryProxy proxy;
     private final int refCode;
     private final int relOffset;
 
     /**
      * Creates a new memory reference
-     *  @param cpu       the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     *  @param cpu       the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param proxy the given {@link org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryProxy memory proxy}
      * @param refCode   the given composite element code and reference code
      * @param relOffset the relative offset
      */
-    public MemoryReference(final Intel8086 cpu,
+    public MemoryReference(final I8086 cpu,
                            final X86MemoryProxy proxy,
                            final int refCode,
                            final int relOffset) {
@@ -111,9 +111,9 @@ public class MemoryReference {
     /**
      * Returns the CPU reference
      *
-     * @return the {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} reference
+     * @return the {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} reference
      */
-    public Intel8086 getCPU() {
+    public I8086 getCPU() {
         return cpu;
     }
 

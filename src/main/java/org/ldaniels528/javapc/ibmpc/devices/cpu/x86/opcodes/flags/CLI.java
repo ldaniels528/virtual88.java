@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flags;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -33,10 +33,11 @@ public class CLI extends AbstractOpCode {
         return instance;
     }
 
-    /* (non-Javadoc)
-     * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.VirtualCPU)
+    /**
+     * {@inheritDoc}
      */
-    public void execute(IbmPcSystem system, final Intel8086 cpu) {
+    @Override
+    public void execute(final IbmPcSystem system, final I8086 cpu) {
         cpu.FLAGS.setIF(false);
     }
 

@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.*;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.*;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers.X86Register;
@@ -51,12 +51,12 @@ public class DecoderUtil {
     /**
      * Returns the register based on the given register code
      *
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param regCode the given 3-bit register code
      * @param size    the size of the desired register (in bits)
      * @return the appropriate {@link Operand operand}
      */
-    public static X86Register getRegister(final Intel8086 cpu,
+    public static X86Register getRegister(final I8086 cpu,
                                           final int regCode,
                                           final int size) {
         switch (size) {
@@ -72,12 +72,12 @@ public class DecoderUtil {
     /**
      * Returns the register based on the given register code
      *
-     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param proxy  the given {@link X86MemoryProxy memory proxy}
      * @param code16 the given 16-bit instruction code
      * @return the appropriate {@link Operand operand}
      */
-    public static X86Register lookupRegister(final Intel8086 cpu,
+    public static X86Register lookupRegister(final I8086 cpu,
                                              final X86MemoryProxy proxy,
                                              final int code16) {
         // get the memory class and register code
@@ -92,13 +92,13 @@ public class DecoderUtil {
     /**
      * Returns the register based on the given register code
      *
-     * @param cpu        the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu        the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param regCode    the given register code (e.g. 01h -> cx)
      * @param memClass   the given memory class
      * @param segRegCode segment register code
      * @return the {@link X86Register register} or <tt>null</tt> if not found
      */
-    public static X86Register lookupRegister(final Intel8086 cpu,
+    public static X86Register lookupRegister(final I8086 cpu,
                                              final int regCode,
                                              final int memClass,
                                              final int segRegCode) {
@@ -120,13 +120,13 @@ public class DecoderUtil {
      * Returns the appropriate operand based on the given
      * register code and memory code information
      *
-     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param proxy  the given {@link X86MemoryProxy memory proxy}
      * @param code16 the given instruction code containing
      *               the register/reference type code.
      * @return the array of {@link Operand operands}
      */
-    public static Operand[] lookupOperands(final Intel8086 cpu,
+    public static Operand[] lookupOperands(final I8086 cpu,
                                            final X86MemoryProxy proxy,
                                            final int code16) {
         // extract the register/reference element type (11b=register, 00b/01b/10b=reference)
@@ -163,7 +163,7 @@ public class DecoderUtil {
      * Returns the appropriate operand based on the given
      * register code and memory code information
      *
-     * @param cpu            the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu            the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param proxy          the given {@link X86MemoryProxy memory proxy}
      * @param code16         the given instruction code containing
      *                       the register/reference type code.
@@ -172,7 +172,7 @@ public class DecoderUtil {
      * @param segRegsAllowed indicates whether segment registers are allowed
      * @return the array of {@link Operand operands}
      */
-    public static Operand[] lookupOperands(final Intel8086 cpu,
+    public static Operand[] lookupOperands(final I8086 cpu,
                                            final X86MemoryProxy proxy,
                                            final int code16,
                                            final boolean reorder,
@@ -234,14 +234,14 @@ public class DecoderUtil {
      * Returns the appropriate data element based on the given
      * register code and memory code information
      *
-     * @param cpu      the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU}
+     * @param cpu      the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU}
      * @param proxy    the given {@link X86MemoryProxy memory proxy}
      * @param elemCode the given element code (11b=register,00b/01b/10b=reference)
      * @param refCode  the given register/memory reference code (000b=ax,001b=cx)
      * @param memClass the given memory code (0=8-bit,1=16-bit)
      * @return the appropriate {@link Operand operand}
      */
-    public static Operand lookupOperand(final Intel8086 cpu,
+    public static Operand lookupOperand(final I8086 cpu,
                                         final X86MemoryProxy proxy,
                                         final int elemCode,
                                         final int refCode,
@@ -270,12 +270,12 @@ public class DecoderUtil {
      * Returns the appropriate data element based on the given
      * register code and memory code information
      *
-     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param proxy  the given {@link X86MemoryProxy memory proxy}
      * @param code16 the given 16-bit instruction code
      * @return the appropriate {@link X86Register operand}
      */
-    public static X86Register lookupPrimaryOperand(final Intel8086 cpu,
+    public static X86Register lookupPrimaryOperand(final I8086 cpu,
                                                    final X86MemoryProxy proxy,
                                                    final int code16) {
         // get the memory class and register code
@@ -290,13 +290,13 @@ public class DecoderUtil {
      * Returns the seconary operand based on the given
      * element code and reference code information
      *
-     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param proxy  the given {@link X86MemoryProxy memory proxy}
      * @param code16 the given instruction code containing
      *               the element/reference type code.
      * @return the array of {@link Operand operands}
      */
-    public static Operand lookupSecondaryOperand(final Intel8086 cpu,
+    public static Operand lookupSecondaryOperand(final I8086 cpu,
                                                  final X86MemoryProxy proxy,
                                                  final int code16) {
         // extract the register/reference element type (11b=register, 00b/01b/10b=reference)
@@ -336,13 +336,13 @@ public class DecoderUtil {
      * Returns the seconary operand based on the given
      * element code and reference code information
      *
-     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param proxy  the given {@link X86MemoryProxy memory proxy}
      * @param code16 the given instruction code containing
      *               the element/reference type code.
      * @return the array of {@link Operand operands}
      */
-    public static Operand lookupSecondaryOperand(final Intel8086 cpu,
+    public static Operand lookupSecondaryOperand(final I8086 cpu,
                                                  final X86MemoryProxy proxy,
                                                  final int code16,
                                                  final int size) {
@@ -408,12 +408,12 @@ public class DecoderUtil {
     /**
      * Returns the "referenced" memory address based on the given register code
      *
-     * @param cpu      the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU}
+     * @param cpu      the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU}
      * @param proxy    the given {@link X86MemoryProxy memory proxy}
      * @param compCode the given composite element and reference codes (e.g. 03h -> '[bp+di]')
      * @return the {@link MemoryReference "referenced" addess} or <tt>null</tt> if not found
      */
-    public static MemoryReference lookupReferencedAddress(final Intel8086 cpu,
+    public static MemoryReference lookupReferencedAddress(final I8086 cpu,
                                                           final X86MemoryProxy proxy,
                                                           final int compCode) {
         // make sure the composite code is valid
@@ -461,33 +461,33 @@ public class DecoderUtil {
     /**
      * Returns an 8-bit NEAR data address (offset only)
      *
-     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param proxy the given {@link X86MemoryProxy memory proxy} instance
      * @return the {@link OperandAddress address operand}
      */
-    public static OperandAddress nextAddressByte(final Intel8086 cpu, final X86MemoryProxy proxy) {
+    public static OperandAddress nextAddressByte(final I8086 cpu, final X86MemoryProxy proxy) {
         return new MemoryAddressNEAR8(cpu, proxy.nextWord());
     }
 
     /**
      * Returns a 16-bit NEAR data address (offset only)
      *
-     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param proxy the given {@link X86MemoryProxy memory proxy} instance
      * @return the {@link OperandAddress address operand}
      */
-    public static OperandAddress nextAddressWord(final Intel8086 cpu, final X86MemoryProxy proxy) {
+    public static OperandAddress nextAddressWord(final I8086 cpu, final X86MemoryProxy proxy) {
         return new MemoryAddressNEAR16(cpu, proxy.nextWord());
     }
 
     /**
      * Returns a 32-bit FAR address (segment and offset)
      *
-     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param proxy the given {@link X86MemoryProxy memory proxy} instance
      * @return the {@link OperandAddress address operand}
      */
-    public static OperandAddress nextAddressFar(final Intel8086 cpu, final X86MemoryProxy proxy) {
+    public static OperandAddress nextAddressFar(final I8086 cpu, final X86MemoryProxy proxy) {
         final int offset = proxy.nextWord();
         final int segment = proxy.nextWord();
         return new MemoryAddressFAR16(cpu, segment, offset);

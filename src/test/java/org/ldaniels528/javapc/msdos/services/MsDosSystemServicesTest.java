@@ -2,7 +2,7 @@ package org.ldaniels528.javapc.msdos.services;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.WordValue;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.data.MOV;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.stack.POP;
@@ -31,7 +31,7 @@ public class MsDosSystemServicesTest {
     public void testGetSystemDate() throws Exception {
         final IbmPcDisplayFrame frame = new IbmPcDisplayFrame("Test PC");
         final IbmPcSystem system = new IbmPcSystemPCjr(frame);
-        final Intel8086 cpu = system.getCPU();
+        final I8086 cpu = system.getCPU();
 
         // execute the 8086 instructions to print the text string
         system.execute(asList(
@@ -68,7 +68,7 @@ public class MsDosSystemServicesTest {
     public void testMsDOS_21h() throws Exception {
         final IbmPcDisplayFrame frame = new IbmPcDisplayFrame("Test PC");
         final IbmPcSystem system = new IbmPcSystemPCjr(frame);
-        final Intel8086 cpu = system.getCPU();
+        final I8086 cpu = system.getCPU();
         final IbmPcRandomAccessMemory memory = system.getRandomAccessMemory();
 
         // insert a text string into memory

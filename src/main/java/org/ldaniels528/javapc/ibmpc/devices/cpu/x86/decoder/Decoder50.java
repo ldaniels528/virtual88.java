@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.stack.POP;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.stack.PUSH;
@@ -49,7 +49,7 @@ public class Decoder50 implements Decoder {
      * {@inheritDoc}
      */
     @Override
-    public OpCode decode(final Intel8086 cpu, X86MemoryProxy proxy) {
+    public OpCode decode(final I8086 cpu, X86MemoryProxy proxy, DecodeProcessor processor) {
         // get the next byte code
         final int code8 = proxy.nextByte();
 

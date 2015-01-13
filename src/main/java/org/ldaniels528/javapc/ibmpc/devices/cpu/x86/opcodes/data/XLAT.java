@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.data;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -38,7 +38,7 @@ public class XLAT extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(IbmPcSystem system, final Intel8086 cpu) {
+    public void execute(IbmPcSystem system, final I8086 cpu) {
         // compute the offset
         final int offset = cpu.BX.get() + cpu.AL.get();
 

@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.X86Stack;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
@@ -28,17 +28,17 @@ public class IRET extends AbstractOpCode {
     /**
      * Private constructor
      */
-    private IRET(final Intel8086 cpu) {
+    private IRET(final I8086 cpu) {
         this.stack = cpu.getStack();
     }
 
     /**
      * Returns the singleton instance of this class
      *
-     * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 Intel 80x86 CPU}
+     * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 Intel 80x86 CPU}
      * @return the singleton instance of this class
      */
-    public static IRET getInstance(final Intel8086 cpu) {
+    public static IRET getInstance(final I8086 cpu) {
         if (instance == null) {
             instance = new IRET(cpu);
         }
@@ -48,7 +48,7 @@ public class IRET extends AbstractOpCode {
     /* (non-Javadoc)
      * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.VirtualCPU)
      */
-    public void execute(IbmPcSystem system, final Intel8086 cpu)
+    public void execute(IbmPcSystem system, final I8086 cpu)
             throws X86AssemblyException {
         // pop the registers
         stack.pop(cpu.IP);

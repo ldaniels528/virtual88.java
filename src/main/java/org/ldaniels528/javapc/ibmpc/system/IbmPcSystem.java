@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.system;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.IbmPcBIOS;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
@@ -56,7 +56,7 @@ public interface IbmPcSystem {
     /**
      * @return the IBM PC-compatible central processing unit (CPU)
      */
-    Intel8086 getCPU();
+    I8086 getCPU();
 
     /**
      * @return the graphical display manager.

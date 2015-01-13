@@ -1,7 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios;
 
 import org.apache.log4j.Logger;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryAddressFAR32;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services.*;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system.INT;
@@ -198,10 +198,10 @@ public class IbmPcBIOS {
      * Handles the given interrupt number
      *
      * @param system    the given {@link org.ldaniels528.javapc.ibmpc.system.IbmPcSystem IBM PC system}
-     * @param cpu       the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu       the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param interrupt the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system.INT interrupt opCode}
      */
-    public void invoke(final IbmPcSystem system, final Intel8086 cpu, final INT interrupt) throws X86AssemblyException {
+    public void invoke(final IbmPcSystem system, final I8086 cpu, final INT interrupt) throws X86AssemblyException {
         // get the interrupt #
         final int interruptNo = interrupt.getInterruptNumber();
 

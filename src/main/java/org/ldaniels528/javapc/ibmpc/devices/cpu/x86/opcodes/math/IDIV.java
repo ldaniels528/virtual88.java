@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.math;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system.INT;
@@ -50,7 +50,7 @@ public class IDIV extends AbstractOpCode {
      * (non-Javadoc)
      * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86)
      */
-    public void execute(IbmPcSystem system, final Intel8086 cpu)
+    public void execute(IbmPcSystem system, final I8086 cpu)
             throws X86AssemblyException {
         switch (operand.size()) {
             // is it operand 8-bit?

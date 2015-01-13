@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.bitwise;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
@@ -38,7 +38,7 @@ public class NOT extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(IbmPcSystem system, final Intel8086 cpu)
+    public void execute(IbmPcSystem system, final I8086 cpu)
             throws X86AssemblyException {
         // get the initial value of the destination
         final int value0 = dest.get();

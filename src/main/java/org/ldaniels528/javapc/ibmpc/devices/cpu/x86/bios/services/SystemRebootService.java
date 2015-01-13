@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -28,7 +28,7 @@ public class SystemRebootService implements InterruptHandler {
 	/* (non-Javadoc)
 	 * @see org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services.InterruptHandler#process(org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86)
 	 */
-	public void process(IbmPcSystem system, final Intel8086 cpu)
+	public void process(IbmPcSystem system, final I8086 cpu)
 	throws X86AssemblyException {
 		cpu.halt();
 	}

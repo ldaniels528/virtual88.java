@@ -1,7 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.app;
 
 import org.ldaniels528.javapc.JavaPCConstants;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramArguments;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramContext;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
@@ -30,7 +30,7 @@ public class IbmPcEmulator implements JavaPCConstants {
     private final X86MemoryProxy proxy;
     private final IbmPcDisplay display;
     private final IbmPcKeyboard keyboard;
-    private final Intel8086 cpu;
+    private final I8086 cpu;
 
     /**
      * Default constructor

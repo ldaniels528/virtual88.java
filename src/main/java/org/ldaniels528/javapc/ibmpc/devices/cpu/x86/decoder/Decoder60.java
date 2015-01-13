@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.data.DB;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.io.INSB;
@@ -50,7 +50,7 @@ public class Decoder60 implements Decoder {
      * {@inheritDoc}
      */
     @Override
-    public OpCode decode(final Intel8086 cpu, final X86MemoryProxy proxy) {
+    public OpCode decode(final I8086 cpu, final X86MemoryProxy proxy, DecodeProcessor processor) {
         // get the 8-bit instruction code
         final int code8 = proxy.nextByte();
 

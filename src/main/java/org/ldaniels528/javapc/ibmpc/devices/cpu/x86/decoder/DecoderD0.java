@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.ByteValue;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
@@ -169,7 +169,7 @@ public class DecoderD0 implements Decoder {
      * {@inheritDoc}
      */
     @Override
-    public OpCode decode(final Intel8086 cpu, final X86MemoryProxy proxy) {
+    public OpCode decode(final I8086 cpu, final X86MemoryProxy proxy, DecodeProcessor processor) {
         // Instruction code layout
         // -----------------------------
         // fedc ba98 7654 3210 (16 bits)
@@ -200,11 +200,11 @@ public class DecoderD0 implements Decoder {
     /**
      * Interprets Type A instructions (ROL,ROR,RCL,RCR,SHL,SHR,SAL,SAR)
      *
-     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param code8 the given 8-bit instruction code
      * @return true, if the instruction was sucessfully decodeed
      */
-    private OpCode decodeTypeA(final Intel8086 cpu, final X86MemoryProxy proxy, final int code8) {
+    private OpCode decodeTypeA(final I8086 cpu, final X86MemoryProxy proxy, final int code8) {
         // Instruction code layout
         // -----------------------------
         // fedc ba98 7654 3210 (16 bits)
@@ -251,14 +251,14 @@ public class DecoderD0 implements Decoder {
     /**
      * Interprets Type B instructions
      *
-     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param code8 the given 8-bit instruction code
      * @return true, if the instruction was sucessfully decodeed
      * @see AAM
      * @see AAD
      * @see XLAT
      */
-    private OpCode decodeTypeB(final Intel8086 cpu, final X86MemoryProxy proxy, final int code8) {
+    private OpCode decodeTypeB(final I8086 cpu, final X86MemoryProxy proxy, final int code8) {
         int code16;
         switch (code8) {
             // AAM
@@ -284,11 +284,11 @@ public class DecoderD0 implements Decoder {
     /**
      * Interprets 80x87 (Type "C") instructions
      *
-     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
      * @param code8 the given 8-bit instruction code
      * @return true, if the instruction was sucessfully decodeed
      */
-    private OpCode decodeTypeC(final Intel8086 cpu, final X86MemoryProxy proxy, final int code8) {
+    private OpCode decodeTypeC(final I8086 cpu, final X86MemoryProxy proxy, final int code8) {
         // Instruction code layout
         // -----------------------------
         // fedc ba98 7654 3210 (16 bits)

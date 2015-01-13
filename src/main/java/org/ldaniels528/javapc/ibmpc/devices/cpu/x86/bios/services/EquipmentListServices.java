@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemInfo;
@@ -50,10 +50,10 @@ public class EquipmentListServices implements InterruptHandler {
      * Process the Equipment Services Interrupt (INT 11h)
      *
      * @param system the given {@link org.ldaniels528.javapc.ibmpc.system.IbmPcSystem IBM PC system}
-     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 8086 CPU} instance
+     * @param cpu    the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 8086 CPU} instance
      * @throws X86AssemblyException
      */
-    public void process(final IbmPcSystem system, final Intel8086 cpu) throws X86AssemblyException {
+    public void process(final IbmPcSystem system, final I8086 cpu) throws X86AssemblyException {
         // get the system information
         final IbmPcSystemInfo systemInfo = system.getInformation();
 
@@ -72,7 +72,7 @@ public class EquipmentListServices implements InterruptHandler {
      *
      * @param memorySize the given memory size (in kilobytes)
      */
-    private void setInstalledMemory(final Intel8086 cpu, final int memorySize) {
+    private void setInstalledMemory(final I8086 cpu, final int memorySize) {
         // determine the memory index (e.g. 00=16KB, 01=32KB, 10=48KB, 11=64KB)
         final int memIndex = determineMemoryIndex(memorySize);
 
@@ -101,7 +101,7 @@ public class EquipmentListServices implements InterruptHandler {
      * @param mode the initial display mode
      *             (e.g. 00=not used, 01=40x25 color, 10=80x25 color, 11=80x25 monochrome )
      */
-    private void setInitialDisplayMode(final Intel8086 cpu, final int mode) {
+    private void setInitialDisplayMode(final I8086 cpu, final int mode) {
         cpu.AX.setBit(5, (mode & 0b01) > 0);
         cpu.AX.setBit(6, (mode & 0b10) > 0);
     }
@@ -111,7 +111,7 @@ public class EquipmentListServices implements InterruptHandler {
      *
      * @param floppies the given number of floppies installed
      */
-    private void setFloppiesInstalled(final Intel8086 cpu, final int floppies) {
+    private void setFloppiesInstalled(final I8086 cpu, final int floppies) {
         cpu.AX.setBit(1, floppies != 0);
         cpu.AX.setBit(6, (floppies & 0x01) > 0); // 001
         cpu.AX.setBit(7, (floppies & 0x02) > 0); // 010
@@ -121,10 +121,10 @@ public class EquipmentListServices implements InterruptHandler {
     /**
      * Sets the number of serial ports installed
      *
-     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 8086 CPU}
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 8086 CPU}
      * @param ports the given number of ports
      */
-    private void setInstalledSerialPorts(final Intel8086 cpu, final int ports) {
+    private void setInstalledSerialPorts(final I8086 cpu, final int ports) {
         cpu.AX.setBit(10, (ports & 0x01) > 0); // 001
         cpu.AX.setBit(11, (ports & 0x02) > 0); // 010
         cpu.AX.setBit(12, (ports & 0x04) > 0); // 100
@@ -135,7 +135,7 @@ public class EquipmentListServices implements InterruptHandler {
      *
      * @param installed indicates whether the hardware is installed or not
      */
-    private void setGamePortInstalled(final Intel8086 cpu, final boolean installed) {
+    private void setGamePortInstalled(final I8086 cpu, final boolean installed) {
         cpu.AX.setBit(13, installed);
     }
 
@@ -144,17 +144,17 @@ public class EquipmentListServices implements InterruptHandler {
      *
      * @param installed indicates whether the hardware is installed or not
      */
-    private void setInternalModemInstalled(final Intel8086 cpu, final boolean installed) {
+    private void setInternalModemInstalled(final I8086 cpu, final boolean installed) {
         cpu.AX.setBit(14, installed);
     }
 
     /**
      * Sets the number of printers installed
      *
-     * @param cpu      the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 8086 CPU}
+     * @param cpu      the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 8086 CPU}
      * @param printers the given number of printers
      */
-    private void setPrintersInstalled(Intel8086 cpu, int printers) {
+    private void setPrintersInstalled(I8086 cpu, int printers) {
         cpu.AX.setBit(15, (printers & 0x01) > 0); // 01
         cpu.AX.setBit(16, (printers & 0x02) > 0); // 10
     }

@@ -1,15 +1,13 @@
 package org.ldaniels528.javapc.ibmpc.app;
 
 import org.ldaniels528.javapc.JavaPCConstants;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramContext;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.*;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.data.DB;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.data.DW;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecodeProcessor;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecodeProcessorImpl;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplayFrame;
-import org.ldaniels528.javapc.ibmpc.devices.keyboard.IbmPcKeyboard;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryProxy;
 import org.ldaniels528.javapc.ibmpc.exceptions.IbmPcException;
@@ -18,13 +16,11 @@ import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemPCjr;
 import org.ldaniels528.javapc.util.ResourceHelper;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static java.lang.String.format;
 import static org.ldaniels528.javapc.ibmpc.util.IbmPcValues.parseHexadecimalString;
 
 /**
@@ -35,11 +31,12 @@ import static org.ldaniels528.javapc.ibmpc.util.IbmPcValues.parseHexadecimalStri
 public class IbmPcDebugger implements JavaPCConstants {
     private final IbmPcRandomAccessMemory memory;
     private final X86MemoryProxy proxy;
-    private final DebugDecoder decoder;
+    private final DecodeProcessor decoder;
     private final IbmPcSystemPCjr system;
     private final IbmPcDisplay display;
-    private final IbmPcKeyboard keyboard;
-    private final Intel8086 cpu;
+    private final I8086 cpu;
+    private final PrintStream out = System.out;
+    private boolean firstInstruction = true;
     private String filename;
     private boolean alive;
 
@@ -47,15 +44,14 @@ public class IbmPcDebugger implements JavaPCConstants {
      * Default constructor
      */
     public IbmPcDebugger() {
-        this.system = new IbmPcSystemPCjr(new IbmPcDisplayFrame(String.format("Java PC - Debugger v%s", VERSION)));
+        this.system = new IbmPcSystemPCjr(new IbmPcDisplayFrame(String.format("JavaPC/Debugger v%s", VERSION)));
         this.cpu = system.getCPU();
         this.memory = system.getRandomAccessMemory();
         this.display = system.getDisplay();
-        this.keyboard = system.getKeyboard();
 
         // create debug helper objects
         this.proxy = system.getMemoryProxy();
-        this.decoder = new DebugDecoder(cpu, proxy);
+        this.decoder = new DecodeProcessorImpl(cpu, proxy);
         proxy.setSegment(0x13F0);
         proxy.setOffset(0x100);
     }
@@ -71,8 +67,8 @@ public class IbmPcDebugger implements JavaPCConstants {
         final IbmPcDebugger app = new IbmPcDebugger();
 
         // display title
-        app.outputln(format("JavaPC/Debugger v%s", VERSION));
-        app.outputln("");
+        System.out.printf("JavaPC/Debugger v%s\n", VERSION);
+        System.out.println("");
 
         // was an executable file specified?
         if (args.length > 0) {
@@ -89,27 +85,31 @@ public class IbmPcDebugger implements JavaPCConstants {
 
     /**
      * Runs the debugger
-     * @throws org.ldaniels528.javapc.ibmpc.exceptions.IbmPcException
+     *
+     * @throws IOException
      * @throws java.lang.InterruptedException
      */
-    public void run() throws IbmPcException, InterruptedException {
+    public void run() throws IbmPcException, InterruptedException, IOException {
+        // initialize the display
+        display.update();
+
+        // get a console reader
+        final BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+
+        // cycle indefinitely
         alive = true;
         while (alive) {
-            output("- ");
+            System.out.printf("- ");
 
             // get the next line input
-            final String input = keyboard.nextLine();
+            final String line = console.readLine().trim();
 
             // interpret the command
-            interpret(input);
-        }
-    }
+            interpret(line);
 
-    /**
-     * Stops the debugger
-     */
-    public void stop() {
-        this.alive = false;
+            // refresh the display
+            display.update();
+        }
     }
 
     /**
@@ -119,7 +119,8 @@ public class IbmPcDebugger implements JavaPCConstants {
      *   [d]ump - dump the contents of memory at the current IP position
      *   [f]lags - displays the current state of all flags
      *   [g]o - starts executing code at the current IP position
-     *   [n]ame - sets the current file name (for reading or saving)
+     *   [f]ileName - sets the current file name (for reading or saving)
+     *   [n]ext - executes the next instruction
      *   [q]uit - exits the Debugger
      *   [r]egisters - displays the current state of all registers
      *   [u]nassemble - decodes assembly code at the current IP position
@@ -130,11 +131,11 @@ public class IbmPcDebugger implements JavaPCConstants {
     private void interpret(final String command) {
         try {
             if (command.startsWith("d")) dump(128);
-            else if (command.startsWith("f")) System.out.println(cpu.FLAGS);
             else if (command.startsWith("g")) executeCode(cpu.IP.get());
-            else if (command.startsWith("n")) name(command);
+            else if (command.startsWith("f")) setFileName(command);
+            else if (command.startsWith("n")) executeNext();
             else if (command.startsWith("q")) stop();
-            else if (command.startsWith("r")) System.out.println(cpu);
+            else if (command.startsWith("r")) out.println(cpu);
             else if (command.startsWith("u")) unassemble(command, 10);
         } catch (X86AssemblyException | IbmPcNumericFormatException e) {
             System.err.printf("Run-time error: %s\n", e.getMessage());
@@ -165,11 +166,23 @@ public class IbmPcDebugger implements JavaPCConstants {
         }
 
         // display the results
-        lines.forEach(this::outputln);
+        lines.forEach(out::println);
     }
 
     private void executeCode(final int offset) throws X86AssemblyException {
         system.execute(new ProgramContext(proxy.getSegment(), offset, proxy.getSegment(), null));
+    }
+
+    private void executeNext() throws X86AssemblyException {
+        if(firstInstruction) {
+            firstInstruction = false;
+            proxy.setOffset(0x100);
+        }
+
+        final OpCode opCode = decoder.decodeNext();
+        out.printf("E [%04X:%04X] %10X[%d] %s\n",
+                cpu.CS.get(), cpu.IP.get(), opCode.getInstructionCode(), opCode.getLength(), opCode);
+        cpu.execute(system, opCode);
     }
 
     /**
@@ -214,9 +227,9 @@ public class IbmPcDebugger implements JavaPCConstants {
             cpu.SS.set(codeSegment);
             cpu.IP.set(codeOffset);
 
-            outputln(String.format("Loaded %s: %d bytes", filename, code.length));
+            out.printf("Loaded %s: %d bytes\n", filename, code.length);
         } catch (final IOException e) {
-            outputln(String.format("Unable to load '%s'", filename));
+            out.printf("Unable to load '%s'\n", filename);
         }
     }
 
@@ -225,10 +238,17 @@ public class IbmPcDebugger implements JavaPCConstants {
      *
      * @param command the given command string (e.g. 'nFROGGER.COM')
      */
-    private void name(final String command) {
+    private void setFileName(final String command) {
         // get & display the file name
         filename = command.substring(1);
-        System.out.printf("Filename: %s\n", filename);
+        out.printf("Filename: %s\n", filename);
+    }
+
+    /**
+     * Stops the debugger
+     */
+    private void stop() {
+        this.alive = false;
     }
 
     /**
@@ -262,7 +282,7 @@ public class IbmPcDebugger implements JavaPCConstants {
             final String byteCodeString = getByteCodeString(segment, offset);
 
             // display the instruction
-            outputln(String.format("%04X:%04X %s %s", segment, offset, byteCodeString, instruction));
+            out.printf("%04X:%04X %s %s\n", segment, offset, byteCodeString, instruction);
         }
     }
 
@@ -293,93 +313,6 @@ public class IbmPcDebugger implements JavaPCConstants {
         }
 
         return sb.toString();
-    }
-
-    private void output(final String text) {
-        display.write(text);
-        display.update();
-
-        System.out.print(text);
-    }
-
-    private void outputln(final String text) {
-        display.writeLine(text);
-        display.update();
-
-        System.out.println(text);
-    }
-
-    /**
-     * Represents a simple 80x86 Decode Processor
-     *
-     * @author lawrence.daniels@gmail.com
-     */
-    private class DebugDecoder implements DecodeProcessor {
-        private final X86MemoryProxy proxy;
-        private final Decoder[] decoders;
-        private final Intel8086 cpu;
-
-        /**
-         * Creates a new instance decode processor
-         *
-         * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
-         * @param proxy the given {@link X86MemoryProxy memory proxy} instance
-         */
-        public DebugDecoder(final Intel8086 cpu, final X86MemoryProxy proxy) {
-            this.cpu = cpu;
-            this.proxy = proxy;
-            this.decoders =
-                    new Decoder[]{
-                            new Decoder00(), new Decoder10(), new Decoder20(), new Decoder30(),
-                            new Decoder40(), new Decoder50(), new Decoder60(), new Decoder70(),
-                            new Decoder80(), new Decoder90(), new DecoderA0(), new DecoderB0(),
-                            new DecoderC0(), new DecoderD0(), new DecoderE0(), new DecoderF0(this)
-                    };
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public OpCode decodeNext() {
-            // capture the current offset
-            final int offset0 = proxy.getOffset();
-
-            // peek at the next byte
-            final int code = proxy.peekAtNextByte();
-
-            // get the first hex digit (mask = 1111 0000)
-            final int index = ((code & 0xF0) >> 4);
-
-            // invoke the appropriate interpreter
-            OpCode opCode;
-            try {
-                opCode = decoders[index].decode(cpu, proxy);
-            } catch (final Throwable cause) {
-                // get the length of the failed instruction
-                final int length = proxy.getOffset() - offset0;
-                final int bytecode = (int) memory.getBytesAsLong(proxy.getSegment(), offset0, length);
-                opCode = (length == 1) ? new DB(bytecode) : new DW(bytecode);
-            }
-
-            // get the length of the instruction
-            final int codeLength = proxy.getOffset() - offset0;
-
-            // set the instruction code length
-            opCode.setLength(codeLength);
-
-            // return the opCode
-            return opCode;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void redirect(final int segment, final int offset) {
-            // no redirection needed
-        }
-
     }
 
 }

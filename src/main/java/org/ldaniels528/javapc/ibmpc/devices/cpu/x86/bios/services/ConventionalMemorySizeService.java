@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
@@ -31,7 +31,7 @@ public class ConventionalMemorySizeService implements InterruptHandler {
 	 * Process the Conventional Memory Size Interrupt
 	 * @throws X86AssemblyException
 	 */
-	public void process(IbmPcSystem system, final Intel8086 cpu)
+	public void process(IbmPcSystem system, final I8086 cpu)
 	throws X86AssemblyException {
 		// get the RAM instance
 		final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();

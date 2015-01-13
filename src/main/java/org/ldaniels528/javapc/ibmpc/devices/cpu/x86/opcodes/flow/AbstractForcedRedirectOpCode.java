@@ -3,7 +3,7 @@
  */
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.OperandValue;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
@@ -36,7 +36,7 @@ public class AbstractForcedRedirectOpCode extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(IbmPcSystem system, final Intel8086 cpu) throws X86AssemblyException {
+    public void execute(IbmPcSystem system, final I8086 cpu) throws X86AssemblyException {
         cpu.jumpTo(this, destination, savePoint);
     }
 

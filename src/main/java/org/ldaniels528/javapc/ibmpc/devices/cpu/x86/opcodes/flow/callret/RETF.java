@@ -3,7 +3,7 @@
  */
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.callret;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
@@ -49,7 +49,7 @@ public class RETF extends AbstractOpCode {
      * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.VirtualCPU)
      */
     @Override
-    public void execute(IbmPcSystem system, final Intel8086 cpu) throws X86AssemblyException {
+    public void execute(IbmPcSystem system, final I8086 cpu) throws X86AssemblyException {
         cpu.returnFar(0);
     }
 

@@ -20,7 +20,7 @@ import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_8BI
  *
  * @author lawrence.daniels@gmail.com
  */
-public class Intel8086 extends X86RegisterSet {
+public class I8086 extends X86RegisterSet {
     // system timer frequency
     private static final long SYSTEM_TIMER_FREQ = 1000 / 18; // 18 times/sec
 
@@ -33,6 +33,7 @@ public class Intel8086 extends X86RegisterSet {
     private long lastTimerUpdate;
     private boolean ipChanged;
     private boolean active;
+    private boolean debugMode = false;
 
     /////////////////////////////////////////////////////////
     //		Constructor(s)
@@ -43,7 +44,7 @@ public class Intel8086 extends X86RegisterSet {
      *
      * @param proxy the {@link X86MemoryProxy memory proxy} instance
      */
-    public Intel8086(final X86MemoryProxy proxy) {
+    public I8086(final X86MemoryProxy proxy) {
         this.XDS = DS;
         this.memory = proxy.getMemory();
         this.active = true;
@@ -72,7 +73,7 @@ public class Intel8086 extends X86RegisterSet {
      * Executes the given compiled code
      *
      * @param system  the given {@link IbmPcSystem IBM PC system}
-     * @param context the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramContext 80x86 execution context}
+     * @param context the given {@link ProgramContext 80x86 execution context}
      */
     public void execute(final IbmPcSystem system, final ProgramContext context) throws X86AssemblyException {
         // setup the segments
@@ -114,7 +115,9 @@ public class Intel8086 extends X86RegisterSet {
         updateSystemTimer(system);
 
         // display the instruction information
-        logger.info(format("E [%04X:%04X] %10X[%d] %s", CS.get(), IP.get(), opCode.getInstructionCode(), opCode.getLength(), opCode));
+        if(debugMode) {
+            logger.info(format("E [%04X:%04X] %10X[%d] %s", CS.get(), IP.get(), opCode.getInstructionCode(), opCode.getLength(), opCode));
+        }
 
         // execute the instruction
         opCode.execute(system, this);
@@ -198,7 +201,9 @@ public class Intel8086 extends X86RegisterSet {
      */
     public int getByte(final int offset) {
         final int value = memory.getByte(XDS.get(), offset);
-        logger.info(format("D [%04X:%04X] %13s %02X", XDS.get(), offset, "", value));
+        if(debugMode) {
+            logger.info(format("D [%04X:%04X] %13s %02X", XDS.get(), offset, "", value));
+        }
         return value;
     }
 
@@ -220,7 +225,9 @@ public class Intel8086 extends X86RegisterSet {
      */
     public int getWord(final int offset) {
         final int value = memory.getWord(XDS.get(), offset);
-        logger.info(format("D [%04X:%04X] %13s data = %04X (%d)", XDS.get(), offset, "", value, value));
+        if(debugMode) {
+            logger.info(format("D [%04X:%04X] %13s data = %04X (%d)", XDS.get(), offset, "", value, value));
+        }
         return value;
     }
 
@@ -242,7 +249,9 @@ public class Intel8086 extends X86RegisterSet {
      */
     public int getDoubleWord(final int offset) {
         final int value = memory.getDoubleWord(XDS.get(), offset);
-        logger.info(format("D [%04X:%04X] %08X", XDS.get(), offset, value));
+        if(debugMode) {
+            logger.info(format("D [%04X:%04X] %08X", XDS.get(), offset, value));
+        }
         return value;
     }
 
@@ -279,7 +288,9 @@ public class Intel8086 extends X86RegisterSet {
             case SIZE_16BIT:
                 // save this position?
                 if (savePoint) {
-                    logger.info(format("Storing IP as %04X", IP.get()));
+                    if(debugMode) {
+                        logger.info(format("Storing IP as %04X", IP.get()));
+                    }
                     stack.pushValue(IP.get() + opCode.getLength());
                 }
 
@@ -366,7 +377,9 @@ public class Intel8086 extends X86RegisterSet {
         final int offset = stack.popValue();
         final int segment = stack.popValue();
 
-        logger.info(format("Returning FAR to %04X:%04X", segment, offset));
+        if(debugMode) {
+            logger.info(format("Returning FAR to %04X:%04X", segment, offset));
+        }
 
         // jump to the offset in memory
         CS.set(segment);
@@ -374,7 +387,7 @@ public class Intel8086 extends X86RegisterSet {
     }
 
     /**
-     * Updates the system timer (every 55 milliseconds - 18 times/sec)
+     * Updates the system timer (every 55 milliseconds ~ 18 times/sec)
      *
      * @param system the given {@link IbmPcSystem IBM PC system}
      * @throws X86AssemblyException
@@ -383,7 +396,9 @@ public class Intel8086 extends X86RegisterSet {
         // is it time to invoke the system timer?
         final long elapsedSinceUpdate = System.currentTimeMillis() - lastTimerUpdate;
         if ((elapsedSinceUpdate >= SYSTEM_TIMER_FREQ) && FLAGS.isIF()) {
-            logger.info(format("SYSTIMR timer last update %d msec ago", elapsedSinceUpdate));
+            if(debugMode) {
+                logger.info(format("SYSTIMR timer last update %d msec ago", elapsedSinceUpdate));
+            }
             INT.SYSTIMR.execute(system, this);
             lastTimerUpdate = System.currentTimeMillis();
         }

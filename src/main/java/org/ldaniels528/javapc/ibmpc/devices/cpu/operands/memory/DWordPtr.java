@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 
 /**
  * Represents a pointer to a 32-bit (double word) memory address
@@ -9,7 +9,7 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
  */
 public class DWordPtr implements MemoryPointer {
     private final MemoryReference memoryRef;
-    private final Intel8086 cpu;
+    private final I8086 cpu;
 
     /**
      * Creates a pointer to a 32-bit memory address

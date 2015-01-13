@@ -15,16 +15,16 @@ import static java.lang.String.format;
 public class X86Stack implements Operand {
     private final Logger logger = Logger.getLogger(getClass());
     private final IbmPcRandomAccessMemory memory;
-    private final Intel8086 cpu;
+    private final I8086 cpu;
     private int elements;
 
     /**
      * Creates a new program stack
      *
      * @param memory the given {@link IbmPcRandomAccessMemory memory} instance
-     * @param cpu    the given {@link Intel8086 80x86 CPU} instance
+     * @param cpu    the given {@link I8086 80x86 CPU} instance
      */
-    public X86Stack(final IbmPcRandomAccessMemory memory, final Intel8086 cpu) {
+    public X86Stack(final IbmPcRandomAccessMemory memory, final I8086 cpu) {
         this.memory = memory;
         this.cpu = cpu;
     }

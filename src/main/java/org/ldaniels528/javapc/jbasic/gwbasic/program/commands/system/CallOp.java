@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.jbasic.gwbasic.program.commands.system;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramArguments;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramContext;
 import org.ldaniels528.javapc.ibmpc.devices.memory.MemoryObject;
@@ -74,7 +74,7 @@ public class CallOp extends GwBasicCommand {
         final int offset = (int) object.toDoublePrecision();
 
         // get the CPU instance
-        final Intel8086 cpu = compiledCode.getSystem().getCPU();
+        final I8086 cpu = compiledCode.getSystem().getCPU();
 
         // create the addressable arguments
         final AddressableArgument[] addressables = getAddressableArguments(compiledCode, arguments);

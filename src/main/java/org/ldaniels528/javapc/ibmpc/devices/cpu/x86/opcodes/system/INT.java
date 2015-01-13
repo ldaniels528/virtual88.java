@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
@@ -45,7 +45,7 @@ public class INT extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final IbmPcSystem system, final Intel8086 cpu) throws X86AssemblyException {
+    public void execute(final IbmPcSystem system, final I8086 cpu) throws X86AssemblyException {
         system.getBIOS().invoke(system, cpu, this);
     }
 

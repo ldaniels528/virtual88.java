@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.loop;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.AbstractFlowControlOpCode;
 
@@ -24,7 +24,7 @@ public class LOOPZ extends AbstractFlowControlOpCode {
      * {@inheritDoc}
      */
     @Override
-    protected boolean redirectsFlow(final Intel8086 cpu) {
+    protected boolean redirectsFlow(final I8086 cpu) {
         final boolean ok = (cpu.CX.get() > 0) && cpu.FLAGS.isZF();
         if (ok) {
             // decrement cx

@@ -1,7 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder;
 
 import org.apache.log4j.Logger;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.AbstractForcedRedirectOpCode;
@@ -17,18 +17,18 @@ import static java.lang.String.format;
  */
 public class DecodeProcessorImpl implements DecodeProcessor {
     private final Logger logger = Logger.getLogger(getClass());
-    protected final IbmPcRandomAccessMemory memory;
-    protected final X86MemoryProxy proxy;
+    private final IbmPcRandomAccessMemory memory;
+    private final X86MemoryProxy proxy;
     private final Decoder[] decoders;
-    protected final Intel8086 cpu;
+    private final I8086 cpu;
 
     /**
      * Creates a new instance decode processor
      *
-     * @param cpu   the given {@link Intel8086 CPU}
+     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU}
      * @param proxy the given {@link X86MemoryProxy memory proxy}
      */
-    public DecodeProcessorImpl(final Intel8086 cpu, final X86MemoryProxy proxy) {
+    public DecodeProcessorImpl(final I8086 cpu, final X86MemoryProxy proxy) {
         this.cpu = cpu;
         this.proxy = proxy;
         this.memory = proxy.getMemory();
@@ -55,7 +55,7 @@ public class DecodeProcessorImpl implements DecodeProcessor {
         final int index = ((code & 0xF0) >> 4);
 
         // invoke the appropriate interpreter
-        final OpCode opCode = decoders[index].decode(cpu, proxy);
+        final OpCode opCode = decoders[index].decode(cpu, proxy, this);
 
         // get the length of the instruction
         final int codeLength = proxy.getOffset() - offset0;

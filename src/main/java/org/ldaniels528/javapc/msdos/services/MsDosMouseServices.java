@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.msdos.services;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services.InterruptHandler;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services.VideoServices;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
@@ -36,7 +36,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * {@inheritDoc}
      */
     @Override
-    public void process(final IbmPcSystem system, final Intel8086 cpu) throws X86AssemblyException {
+    public void process(final IbmPcSystem system, final I8086 cpu) throws X86AssemblyException {
         // get an instance of the mouse
         final IbmPcMouse mouse = system.getMouse();
 
@@ -159,7 +159,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * AX = FFFFh mouse driver installed
      * BX = number of buttons
      */
-    private void resetMouse(Intel8086 cpu) {
+    private void resetMouse(I8086 cpu) {
         cpu.AX.set(0xFFFF);
         cpu.BX.set(2); // TODO Detect how many mouse buttons?
     }
@@ -188,7 +188,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * | | | | | | | | +---- left button (1 = pressed)
      * | | | | | | | +----- right button (1 = pressed)
      */
-    private void getPositionAndButtonStatus(IbmPcMouse mouse, Intel8086 cpu) {
+    private void getPositionAndButtonStatus(IbmPcMouse mouse, I8086 cpu) {
         cpu.CX.set(mouse.getMouseX());
         cpu.DX.set(mouse.getMouseY());
         cpu.BX.set(mouse.getButtonStatus());
@@ -200,7 +200,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * CX = horizontal position
      * DX = vertical position
      */
-    private void setPosition(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setPosition(IbmPcMouse mouse, I8086 cpu) {
         mouse.setMouseX(cpu.CX.get());
         mouse.setMouseY(cpu.DX.get());
     }
@@ -220,7 +220,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * | | | | | | | +----- right button (1 = pressed)
      * +------------------- unused
      */
-    private void getButtonPressInfo(IbmPcMouse mouse, Intel8086 cpu) {
+    private void getButtonPressInfo(IbmPcMouse mouse, I8086 cpu) {
         cpu.CX.set(mouse.getMouseX());
         cpu.DX.set(mouse.getMouseY());
         cpu.BX.set(mouse.getPressCount());
@@ -242,7 +242,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * | | | | | | | +----- right button (1 = pressed)
      * +------------------- unused
      */
-    private void getButtonReleseInfo(IbmPcMouse mouse, Intel8086 cpu) {
+    private void getButtonReleseInfo(IbmPcMouse mouse, I8086 cpu) {
         cpu.CX.set(mouse.getMouseX());
         cpu.DX.set(mouse.getMouseY());
         cpu.BX.set(mouse.getPressCount());
@@ -259,7 +259,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * CX = minimum horizontal position
      * DX = maximum horizontal position
      */
-    private void setHorizontalMinOrMax(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setHorizontalMinOrMax(IbmPcMouse mouse, I8086 cpu) {
         mouse.setMinimumX(cpu.CX.get());
         mouse.setMaximumX(cpu.DX.get());
     }
@@ -274,7 +274,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * CX = minimum vertical position
      * DX = maximum vertical position
      */
-    private void setVerticalMinOrMax(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setVerticalMinOrMax(IbmPcMouse mouse, I8086 cpu) {
         mouse.setMinimumY(cpu.CX.get());
         mouse.setMaximumY(cpu.DX.get());
     }
@@ -286,7 +286,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * CX = vertical hot spot (-16 to 16)
      * ES:DX = pointer to screen and cursor masks (16 byte bitmap)
      */
-    private void setGraphicsCursor(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setGraphicsCursor(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -298,7 +298,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * CX = start of screen mask or hardware cursor scan line
      * DX = end of screen mask or hardware cursor scan line
      */
-    private void setTextCursor(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setTextCursor(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -310,7 +310,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * CX = horizontal mickey count (-32768 to 32767)
      * DX = vertical mickey count (-32768 to 32767)
      */
-    private void readMotionCounters(IbmPcMouse mouse, Intel8086 cpu) {
+    private void readMotionCounters(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -327,21 +327,21 @@ public class MsDosMouseServices implements InterruptHandler {
      * | +------- right button released
      * +--------- unused
      */
-    private void setUserDefinedInputMask(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setUserDefinedInputMask(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
     /**
      * Mouse Light Pen Emulation On
      */
-    private void setMouseLightPenEmulationOn(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setMouseLightPenEmulationOn(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
     /**
      * Mouse Light Pen Emulation Off
      */
-    private void setMouseLightPenEmulationOff(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setMouseLightPenEmulationOff(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -354,7 +354,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * CX = horizontal ratio (1..32767, default 8)
      * DX = vertical ratio (1..32767, default 16)
      */
-    private void setMousePixelRatio(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setMousePixelRatio(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -366,7 +366,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * SI = lower X screen coordinate
      * DI = lower Y screen coordinate
      */
-    private void setMouseConditionOff(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setMouseConditionOff(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -375,7 +375,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * Parameters:
      * DX = threshold speed (mickeys per second, default 64)
      */
-    private void setMouseDoubleSpeedThresthold(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setMouseDoubleSpeedThresthold(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -410,7 +410,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * | +---- right button (1 = pressed)
      * +------ unused
      */
-    private void swapInterruptSubroutine(IbmPcMouse mouse, Intel8086 cpu) {
+    private void swapInterruptSubroutine(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -423,7 +423,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * Returns:
      * BX = buffer size need to hold current mouse state
      */
-    private void getDriverStateAndRequirements(IbmPcMouse mouse, Intel8086 cpu) {
+    private void getDriverStateAndRequirements(IbmPcMouse mouse, I8086 cpu) {
         cpu.BX.set(1024);
     }
 
@@ -435,7 +435,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * Parameters:
      * ES:DX = far pointer to mouse state save buffer
      */
-    private void saveDriverState(IbmPcMouse mouse, Intel8086 cpu) {
+    private void saveDriverState(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -447,7 +447,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * Parameters:
      * ES:DX = far pointer to mouse state save buffer
      */
-    private void restoreDriverState(IbmPcMouse mouse, Intel8086 cpu) {
+    private void restoreDriverState(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -479,7 +479,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * | +---- right button (1 = pressed)
      * +------ unused
      */
-    private void setAlternateSubroutineCallMaskAndAddress(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setAlternateSubroutineCallMaskAndAddress(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -505,7 +505,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * | +---------- cursor moved
      * +------------ unused
      */
-    private void getAlternateInterruptAddress(IbmPcMouse mouse, Intel8086 cpu) {
+    private void getAlternateInterruptAddress(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -522,7 +522,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * 	DX = double speed threshold
      * </pre>
      */
-    private void setSensitivity(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setSensitivity(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -536,7 +536,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * CX = vertical coordinates per pixel (% 100)
      * DX = double speed threshold
      */
-    private void getSensitivity(IbmPcMouse mouse, Intel8086 cpu) {
+    private void getSensitivity(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -555,7 +555,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * = 3 100 interrupts per second
      * = 4 200 interrupts per second
      */
-    private void setInterruptRate(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setInterruptRate(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -568,7 +568,7 @@ public class MsDosMouseServices implements InterruptHandler {
      *
      * @see IbmPcDisplay#setActivePage(int)
      */
-    private void setCrtPage(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setCrtPage(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -579,7 +579,7 @@ public class MsDosMouseServices implements InterruptHandler {
      *
      * @see IbmPcDisplay#getActivePage()
      */
-    private void getCrtPage(IbmPcMouse mouse, Intel8086 cpu) {
+    private void getCrtPage(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -590,7 +590,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * = FFFF if error
      * ES:BX = previous ~INT 33~ vector
      */
-    private void disableDriver(IbmPcMouse mouse, Intel8086 cpu) {
+    private void disableDriver(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -600,7 +600,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * Reinstalls the mouse drivers interrupt vectors for
      * {@link VideoServices INT 10} and INT 71 (8088/86) and INT 74 (286/386)
      */
-    private void enableDriver(IbmPcMouse mouse, Intel8086 cpu) {
+    private void enableDriver(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -611,7 +611,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * = FFFF mouse driver installed
      * BX 	= 2 mouse driver installed
      */
-    private void resetSoftware(IbmPcMouse mouse, Intel8086 cpu) {
+    private void resetSoftware(IbmPcMouse mouse, I8086 cpu) {
         cpu.AX.set(0xFFFF);
         cpu.BX.set(2);
     }
@@ -632,7 +632,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * = 7 Portuguese P
      * = 8 Italian I
      */
-    private void setLanguageForMessages(IbmPcMouse mouse, Intel8086 cpu) {
+    private void setLanguageForMessages(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -650,7 +650,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * = 7 Portuguese P
      * = 8 Italian I
      */
-    private void getLanguageNumber(IbmPcMouse mouse, Intel8086 cpu) {
+    private void getLanguageNumber(IbmPcMouse mouse, I8086 cpu) {
         // TODO Have to figure this out
     }
 
@@ -673,7 +673,7 @@ public class MsDosMouseServices implements InterruptHandler {
      * = 5 IRQ 5
      * = 7 IRQ 7
      */
-    private void getDriverVersionMouseTypeAndIRQ(IbmPcMouse mouse, Intel8086 cpu) {
+    private void getDriverVersionMouseTypeAndIRQ(IbmPcMouse mouse, I8086 cpu) {
         // set major & minor version
         cpu.BH.set(0x06);
         cpu.BL.set(0x10);

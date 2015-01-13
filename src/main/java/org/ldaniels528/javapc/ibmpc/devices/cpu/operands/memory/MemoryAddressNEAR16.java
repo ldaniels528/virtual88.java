@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 
 /**
@@ -9,15 +9,15 @@ import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
  */
 public class MemoryAddressNEAR16 implements OperandAddress {
 	private final IbmPcRandomAccessMemory memory;
-	private final Intel8086 cpu;
+	private final I8086 cpu;
 	private final int offset;
 	
 	/**
 	 * Creates a NEAR pointer to a 16-bit memory address
-	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
 	 * @param offset the offset portion of the address
 	 */
-	public MemoryAddressNEAR16( final Intel8086 cpu, final int offset ) {
+	public MemoryAddressNEAR16( final I8086 cpu, final int offset ) {
 		this.cpu	= cpu;
 		this.memory	= cpu.getRandomAccessMemory();
 		this.offset = offset;

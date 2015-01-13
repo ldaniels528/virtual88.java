@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcColorSet;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
 import org.ldaniels528.javapc.ibmpc.devices.display.modes.IbmPcDisplayMode;
@@ -45,7 +45,7 @@ public class VideoServices implements InterruptHandler {
      *
      * @throws X86AssemblyException
      */
-    public void process(final IbmPcSystem system, final Intel8086 cpu) throws X86AssemblyException {
+    public void process(final IbmPcSystem system, final I8086 cpu) throws X86AssemblyException {
         // get the display
         final IbmPcDisplay display = system.getDisplay();
 
@@ -108,10 +108,10 @@ public class VideoServices implements InterruptHandler {
      * Sets the display mode
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 register context}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 register context}
      * @throws X86AssemblyException
      */
-    private void setVideoMode(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void setVideoMode(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         // get the request mode
         final int mode = cpu.AL.get();
 
@@ -130,11 +130,11 @@ public class VideoServices implements InterruptHandler {
      * Sets the cursor size and/or shape
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 register context}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 register context}
      * @throws X86AssemblyException
      * @see <a href="http://www.htl-steyr.ac.at/~morg/pcinfo/hardware/interrupts/inte6lbk.htm">Set Cursor Type</a>
      */
-    private void setCursorSizeAndShape(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void setCursorSizeAndShape(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         logger.info(format("setCursorSizeAndShape is not yet implemented"));
     }
 
@@ -142,9 +142,9 @@ public class VideoServices implements InterruptHandler {
      * Sets the cursor position
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 register context}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 register context}
      */
-    private void setCursorPosition(final IbmPcDisplay display, final Intel8086 cpu) {
+    private void setCursorPosition(final IbmPcDisplay display, final I8086 cpu) {
         // get video page
         final int page = cpu.BH.get();
         if (page != 0) {
@@ -163,10 +163,10 @@ public class VideoServices implements InterruptHandler {
      * Queries the cursor position and size
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 register context}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 register context}
      * @throws X86AssemblyException
      */
-    private void queryCursorPositionAndSize(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void queryCursorPositionAndSize(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         throw new X86AssemblyException("Not yet implemeneted");
     }
 
@@ -174,10 +174,10 @@ public class VideoServices implements InterruptHandler {
      * Reads light pen information
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 register context}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 register context}
      * @throws X86AssemblyException
      */
-    private void readLightPen(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void readLightPen(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         throw new X86AssemblyException("Not yet implemeneted");
     }
 
@@ -185,10 +185,10 @@ public class VideoServices implements InterruptHandler {
      * Select active display page
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 register context}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 register context}
      * @throws X86AssemblyException
      */
-    private void setActiveDisplayPage(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void setActiveDisplayPage(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         final int page = cpu.AL.get();
         display.setActivePage(page);
     }
@@ -197,10 +197,10 @@ public class VideoServices implements InterruptHandler {
      * Scroll Up / Clear Screen Rectangle
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 register context}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 register context}
      * @throws X86AssemblyException
      */
-    private void scrollWindowUp(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void scrollWindowUp(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         // number of lines to scroll in (0=blank entire rectangle)
         final int nLines = cpu.AL.get();
 
@@ -224,10 +224,10 @@ public class VideoServices implements InterruptHandler {
      * Scroll Down / Clear Screen Rectangle
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 register context}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 register context}
      * @throws X86AssemblyException
      */
-    private void scrollWindowDown(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void scrollWindowDown(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         // number of lines to scroll in (0=blank entire rectangle)
         final int nLines = cpu.AL.get();
 
@@ -250,10 +250,10 @@ public class VideoServices implements InterruptHandler {
      * Read Character/Attribute at Cursor Location
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 register context}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 register context}
      * @throws X86AssemblyException
      */
-    private void readCharacterOrAttribute(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void readCharacterOrAttribute(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         // get display page
         final int page = cpu.BH.get();
 
@@ -279,10 +279,10 @@ public class VideoServices implements InterruptHandler {
      * Write Character/Attribute to Cursor Location
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 register context}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 register context}
      * @throws X86AssemblyException
      */
-    private void writeCharacterOrAttribute(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void writeCharacterOrAttribute(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         // get the display mode
         final IbmPcDisplayMode mode = display.getDisplayMode();
         final int step = mode.isGraphical() ? 1 : 2;
@@ -324,10 +324,10 @@ public class VideoServices implements InterruptHandler {
      * </pre>
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 registers}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 registers}
      * @throws X86AssemblyException
      */
-    private void writeCharacterAsTTY(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void writeCharacterAsTTY(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         // get the display page number
         final int page = cpu.BH.get();
 
@@ -345,10 +345,10 @@ public class VideoServices implements InterruptHandler {
      * Sets the color palette (graphics mode) or border (text mode)
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 registers}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 registers}
      * @throws X86AssemblyException
      */
-    private void setColorPaletteOrBorder(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void setColorPaletteOrBorder(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         // get the parameters
         final int color = cpu.BL.get(); // 0..3/15
         final int mode = cpu.BH.get(); // 0 or 1
@@ -374,10 +374,10 @@ public class VideoServices implements InterruptHandler {
      * Sets the specified graphics pixel
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 register context}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 register context}
      * @throws X86AssemblyException
      */
-    private void writeGraphicsPixel(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void writeGraphicsPixel(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         // get input parameters
         final int color = cpu.AL.get();    // 0..3/15/255
         final int column = cpu.CX.get();    // 0..319/639
@@ -391,10 +391,10 @@ public class VideoServices implements InterruptHandler {
      * Reads the specified graphics pixel
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 register context}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 register context}
      * @throws X86AssemblyException
      */
-    private void readGraphicsPixel(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void readGraphicsPixel(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         // get input parameters
         final int column = cpu.CX.get(); // 0..319/639
         final int row = cpu.DX.get(); // 0..199/479
@@ -408,10 +408,10 @@ public class VideoServices implements InterruptHandler {
      * Query Current Video Info
      *
      * @param display the given {@link IbmPcDisplay display}
-     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 register context}
+     * @param cpu     the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 register context}
      * @throws X86AssemblyException
      */
-    private void readVideoMode(final IbmPcDisplay display, final Intel8086 cpu) throws X86AssemblyException {
+    private void readVideoMode(final IbmPcDisplay display, final I8086 cpu) throws X86AssemblyException {
         // get the display mode
         final IbmPcDisplayMode mode = display.getDisplayMode();
 

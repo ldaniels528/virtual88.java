@@ -6,7 +6,7 @@ import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.l
 import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.lookupSecondaryOperand;
 import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.nextSignedValue8;
 import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.nextValue;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryReference;
@@ -131,7 +131,7 @@ public class Decoder80 implements Decoder {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public OpCode decode( final Intel8086 cpu, final X86MemoryProxy proxy ) {
+	public OpCode decode(final I8086 cpu, final X86MemoryProxy proxy, DecodeProcessor processor) {
 		// get the 16-bit instruction
 		final int code16 = proxy.nextWord();
 		
@@ -151,12 +151,12 @@ public class Decoder80 implements Decoder {
 	
 	/**
 	 * Decodes a Type A instructions (ADD, OR, ADC, SBB, AND, SUB, XOR, and CMP)
-	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
 	 * @param proxy the given {@link X86MemoryProxy memory proxy} instance
 	 * @param code16 the given 16-bit instruction
 	 * @return an {@link OpCode 80x86 opCode}  
 	 */
-	private OpCode decodeTypeA( final Intel8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
+	private OpCode decodeTypeA( final I8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
 		// instruction code layout
 		// -----------------------------
 		// fedc ba98 7654 3210 (16 bits)
@@ -194,12 +194,12 @@ public class Decoder80 implements Decoder {
 	
 	/**
 	 * Decodes a Type B instructions (TEST and XCHG)
-	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
 	 * @param proxy the given {@link X86MemoryProxy memory proxy} instance
 	 * @param code16 the given 16-bit instruction
 	 * @return an {@link OpCode 80x86 opCode}  
 	 */
-	private OpCode decodeTypeB( final Intel8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
+	private OpCode decodeTypeB( final I8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
 		// instruction code layout
 		// -----------------------------
 		// fedc ba98 7654 3210 (16 bits)
@@ -226,12 +226,12 @@ public class Decoder80 implements Decoder {
 
 	/**
 	 * Decodes a Type C instructions (e.g. 'mov al,cl', 'mov [bx],al', 'mov ax,[bx]')
-	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
 	 * @param proxy the given {@link X86MemoryProxy memory proxy} instance
 	 * @param code16 the given 16-bit instruction
 	 * @return an {@link OpCode 80x86 opCode}  
 	 */
-	private OpCode decodeTypeC( final Intel8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
+	private OpCode decodeTypeC( final I8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
 		// instruction code layout
 		// -----------------------------
 		// fedc ba98 7654 3210 (16 bits)
@@ -246,12 +246,12 @@ public class Decoder80 implements Decoder {
 	
 	/**
 	 * Decodes a Type D instructions (MOV, LEA, and POP)
-	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
 	 * @param proxy the given {@link X86MemoryProxy memory proxy} instance
 	 * @param code16 the given 16-bit instruction
 	 * @return an {@link OpCode 80x86 opCode}  
 	 */
-	private OpCode decodeTypeD( final Intel8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
+	private OpCode decodeTypeD( final I8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
 		// instruction code layout
 		// -----------------------------
 		// fedc ba98 7654 3210 (16 bits)
@@ -273,12 +273,12 @@ public class Decoder80 implements Decoder {
 	
 	/**
 	 * Decodes a Load Executive Address (LEA) instruction
-	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
 	 * @param proxy the given {@link X86MemoryProxy memory proxy} instance
 	 * @param code16 the given 16-bit instruction
 	 * @return an {@link LEA Load Executive Address} instruction  
 	 */
-	private LEA decodeLEA( final Intel8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
+	private LEA decodeLEA( final I8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
 		// get the compsite (element & reference) code
 		//	code16: tt.. .mmm .... .... (mask = 1100 0111 0000 0000)
 		final int compCode = ( code16 & 0xC700 ) >> 8;
@@ -295,12 +295,12 @@ public class Decoder80 implements Decoder {
 	
 	/**
 	 * Decodes a MOV instruction
-	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
 	 * @param proxy the given {@link X86MemoryProxy memory proxy} instance
 	 * @param code16 the given 16-bit instruction
 	 * @return an {@link MOV MOV} instruction  
 	 */
-	private MOV decodeMOV( final Intel8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
+	private MOV decodeMOV( final I8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
 		// lookup the primary and secondary operand
 		final Operand[] operands = lookupOperands( cpu, proxy, code16, true, true );
 		
@@ -310,12 +310,12 @@ public class Decoder80 implements Decoder {
 
 	/**
 	 * Decodes a POP instruction
-	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086 CPU} instance
+	 * @param cpu the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
 	 * @param proxy the given {@link X86MemoryProxy memory proxy} instance
 	 * @param code16 the given 16-bit instruction
 	 * @return an {@link POP POP} instruction  
 	 */
-	private POP decodePOP( final Intel8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
+	private POP decodePOP( final I8086 cpu, final X86MemoryProxy proxy, final int code16 ) {
 		// lookup the primary operand
 		final Operand operand = lookupSecondaryOperand( cpu, proxy, code16 );
 		

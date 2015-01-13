@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.bitwise;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.Intel8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
@@ -41,7 +41,7 @@ public class RCL extends AbstractDualOperandOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(IbmPcSystem system, final Intel8086 cpu) {
+    public void execute(IbmPcSystem system, final I8086 cpu) {
         // get the destination value
         final int value = dest.get();
 
