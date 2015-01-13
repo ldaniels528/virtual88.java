@@ -211,7 +211,7 @@ public class IbmPcBIOS {
         // is there a system handler defined?
         if (handlers.containsKey(address)) {
             final InterruptHandler handler = handlers.get(address);
-            logger.info(format("Handling interrupt %02X with %s (%s)", interruptNo, handler.getClass().getSimpleName(), address));
+            //logger.info(format("Handling interrupt %02X with %s (%s)", interruptNo, handler.getClass().getSimpleName(), address));
 
             // handle the interrupt
             handler.process(system, cpu);
@@ -219,7 +219,7 @@ public class IbmPcBIOS {
 
         // otherwise, use the defined user handler
         else {
-            logger.info(format("Handling interrupt %02X at %s", interruptNo, address));
+            //logger.info(format("Handling interrupt %02X at %s", interruptNo, address));
 
             // jump to the address in memory
             cpu.invokeInterrupt(address);

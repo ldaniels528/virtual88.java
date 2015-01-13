@@ -346,8 +346,9 @@ public class I8086 extends X86RegisterSet {
 
         // get the return offset
         final int offset = stack.popValue();
-
-        logger.info(format("Returning NEAR to %04X:%04X", CS.get(), offset));
+        if(debugMode) {
+            logger.info(format("Returning NEAR to %04X:%04X", CS.get(), offset));
+        }
 
         // jump to the offset in memory
         IP.set(offset);

@@ -3,7 +3,6 @@ package org.ldaniels528.javapc.ibmpc.app;
 import org.ldaniels528.javapc.JavaPCConstants;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.ProgramContext;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecodeProcessor;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecodeProcessorImpl;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
@@ -17,9 +16,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemPCjr;
 import org.ldaniels528.javapc.util.ResourceHelper;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static org.ldaniels528.javapc.ibmpc.util.IbmPcValues.parseHexadecimalString;
 
@@ -126,17 +123,38 @@ public class IbmPcDebugger implements JavaPCConstants {
      *   [u]nassemble - decodes assembly code at the current IP position
      * </pre>
      *
-     * @param command the given command
+     * @param line the given line
      */
-    private void interpret(final String command) {
+    private void interpret(final String line) {
+        // parse the command and get the parameters
+        final List<String> args = Arrays.asList(line.split("[ ]"));
+        final String command = args.get(0).toLowerCase();
+        final List<String> params = args.size() < 2 ? Collections.<String>emptyList() : args.subList(1, args.size());
+
         try {
-            if (command.startsWith("d")) dump(128);
-            else if (command.startsWith("g")) executeCode(cpu.IP.get());
-            else if (command.startsWith("f")) setFileName(command);
-            else if (command.startsWith("n")) executeNext();
-            else if (command.startsWith("q")) stop();
-            else if (command.startsWith("r")) out.println(cpu);
-            else if (command.startsWith("u")) unassemble(command, 10);
+            switch (command) {
+                case "d":
+                    dump(params);
+                    break;
+                case "g":
+                    executeCode(cpu.IP.get(), 100);
+                    break;
+                case "f":
+                    setFileName(line);
+                    break;
+                case "n":
+                    executeNext();
+                    break;
+                case "q":
+                    stop();
+                    break;
+                case "r":
+                    out.println(cpu);
+                    break;
+                case "u":
+                    unassemble(line, 10);
+                    break;
+            }
         } catch (X86AssemblyException | IbmPcNumericFormatException e) {
             System.err.printf("Run-time error: %s\n", e.getMessage());
         }
@@ -144,11 +162,40 @@ public class IbmPcDebugger implements JavaPCConstants {
 
     /**
      * Dumps the specific number of bytes on screen
+     * <p/>Syntax1: d [offset] [count]
+     * <p/>Syntax2: d [segment:offset] [count]
      *
-     * @param count the specified number of bytes to display
+     * @param params the given command parameters
      */
-    private void dump(final int count) {
+    private void dump(final List<String> params) {
         final int DUMP_LENGTH = 16;
+        final int segment0 = proxy.getSegment();
+        final int offset0 = proxy.getOffset();
+
+        int segment = segment0;
+        int offset = offset0;
+        int count = 128;
+        switch (params.size()) {
+            case 2:
+                count = Integer.parseInt(params.get(1));
+            case 1:
+                final String[] pcs = params.get(0).split(":");
+                switch (pcs.length) {
+                    case 2:
+                        segment = Integer.parseInt(pcs[0]);
+                        offset = Integer.parseInt(pcs[1]);
+                        break;
+                    case 1:
+                        offset = Integer.parseInt(pcs[0]);
+                        break;
+                }
+            case 0:
+                break;
+        }
+
+        // move to the user defined segment:offset
+        proxy.setSegment(segment);
+        proxy.setOffset(offset);
 
         // create a container for lines of data
         final List<String> lines = new LinkedList<>();
@@ -167,20 +214,53 @@ public class IbmPcDebugger implements JavaPCConstants {
 
         // display the results
         lines.forEach(out::println);
+
+        // move back to the original segment:offset
+        proxy.setSegment(segment0);
+        proxy.setOffset(offset0);
     }
 
-    private void executeCode(final int offset) throws X86AssemblyException {
-        system.execute(new ProgramContext(proxy.getSegment(), offset, proxy.getSegment(), null));
+    private int[] parseSegmentOffset(final String param) {
+        int segment = proxy.getSegment();
+        int offset = proxy.getOffset();
+
+        final String[] pcs = param.split(":");
+        switch (pcs.length) {
+            case 2:
+                segment = Integer.parseInt(pcs[0]);
+                offset = Integer.parseInt(pcs[1]);
+                break;
+            case 1:
+                offset = Integer.parseInt(pcs[0]);
+                break;
+        }
+
+        return new int[] { segment, offset };
+    }
+
+    private void executeCode(final int offset, final int limit) throws X86AssemblyException {
+        int count = 0;
+
+        // point the the offset
+        proxy.setOffset(offset);
+
+        // execute instructions until the CPU is halted
+        while (count++ < limit && cpu.isActive()) {
+            final OpCode opCode = decoder.decodeNext();
+            out.printf("[%04X:%04X] %10X[%d] %s\n",
+                    cpu.CS.get(), cpu.IP.get(), opCode.getInstructionCode(), opCode.getLength(), opCode);
+            cpu.execute(system, opCode);
+        }
     }
 
     private void executeNext() throws X86AssemblyException {
-        if(firstInstruction) {
+        if (firstInstruction) {
             firstInstruction = false;
             proxy.setOffset(0x100);
         }
 
         final OpCode opCode = decoder.decodeNext();
-        out.printf("E [%04X:%04X] %10X[%d] %s\n",
+        out.printf("[%04X:%04X] %10X[%d] %s\n",
                 cpu.CS.get(), cpu.IP.get(), opCode.getInstructionCode(), opCode.getLength(), opCode);
         cpu.execute(system, opCode);
     }
@@ -282,7 +362,7 @@ public class IbmPcDebugger implements JavaPCConstants {
             final String byteCodeString = getByteCodeString(segment, offset);
 
             // display the instruction
-            out.printf("%04X:%04X %s %s\n", segment, offset, byteCodeString, instruction);
+            out.printf("[%04X:%04X] %s %s\n", segment, offset, byteCodeString, instruction);
         }
     }
 

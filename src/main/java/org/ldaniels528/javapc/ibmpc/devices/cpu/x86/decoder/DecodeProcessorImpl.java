@@ -1,6 +1,5 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder;
 
-import org.apache.log4j.Logger;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
@@ -8,15 +7,12 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.AbstractForcedR
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryProxy;
 
-import static java.lang.String.format;
-
 /**
  * 80x86 Decode Processor
  *
  * @author lawrence.daniels@gmail.com
  */
 public class DecodeProcessorImpl implements DecodeProcessor {
-    private final Logger logger = Logger.getLogger(getClass());
     private final IbmPcRandomAccessMemory memory;
     private final X86MemoryProxy proxy;
     private final Decoder[] decoders;
@@ -25,7 +21,7 @@ public class DecodeProcessorImpl implements DecodeProcessor {
     /**
      * Creates a new instance decode processor
      *
-     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU}
+     * @param cpu   the given {@link I8086 CPU}
      * @param proxy the given {@link X86MemoryProxy memory proxy}
      */
     public DecodeProcessorImpl(final I8086 cpu, final X86MemoryProxy proxy) {
@@ -72,7 +68,6 @@ public class DecodeProcessorImpl implements DecodeProcessor {
             final AbstractForcedRedirectOpCode forcedRedirectOpCode = (AbstractForcedRedirectOpCode) opCode;
             final Operand destination = forcedRedirectOpCode.getDestination();
             proxy.setDestination(destination);
-            logger.info(format("Redirecting to %04X:%04X", proxy.getSegment(), proxy.getOffset()));
         }
 
         // return the opCode
