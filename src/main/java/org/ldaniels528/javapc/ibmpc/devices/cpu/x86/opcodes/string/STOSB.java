@@ -29,7 +29,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @see REPNZ
  */
 public class STOSB extends AbstractOpCode {
-    private static STOSB instance = new STOSB();
+    private static final STOSB instance = new STOSB();
 
     /**
      * Private constructor
@@ -53,14 +53,14 @@ public class STOSB extends AbstractOpCode {
         // get the RAM instance
         final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
 
-        // put byte from AL into DS:[SI]
-        memory.setByte(cpu.DS.get(), cpu.SI.get(), cpu.AL.get());
+        // put byte from AL into ES:[DI]
+        memory.setByte(cpu.ES.get(), cpu.DI.get(), cpu.AL.get());
 
         // setup increment/decrement value
         final int delta = cpu.FLAGS.isDF() ? -1 : 1;
 
-        // increment/decrement SI
-        cpu.SI.add(delta);
+        // increment/decrement DI
+        cpu.DI.add(delta);
     }
 
 }

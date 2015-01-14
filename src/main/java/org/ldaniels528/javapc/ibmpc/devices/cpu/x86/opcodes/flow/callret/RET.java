@@ -2,6 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.callret;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.StackModifyingOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -25,7 +26,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @see RETF
  * @see RETFn
  */
-public class RET extends AbstractOpCode {
+public class RET extends AbstractOpCode implements StackModifyingOpCode {
     private static RET instance = new RET();
 
     /**
@@ -42,17 +43,16 @@ public class RET extends AbstractOpCode {
         return instance;
     }
 
-    /* (non-Javadoc)
-     * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.VirtualCPU)
+    /**
+     * {@inheritDoc}
      */
     @Override
     public void execute(IbmPcSystem system, final I8086 cpu) throws X86AssemblyException {
         cpu.returnNear(0);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#isConditional()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public boolean isConditional() {

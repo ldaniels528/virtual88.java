@@ -22,7 +22,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * </pre>
  */
 public class SCASB extends AbstractOpCode {
-    private static SCASB instance = new SCASB();
+    private static final SCASB instance = new SCASB();
 
     /**
      * Private constructor

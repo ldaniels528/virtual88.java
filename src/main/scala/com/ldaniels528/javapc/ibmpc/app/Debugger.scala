@@ -6,10 +6,10 @@ import com.ldaniels528.javapc.ibmpc.app.CommandParser.UnixLikeArgs
 import org.ldaniels528.javapc.JavaPCConstants
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryPointer
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecodeProcessorImpl
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.{DecodeProcessorImpl, FlowControlCallBackOpCode}
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.addressing.DataSegmentOverride
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flags.AbstractFlagUpdateOpCode
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.{AbstractDualOperandOpCode, AbstractSingleOperandOpCode}
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.{AbstractDualOperandOpCode, AbstractSingleOperandOpCode, StackModifyingOpCode}
 import org.ldaniels528.javapc.ibmpc.devices.cpu.{OpCode, X86CompositeRegister16Bit, X86Register16bit, X86Register8bit}
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplayFrame
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemPCjr
@@ -68,14 +68,14 @@ class Debugger() {
    * Interprets and executes the given command
    * Commands:
    * <pre>
+   * [a]sm - decodes assembly code at the current IP position
    * [d]ump - dump the contents of memory at the current IP position
    * [f]lags - displays the current state of all flags
    * [g]o - starts executing code at the current IP position
-   * [f]ileName - sets the current file name (for reading or saving)
+   * [f]ile - sets the current file name (for reading or saving)
    * [n]ext - executes the next instruction
    * [q]uit - exits the Debugger
-   * [r]egisters - displays the current state of all registers
-   * [u]nassemble - decodes assembly code at the current IP position
+   * [r]egs - displays the current state of all registers
    * </pre>
    *
    * @param line the given line of input
@@ -87,13 +87,13 @@ class Debugger() {
 
       Try {
         command match {
-          case "d" => dump(params)
-          case "g" => executeCode(params)
-          case "f" => setFileName(line)
-          case "n" => executeNext()
-          case "q" => stop()
-          case "r" => out.println(cpu)
-          case "u" => unassemble(params)
+          case "a" | "asm" => dumpAssembly(params)
+          case "d" | "dump" => dump(params)
+          case "g" | "go" => executeCode(params)
+          case "f" | "file" => setFileName(line)
+          case "n" | "next" => executeNext()
+          case "q" | "quit" => stop()
+          case "r" | "regs" => out.println(cpu)
           case x =>
             throw new IllegalArgumentException(s"Command '$x' not recognized")
         }
@@ -107,35 +107,42 @@ class Debugger() {
   }
 
   /**
-   * Dumps the specific number of bytes on screen
-   * <p/>Syntax1: d [offset] [count]
-   * <p/>Syntax2: d [segment] [offset] [-n count]
+   * Dumps the specific number of bytes to the console
+   * <p/>Syntax1: d[ump] [offset] [-n count] [-c columns]
+   * <p/>Syntax2: d[ump] [segment] [offset] [-n count] [-c columns]
    * @param params the given command parameters
    */
   private def dump(params: UnixLikeArgs) {
     val DUMP_LENGTH = 16
 
     // extract the parameters
+    val columns = params("-c") map (_.toInt) getOrElse DUMP_LENGTH
     val count = params("-n") map (_.toInt) getOrElse 128
     val (segment, offset) = params.args match {
       case aSegment :: aOffset :: Nil => (aSegment.toInt, aOffset.toInt)
       case aOffset :: Nil => (proxy.getSegment, aOffset.toInt)
       case Nil => (proxy.getSegment, proxy.getOffset)
       case _ =>
-        throw new IllegalArgumentException("Syntax: d [[segment]:offset] [-n count")
+        throw new IllegalArgumentException("Syntax: dump [[segment]:offset] [-n count] [-c columns]")
     }
 
     // copy the block of data
     val block = new Array[Byte](count)
     proxy.getMemory.getBytes(segment, offset, block, count)
 
-    block.sliding(DUMP_LENGTH, DUMP_LENGTH) foreach { chunk =>
+    block.sliding(columns, columns) foreach { chunk =>
       val hex = chunk map (b => f"$b%02x") mkString "."
       val chars = chunk.map(b => if (b >= 32 && b <= 127) b.toChar else '.').mkString
       out.println(f"$hex%48s $chars")
     }
   }
 
+  /**
+   * Executes a sequence of instructions
+   * <p/>Syntax1: g[o] [offset] [-n count]
+   * <p/>Syntax2: g[o] [segment] [offset] [-n count]
+   * @param params the given [[UnixLikeArgs]]
+   */
   private def executeCode(params: UnixLikeArgs) {
     // extract the parameters
     val limit = params("-n") map (_.toInt) getOrElse 100
@@ -144,7 +151,7 @@ class Debugger() {
       case aOffset :: Nil => (proxy.getSegment, aOffset.toInt)
       case Nil => (proxy.getSegment, proxy.getOffset)
       case _ =>
-        throw new IllegalArgumentException("Syntax: d [[segment]:offset] [-n count")
+        throw new IllegalArgumentException("Syntax: go [[segment]:offset] [-n count")
     }
 
     // execute the code
@@ -154,12 +161,17 @@ class Debugger() {
 
     while (count < limit && cpu.isActive) {
       val opCode: OpCode = decoder.decodeNext
-      out.println("[%04X:%04X] %10X[%d] %-28s | %s".format(cpu.CS.get, cpu.IP.get, opCode.getInstructionCode, opCode.getLength, opCode, inspect(opCode)))
+      out.println("[%04X:%04X] %12X[%d] %-28s | %s".format(cpu.CS.get, cpu.IP.get, opCode.getInstructionCode, opCode.getLength, opCode, inspect(opCode)))
       cpu.execute(system, opCode)
       count += 1
     }
   }
 
+  /**
+   * Executes the next instruction
+   * <p/>Syntax1: n[ext] [offset] [-n count]
+   * <p/>Syntax2: n[ext] [segment] [offset] [-n count]
+   */
   private def executeNext() {
     // make sure we start with the first instruction
     if (firstInstruction) {
@@ -168,20 +180,24 @@ class Debugger() {
     }
 
     val opCode = decoder.decodeNext()
-    out.println("[%04X:%04X] %10X[%d] %-28s | %s".format(cpu.CS.get, cpu.IP.get, opCode.getInstructionCode, opCode.getLength, opCode, inspect(opCode)))
+    out.println("[%04X:%04X] %12X[%d] %-28s | %s".format(cpu.CS.get, cpu.IP.get, opCode.getInstructionCode, opCode.getLength, opCode, inspect(opCode)))
     cpu.execute(system, opCode)
   }
 
   private def inspect(opCode: OpCode): String = {
     opCode match {
-      case doo: AbstractDualOperandOpCode =>
-        Seq(inspect(doo.src), inspect(doo.dest)).flatten.mkString(", ")
-      case dso: DataSegmentOverride =>
-        Seq(inspect(dso.register).getOrElse(""), inspect(dso.instruction)).filter(_.nonEmpty).mkString(", ")
-      case fuo: AbstractFlagUpdateOpCode =>
+      case op: AbstractDualOperandOpCode =>
+        Seq(inspect(op.src), inspect(op.dest), inspectForSP(op)).flatten.mkString(", ")
+      case op: DataSegmentOverride =>
+        Seq(inspect(op.register).getOrElse(""), inspect(op.instruction)).filter(_.nonEmpty).mkString(", ")
+      case op: AbstractFlagUpdateOpCode =>
         s"FL = ${cpu.FLAGS}"
-      case soo: AbstractSingleOperandOpCode =>
-        inspect(soo.operand).getOrElse("")
+      case op: AbstractSingleOperandOpCode =>
+        Seq(inspect(op.operand), inspectForSP(op)).flatten.mkString(", ")
+      case op: StackModifyingOpCode =>
+        inspect(cpu.SP).getOrElse("")
+      case op: FlowControlCallBackOpCode =>
+        inspect(op.opCode)
       case _ => ""
     }
   }
@@ -189,9 +205,7 @@ class Debugger() {
   private def inspect(operand: Operand): Option[String] = {
     operand match {
       case mp: MemoryPointer =>
-        val memOffset = mp.getMemoryReference.getOffset
-        val value = mp.get()
-        Some(f"[$memOffset%04X] = $value%04X")
+        Some(f"[${mp.getMemoryReference.getOffset}%04X] = ${mp.get}%04X")
       case r: X86Register8bit =>
         Some(f"${r.name} = ${r.get}%02X")
       case r: X86Register16bit =>
@@ -200,6 +214,13 @@ class Debugger() {
         Some(f"$r = ${r.get}%04X")
       case o =>
         None
+    }
+  }
+
+  private def inspectForSP(opCode: OpCode): Option[String] = {
+    opCode match {
+      case op: StackModifyingOpCode => inspect(cpu.SP)
+      case _ => None
     }
   }
 
@@ -221,6 +242,7 @@ class Debugger() {
       cpu.ES.set(codeSegment)
       cpu.SS.set(codeSegment)
       cpu.IP.set(codeOffset)
+      cpu.SP.set(0xFFFE)
 
       out.println(f"Loaded $filename: ${code.length}%d bytes")
     }
@@ -243,16 +265,14 @@ class Debugger() {
   /**
    * Stops the debugger
    */
-  private def stop() {
-    this.alive = false
-  }
+  private def stop() = sys.exit(0)
 
   /**
    * Disassemble the specified number of instructions.
    *
    * @param params the given UNIX-style parameters
    */
-  private def unassemble(params: UnixLikeArgs) {
+  private def dumpAssembly(params: UnixLikeArgs) {
     // extract the parameters
     val count = params("-n") map (_.toInt) getOrElse 10
     val (segment0, offset0) = params.args match {

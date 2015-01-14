@@ -12,7 +12,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  */
 public class FlowControlCallBackOpCode implements OpCode {
     private final DecodeProcessor processor;
-    private final OpCode opCode;
+    public final OpCode opCode;
 
     /**
      * Creates a new flow control callback opCode

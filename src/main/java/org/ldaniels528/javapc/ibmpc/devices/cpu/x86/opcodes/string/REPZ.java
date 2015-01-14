@@ -47,8 +47,7 @@ public class REPZ extends AbstractOpCode {
      * {@inheritDoc}
      */
     @Override
-    public void execute(IbmPcSystem system, final I8086 cpu)
-            throws X86AssemblyException {
+    public void execute(final IbmPcSystem system, final I8086 cpu) throws X86AssemblyException {
         // cache CX and FLAGS
         final X86Register CX = cpu.CX;
         final X86Flags FLAGS = cpu.FLAGS;

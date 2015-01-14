@@ -2,6 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.callret;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.StackModifyingOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -25,7 +26,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @see RETF
  * @see RETFn
  */
-public class RETFn extends AbstractOpCode {
+public class RETFn extends AbstractOpCode implements StackModifyingOpCode {
     private final int count;
 
     /**
@@ -37,26 +38,24 @@ public class RETFn extends AbstractOpCode {
         this.count = count;
     }
 
-    /* (non-Javadoc)
-     * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.VirtualCPU)
+    /**
+     * {@inheritDoc}
      */
-    public void execute(IbmPcSystem system, final I8086 cpu)
-            throws X86AssemblyException {
+    @Override
+    public void execute(IbmPcSystem system, final I8086 cpu) throws X86AssemblyException {
         cpu.returnFar(count);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#isConditional()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public boolean isConditional() {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public String toString() {

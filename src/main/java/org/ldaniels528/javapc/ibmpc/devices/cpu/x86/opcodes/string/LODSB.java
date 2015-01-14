@@ -27,7 +27,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @see REPZ
  */
 public class LODSB extends AbstractOpCode {
-    private static LODSB instance = new LODSB();
+    private static final LODSB instance = new LODSB();
 
     /**
      * Private constructor

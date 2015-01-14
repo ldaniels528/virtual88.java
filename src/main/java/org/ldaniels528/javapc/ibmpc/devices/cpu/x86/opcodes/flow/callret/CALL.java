@@ -1,6 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.callret;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.StackModifyingOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.AbstractForcedRedirectOpCode;
 
 /**
@@ -15,7 +16,7 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flow.AbstractForcedR
  *
  * @author lawrence.daniels@gmail.com
  */
-public class CALL extends AbstractForcedRedirectOpCode {
+public class CALL extends AbstractForcedRedirectOpCode implements StackModifyingOpCode {
 
     /**
      * Creates a new CALL opCode

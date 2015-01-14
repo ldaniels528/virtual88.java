@@ -22,7 +22,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * </pre>
  */
 public class SCASW extends AbstractOpCode {
-    private static SCASW instance = new SCASW();
+    private static final SCASW instance = new SCASW();
 
     /**
      * Private constructor

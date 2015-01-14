@@ -2,6 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.stack;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.X86Stack;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.StackModifyingOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flags.AbstractFlagUpdateOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
@@ -25,7 +26,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @author lawrence.daniels@gmail.com
  * @see PUSHF
  */
-public class PUSHF extends AbstractFlagUpdateOpCode {
+public class PUSHF extends AbstractFlagUpdateOpCode implements StackModifyingOpCode {
     private static final PUSHF instance = new PUSHF();
 
     /**

@@ -29,7 +29,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @see REPNZ
  */
 public class STOSW extends AbstractOpCode {
-    private static STOSW instance = new STOSW();
+    private static final STOSW instance = new STOSW();
 
     /**
      * Private constructor
@@ -53,14 +53,14 @@ public class STOSW extends AbstractOpCode {
         // get the RAM instance
         final IbmPcRandomAccessMemory memory = cpu.getRandomAccessMemory();
 
-        // put word from AX into DS:[SI]
-        memory.setWord(cpu.DS.get(), cpu.SI.get(), cpu.AX.get());
+        // put word from AX into ES:[DI]
+        memory.setWord(cpu.ES.get(), cpu.DI.get(), cpu.AX.get());
 
         // setup increment/decrement value
         final int delta = cpu.FLAGS.isDF() ? -2 : 2;
 
-        // increment/decrement SI
-        cpu.SI.add(delta);
+        // increment/decrement DI
+        cpu.DI.add(delta);
     }
 
 }
