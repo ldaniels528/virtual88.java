@@ -16,8 +16,8 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class STD extends AbstractOpCode {
-    private static STD instance = new STD();
+public class STD extends AbstractFlagUpdateOpCode {
+    private static final STD instance = new STD();
 
     /**
      * Private constructor
@@ -33,9 +33,10 @@ public class STD extends AbstractOpCode {
         return instance;
     }
 
-    /* (non-Javadoc)
-     * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.VirtualCPU)
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public void execute(IbmPcSystem system, final I8086 cpu) {
         cpu.FLAGS.setDF(true);
     }

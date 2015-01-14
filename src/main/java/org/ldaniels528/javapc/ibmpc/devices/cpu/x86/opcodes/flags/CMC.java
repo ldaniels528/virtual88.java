@@ -16,8 +16,8 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class CMC extends AbstractOpCode {
-    private static CMC instance = new CMC();
+public class CMC extends AbstractFlagUpdateOpCode {
+    private static final CMC instance = new CMC();
 
     /**
      * Private constructor
@@ -33,9 +33,10 @@ public class CMC extends AbstractOpCode {
         return instance;
     }
 
-    /* (non-Javadoc)
-     * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.VirtualCPU)
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public void execute(IbmPcSystem system, final I8086 cpu) {
         cpu.FLAGS.setCF(!cpu.FLAGS.isCF());
     }

@@ -30,14 +30,14 @@ public interface X86Register extends Operand {
 	/**
 	 * Performs a logical AND between the register's value
 	 * and the given masking value.
-	 * @param value the given masking value
+	 * @param mask the given masking value
 	 */
 	public void and( int mask );
 	
 	/**
 	 * Performs a logical OR between the register's value
 	 * and the given masking value.
-	 * @param value the given masking value
+	 * @param mask the given masking value
 	 */
 	public void or( int mask );
 	

@@ -3,6 +3,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.bitwise;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractSingleOperandOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -23,16 +24,15 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class NEG extends AbstractOpCode {
-    private final Operand dest;
+public class NEG extends AbstractSingleOperandOpCode {
 
     /**
-     * NEG dest
+     * NEG operand
      *
-     * @param operand
+     * @param operand the given {@link Operand operand}
      */
     public NEG(final Operand operand) {
-        this.dest = operand;
+        super("NEG", operand);
     }
 
     /**
@@ -42,21 +42,13 @@ public class NEG extends AbstractOpCode {
     public void execute(IbmPcSystem system, final I8086 cpu)
             throws X86AssemblyException {
         // get the initial value of the destination
-        final int value0 = dest.get();
+        final int value0 = operand.get();
 
         // compute 2's complement
         final int value1 = (2 - value0);
 
         // set the desination with the new value
-        dest.set(value1);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("NEG %s", dest);
+        operand.set(value1);
     }
 
 }

@@ -1,7 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flags;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
 /**
@@ -16,8 +15,8 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class STI extends AbstractOpCode {
-    private static STI instance = new STI();
+public class STI extends AbstractFlagUpdateOpCode {
+    private static final STI instance = new STI();
 
     /**
      * Private constructor
@@ -33,9 +32,10 @@ public class STI extends AbstractOpCode {
         return instance;
     }
 
-    /* (non-Javadoc)
-     * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.VirtualCPU)
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public void execute(IbmPcSystem system, final I8086 cpu) {
         cpu.FLAGS.setIF(true);
     }

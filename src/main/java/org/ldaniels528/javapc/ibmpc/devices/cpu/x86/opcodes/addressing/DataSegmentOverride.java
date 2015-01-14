@@ -13,8 +13,8 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @author lawrence.daniels@gmail.com
  */
 public class DataSegmentOverride extends AbstractOpCode {
-    private final X86Register16bit register;
-    private final OpCode instruction;
+    public final X86Register16bit register;
+    public final OpCode instruction;
 
     /**
      * Creates a new segment register override construct

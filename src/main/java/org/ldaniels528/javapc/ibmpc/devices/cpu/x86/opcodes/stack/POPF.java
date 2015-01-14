@@ -2,7 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.stack;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.X86Stack;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flags.AbstractFlagUpdateOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -35,8 +35,8 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class POPF extends AbstractOpCode {
-    private static POPF instance = new POPF();
+public class POPF extends AbstractFlagUpdateOpCode {
+    private static final POPF instance = new POPF();
 
     /**
      * Private constructor

@@ -2,6 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.math;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -28,9 +29,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class TEST extends AbstractOpCode {
-    private final Operand dest;
-    private final Operand src;
+public class TEST extends AbstractDualOperandOpCode {
 
     /**
      * TEST dest, src
@@ -39,22 +38,21 @@ public class TEST extends AbstractOpCode {
      * @param src  the given {@link Operand source}
      */
     public TEST(final Operand dest, final Operand src) {
-        this.dest = dest;
-        this.src = src;
+        super("TEST", dest, src);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86)
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public void execute(IbmPcSystem system, final I8086 cpu) {
         cpu.FLAGS.updateAND(src, dest);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode#toString()
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public String toString() {
         return String.format("%s %s,%s", getClass().getSimpleName(), dest, src);
     }

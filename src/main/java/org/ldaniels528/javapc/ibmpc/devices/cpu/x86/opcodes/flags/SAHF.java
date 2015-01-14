@@ -21,8 +21,8 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class SAHF extends AbstractOpCode {
-    private static SAHF instance = new SAHF();
+public class SAHF extends AbstractFlagUpdateOpCode {
+    private static final SAHF instance = new SAHF();
 
     /**
      * Private constructor

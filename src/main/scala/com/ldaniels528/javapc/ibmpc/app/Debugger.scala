@@ -4,8 +4,13 @@ import java.io._
 
 import com.ldaniels528.javapc.ibmpc.app.CommandParser.UnixLikeArgs
 import org.ldaniels528.javapc.JavaPCConstants
-import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode
+import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand
+import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryPointer
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecodeProcessorImpl
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.addressing.DataSegmentOverride
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flags.AbstractFlagUpdateOpCode
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.{AbstractDualOperandOpCode, AbstractSingleOperandOpCode}
+import org.ldaniels528.javapc.ibmpc.devices.cpu.{OpCode, X86CompositeRegister16Bit, X86Register16bit, X86Register8bit}
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplayFrame
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemPCjr
 import org.ldaniels528.javapc.util.ResourceHelper
@@ -76,26 +81,28 @@ class Debugger() {
    * @param line the given line of input
    */
   private def interpret(line: String) {
-    val tokens = CommandParser.parseTokens(line)
-    val (command, params) = (tokens.head.toLowerCase.toLowerCase, CommandParser.parse(tokens.tail))
+    if (line.nonEmpty) {
+      val tokens = CommandParser.parseTokens(line)
+      val (command, params) = (tokens.head.toLowerCase.toLowerCase, CommandParser.parse(tokens.tail))
 
-    Try {
-      command match {
-        case "d" => dump(params)
-        case "g" => executeCode(cpu.IP.get, 100)
-        case "f" => setFileName(line)
-        case "n" => executeNext()
-        case "q" => stop()
-        case "r" => out.println(cpu)
-        case "u" => unassemble(params)
-        case x =>
-          throw new IllegalArgumentException(s"Command '$x' not recognized")
+      Try {
+        command match {
+          case "d" => dump(params)
+          case "g" => executeCode(params)
+          case "f" => setFileName(line)
+          case "n" => executeNext()
+          case "q" => stop()
+          case "r" => out.println(cpu)
+          case "u" => unassemble(params)
+          case x =>
+            throw new IllegalArgumentException(s"Command '$x' not recognized")
+        }
       }
-    }
-    match {
-      case Success(_) =>
-      case Failure(e) =>
-        System.err.println(s"Run-time error: ${e.getMessage}")
+      match {
+        case Success(_) =>
+        case Failure(e) =>
+          System.err.println(s"Run-time error: ${e.getMessage}")
+      }
     }
   }
 
@@ -129,13 +136,25 @@ class Debugger() {
     }
   }
 
-  private def executeCode(offset: Int, limit: Int) {
+  private def executeCode(params: UnixLikeArgs) {
+    // extract the parameters
+    val limit = params("-n") map (_.toInt) getOrElse 100
+    val (segment, offset) = params.args match {
+      case aSegment :: aOffset :: Nil => (aSegment.toInt, aOffset.toInt)
+      case aOffset :: Nil => (proxy.getSegment, aOffset.toInt)
+      case Nil => (proxy.getSegment, proxy.getOffset)
+      case _ =>
+        throw new IllegalArgumentException("Syntax: d [[segment]:offset] [-n count")
+    }
+
+    // execute the code
     var count = 0
+    proxy.setSegment(segment)
     proxy.setOffset(offset)
 
     while (count < limit && cpu.isActive) {
       val opCode: OpCode = decoder.decodeNext
-      out.println("[%04X:%04X] %10X[%d] %s".format(cpu.CS.get, cpu.IP.get, opCode.getInstructionCode, opCode.getLength, opCode))
+      out.println("[%04X:%04X] %10X[%d] %-28s | %s".format(cpu.CS.get, cpu.IP.get, opCode.getInstructionCode, opCode.getLength, opCode, inspect(opCode)))
       cpu.execute(system, opCode)
       count += 1
     }
@@ -149,8 +168,39 @@ class Debugger() {
     }
 
     val opCode = decoder.decodeNext()
-    out.println("[%04X:%04X] %10X[%d] %s".format(cpu.CS.get, cpu.IP.get, opCode.getInstructionCode, opCode.getLength, opCode))
+    out.println("[%04X:%04X] %10X[%d] %-28s | %s".format(cpu.CS.get, cpu.IP.get, opCode.getInstructionCode, opCode.getLength, opCode, inspect(opCode)))
     cpu.execute(system, opCode)
+  }
+
+  private def inspect(opCode: OpCode): String = {
+    opCode match {
+      case doo: AbstractDualOperandOpCode =>
+        Seq(inspect(doo.src), inspect(doo.dest)).flatten.mkString(", ")
+      case dso: DataSegmentOverride =>
+        Seq(inspect(dso.register).getOrElse(""), inspect(dso.instruction)).filter(_.nonEmpty).mkString(", ")
+      case fuo: AbstractFlagUpdateOpCode =>
+        s"FL = ${cpu.FLAGS}"
+      case soo: AbstractSingleOperandOpCode =>
+        inspect(soo.operand).getOrElse("")
+      case _ => ""
+    }
+  }
+
+  private def inspect(operand: Operand): Option[String] = {
+    operand match {
+      case mp: MemoryPointer =>
+        val memOffset = mp.getMemoryReference.getOffset
+        val value = mp.get()
+        Some(f"[$memOffset%04X] = $value%04X")
+      case r: X86Register8bit =>
+        Some(f"${r.name} = ${r.get}%02X")
+      case r: X86Register16bit =>
+        Some(f"$r = ${r.get}%04X")
+      case r: X86CompositeRegister16Bit =>
+        Some(f"$r = ${r.get}%04X")
+      case o =>
+        None
+    }
   }
 
   /**

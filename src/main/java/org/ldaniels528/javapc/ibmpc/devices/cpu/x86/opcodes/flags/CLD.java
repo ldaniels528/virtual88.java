@@ -16,8 +16,8 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class CLD extends AbstractOpCode {
-    private static CLD instance = new CLD();
+public class CLD extends AbstractFlagUpdateOpCode {
+    private static final CLD instance = new CLD();
 
     /**
      * Private constructor
@@ -33,9 +33,10 @@ public class CLD extends AbstractOpCode {
         return instance;
     }
 
-    /* (non-Javadoc)
-     * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.VirtualCPU)
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public void execute(IbmPcSystem system, final I8086 cpu) {
         cpu.FLAGS.setDF(false);
     }

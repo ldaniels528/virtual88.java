@@ -2,7 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.math;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractSingleOperandOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -34,8 +34,7 @@ import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_8BI
  *
  * @author lawrence.daniels@gmail.com
  */
-public class MUL extends AbstractOpCode {
-    private final Operand operand;
+public class MUL extends AbstractSingleOperandOpCode {
 
     /**
      * MUL <i>operand</i>
@@ -43,7 +42,7 @@ public class MUL extends AbstractOpCode {
      * @param operand the given {@link Operand operand}
      */
     public MUL(final Operand operand) {
-        this.operand = operand;
+        super("MUL", operand);
     }
 
     /**

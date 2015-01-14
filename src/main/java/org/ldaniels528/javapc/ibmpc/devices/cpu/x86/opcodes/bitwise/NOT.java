@@ -2,7 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.bitwise;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractSingleOperandOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -22,40 +22,27 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class NOT extends AbstractOpCode {
-    private final Operand dest;
+public class NOT extends AbstractSingleOperandOpCode {
 
     /**
-     * NOT dest
+     * NOT operand
      *
-     * @param operand
+     * @param operand the given {@link Operand operand}
      */
     public NOT(final Operand operand) {
-        this.dest = operand;
+        super("NOT", operand);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void execute(IbmPcSystem system, final I8086 cpu)
-            throws X86AssemblyException {
-        // get the initial value of the destination
-        final int value0 = dest.get();
-
+    public void execute(IbmPcSystem system, final I8086 cpu) throws X86AssemblyException {
         // compute 1's complement (e.g. AB (10101011) becomes 54 (01010100))
-        final int value1 = (1 - value0);
+        final int value1 = (1 - operand.get());
 
-        // set the desination with the new value
-        dest.set(value1);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("NOT %s", dest);
+        // set the operand with the new value
+        operand.set(value1);
     }
 
 }

@@ -85,7 +85,7 @@ public class FlowControlCallBackOpCode implements OpCode {
      */
     @Override
     public String toString() {
-        return String.format("%s  <Callback>", opCode);
+        return opCode.toString();
     }
 
     /**

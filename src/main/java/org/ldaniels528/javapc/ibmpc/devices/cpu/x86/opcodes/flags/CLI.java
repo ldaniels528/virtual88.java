@@ -1,7 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flags;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
 /**
@@ -16,8 +15,8 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class CLI extends AbstractOpCode {
-    private static CLI instance = new CLI();
+public class CLI extends AbstractFlagUpdateOpCode {
+    private static final CLI instance = new CLI();
 
     /**
      * Private constructor

@@ -77,3 +77,25 @@ The following is a working example of the third use case:
 			new INT(0x21)                               // int 21h
 	));
 ```
+
+#### Debugger
+
+The Debugger enables users to introspect MS DOS .com binaries and step through code
+instruction by instruction. As you can see below, it also provides the contents of
+registers or FLAGS depending upon which instruction is being executed.
+
+```
+	- g
+	[13F0:0100]         FA[1] CLI                          | FL = NV UP EI PL NZ NA PO NC DT
+	[13F0:0101]     B80F68[3] MOV AX,680F                  | AX = 0000
+	[13F0:0104]      51000[3] ADD AX,0010                  | AX = 680F
+	[13F0:0107]       B104[2] MOV CL,04                    | CL = 00
+	[13F0:0109]       D3E8[2] SHR AX,CL                    | CL = 04, AX = 681F
+	[13F0:010B]       8CCB[2] MOV BX,CS                    | CS = 13F0, BX = 0000
+	[13F0:010D]        3C3[2] ADD AX,BX                    | BX = 13F0, AX = 0681
+	[13F0:010F]       8ED8[2] MOV DS,AX                    | AX = 1A71, DS = 13F0
+	[13F0:0111]       8ED0[2] MOV SS,AX                    | AX = 1A71, SS = 13F0
+	[13F0:0113] 268B1E0200[5] ES: MOV BX,[0002]            | ES = 13F0, [0002] = 0000, BX = 13F0
+	[13F0:011C]       2BD8[2] SUB BX,AX                    | AX = 1A71, BX = 9ADD
+	[13F0:011E]   F7C300F0[4] TEST BX,F000                 | BX = 7F94
+```

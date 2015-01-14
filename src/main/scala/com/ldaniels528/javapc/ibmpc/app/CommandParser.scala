@@ -23,7 +23,7 @@ object CommandParser {
         case c if c == '`' && !inQuotes =>
           inBackTicks = !inBackTicks
           sb += c
-          if(!inBackTicks) {
+          if (!inBackTicks) {
             val s = sb.toString()
             sb.clear()
             Option(s)
@@ -34,14 +34,6 @@ object CommandParser {
         case c if inBackTicks =>
           sb += c
           None
-
-        // is it a label?
-        /*
-        case c if c == ':' && !inQuotes =>
-          sb += c
-          val s = sb.toString()
-          sb.clear()
-          Option(s)*/
 
         // symbol (unquoted)?
         case c if SYMBOLS.contains(c) && !inQuotes =>
@@ -123,13 +115,13 @@ object CommandParser {
    */
   case class UnixLikeArgs(commandName: Option[String], args: List[String], flags: Map[String, Option[String]] = Map.empty) {
 
-    def apply(index: Int): String = args(index)
+    def apply(index: Int): Option[String] = if (index < args.length) Some(args(index)) else None
 
-    def apply(flag: String) = flags.get(flag).flatten
+    def apply(flag: String): Option[String] = flags.get(flag).flatten
 
-    def apply(flag: String, defaultValue: String) = flags.get(flag).flatten getOrElse defaultValue
+    def apply(flag: String, defaultValue: String): String = flags.get(flag).flatten getOrElse defaultValue
 
-    def contains(flag: String) = flags.get(flag).isDefined
+    def contains(flag: String): Boolean = flags.get(flag).isDefined
 
   }
 

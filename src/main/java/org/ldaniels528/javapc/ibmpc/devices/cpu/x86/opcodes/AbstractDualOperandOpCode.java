@@ -9,9 +9,9 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryPointer;
  * @author ldaniels
  */
 public abstract class AbstractDualOperandOpCode extends AbstractOpCode {
-    protected final String name;
-    protected final Operand dest;
-    protected final Operand src;
+    public final String name;
+    public final Operand dest;
+    public final Operand src;
 
     /**
      * Creates a new dual operand opCode

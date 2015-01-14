@@ -3,7 +3,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.math;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractSingleOperandOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -31,8 +31,7 @@ import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_8BI
  *
  * @author lawrence.daniels@gmail.com
  */
-public class IMUL extends AbstractOpCode {
-    private final Operand operand;
+public class IMUL extends AbstractSingleOperandOpCode {
 
     /**
      * IMUL <i>operand</i>
@@ -40,13 +39,13 @@ public class IMUL extends AbstractOpCode {
      * @param operand the given {@link Operand operand}
      */
     public IMUL(final Operand operand) {
-        this.operand = operand;
+        super("IMUL", operand);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode#execute(org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86)
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public void execute(IbmPcSystem system, final I8086 cpu)
             throws X86AssemblyException {
         switch (operand.size()) {

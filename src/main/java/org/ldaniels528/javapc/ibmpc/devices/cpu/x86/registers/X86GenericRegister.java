@@ -6,8 +6,8 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers;
  * @author lawrence.daniels@gmail.com
  */
 public abstract class X86GenericRegister implements X86Register {
-    protected final String name;
-    protected final int mask;
+    public final String name;
+    public final int mask;
     private final int index;
     protected int value;
 

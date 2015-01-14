@@ -3,7 +3,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.math;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractSingleOperandOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -12,8 +12,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class INC extends AbstractOpCode {
-    private final Operand operand;
+public class INC extends AbstractSingleOperandOpCode {
 
     /**
      * Creates a new increment instruction
@@ -21,7 +20,7 @@ public class INC extends AbstractOpCode {
      * @param operand the given {@link Operand operand}
      */
     public INC(final Operand operand) {
-        this.operand = operand;
+        super("INC", operand);
     }
 
     /**
@@ -30,14 +29,6 @@ public class INC extends AbstractOpCode {
     @Override
     public void execute(final IbmPcSystem system, final I8086 cpu) throws X86AssemblyException {
         operand.set(cpu.FLAGS.updateINC(operand));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("INC %s", operand);
     }
 
 }

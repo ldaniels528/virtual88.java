@@ -3,7 +3,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.stack;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.X86Stack;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractSingleOperandOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -30,8 +30,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class PUSH extends AbstractOpCode {
-    private final Operand operand;
+public class PUSH extends AbstractSingleOperandOpCode {
 
     /**
      * Creates a new PUSH instruction
@@ -39,7 +38,7 @@ public class PUSH extends AbstractOpCode {
      * @param operand the given {@link Operand operand}
      */
     public PUSH(final Operand operand) {
-        this.operand = operand;
+        super("PUSH", operand);
     }
 
     /**
@@ -52,14 +51,6 @@ public class PUSH extends AbstractOpCode {
 
         // push the operand onto the stack
         stack.pushValue(operand.get());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("PUSH %s", operand);
     }
 
 }

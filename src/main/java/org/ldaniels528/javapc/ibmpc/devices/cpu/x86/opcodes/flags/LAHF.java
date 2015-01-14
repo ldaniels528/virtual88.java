@@ -21,8 +21,8 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class LAHF extends AbstractOpCode {
-    private static LAHF instance = new LAHF();
+public class LAHF extends AbstractFlagUpdateOpCode {
+    private static final LAHF instance = new LAHF();
 
     /**
      * Private constructor
