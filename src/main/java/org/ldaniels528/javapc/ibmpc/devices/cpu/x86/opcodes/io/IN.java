@@ -2,12 +2,13 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.io;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers.X86Register;
 import org.ldaniels528.javapc.ibmpc.devices.ports.IbmPcHardwarePorts;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
-import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.*;
+import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_16BIT;
+import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_8BIT;
 
 /**
  * <pre>
@@ -27,9 +28,7 @@ import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.*;
  * @author lawrence.daniels@gmail.com
  * @see OUT
  */
-public class IN extends AbstractOpCode {
-    private final X86Register accum;
-    private final Operand port;
+public class IN extends AbstractDualOperandOpCode {
 
     /**
      * IN accum, port (e.g. 'IN AL,DX')
@@ -38,8 +37,7 @@ public class IN extends AbstractOpCode {
      * @param port  the given {@link Operand port}
      */
     public IN(final X86Register accum, final Operand port) {
-        this.accum = accum;
-        this.port = port;
+        super("IN", accum, port);
     }
 
     /**
@@ -48,13 +46,13 @@ public class IN extends AbstractOpCode {
     @Override
     public void execute(IbmPcSystem system, final I8086 cpu) {
         // get the port number
-        final int portNum = port.get();
+        final int portNum = src.get();
 
         // retrieve the information from the port
         final IbmPcHardwarePorts ports = system.getHardwarePorts();
 
         int value = 0;
-        switch (accum.size()) {
+        switch (dest.size()) {
             case SIZE_8BIT:
                 value = ports.in8(portNum);
                 break;
@@ -64,15 +62,7 @@ public class IN extends AbstractOpCode {
         }
 
         // place the value into the accumulator
-        accum.set(value);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("IN %s,%s", accum, port);
+        dest.set(value);
     }
 
 }

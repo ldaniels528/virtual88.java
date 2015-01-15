@@ -2,6 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.FlagsAffected;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -22,6 +23,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
+@FlagsAffected({"IF", "TF"})
 public class INT extends AbstractOpCode {
     // define the special interrupts
     public static final INT DIVBYZR = new INT(0); // Divide By Zero interrupt

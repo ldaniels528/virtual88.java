@@ -2,6 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.string;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.StringFunctionOpCode;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 
 /**
@@ -11,14 +12,13 @@ import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
  *
  * @author ldaniels
  */
-public interface MassDataOpCode extends OpCode {
+public interface MassDataOpCode extends StringFunctionOpCode {
 
     /**
      * Executes the mass data opCode
      *
      * @param cpu   the {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 Intel 8086} instance
      * @param count the number of data elements to operate upon
-     * @throws X86AssemblyException
      */
     void executeEnMass(I8086 cpu, int count);
 

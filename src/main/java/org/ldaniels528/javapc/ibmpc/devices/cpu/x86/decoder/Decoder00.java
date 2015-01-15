@@ -128,7 +128,7 @@ public class Decoder00 implements Decoder {
     /**
      * Decode the 80386SX/DX 0F00-0FFF instructions
      *
-     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
+     * @param cpu   the given {@link I8086 CPU} instance
      * @param proxy the given {@link X86MemoryProxy memory proxy}
      * @return the resultant {@link OpCode opCode}
      * See <a href="http://pdos.csail.mit.edu/6.828/2006/readings/i386/SETcc.htm">SETxx</a>
@@ -137,12 +137,6 @@ public class Decoder00 implements Decoder {
         // get the 8-bit code
         final int subCode = proxy.nextByte();
         switch (subCode) {
-            // POP FS
-            case 0xA1:
-                return new POP(cpu.FS);
-            // POP GS
-            case 0xA9:
-                return new POP(cpu.GS);
             // MOVSX r16/32,r/m8
             case 0xBE:
                 return decodeMOVSX(cpu, proxy, MEM_CLASS_8BIT);
@@ -173,7 +167,7 @@ public class Decoder00 implements Decoder {
     /**
      * Decodes complex instruction codes between 00h and 0Fh
      *
-     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
+     * @param cpu   the given {@link I8086 CPU} instance
      * @param proxy the given {@link X86MemoryProxy memory proxy}
      * @param code8 the given 8-bit instruction code
      * @return the resultant {@link OpCode opCode}
@@ -214,7 +208,7 @@ public class Decoder00 implements Decoder {
     /**
      * MOVSX r16/32,r/m8 | MOVSX r32,r/m16
      *
-     * @param cpu         the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
+     * @param cpu         the given {@link I8086 CPU} instance
      * @param proxy       the given {@link X86MemoryProxy memory proxy}
      * @param srcMemClass the memory class of the source operand
      *                    (see {@link DecoderUtil#MEM_CLASS_8BIT}
@@ -232,7 +226,7 @@ public class Decoder00 implements Decoder {
     /**
      * Decodes a 16-bit register
      *
-     * @param cpu   the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
+     * @param cpu   the given {@link I8086 CPU} instance
      * @param proxy the given {@link X86MemoryProxy memory proxy}
      * @return the resultant {@link X86Register register}
      */
@@ -245,7 +239,7 @@ public class Decoder00 implements Decoder {
     /**
      * Decode the operands
      *
-     * @param cpu         the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
+     * @param cpu         the given {@link I8086 CPU} instance
      * @param proxy       the given {@link X86MemoryProxy memory proxy}
      * @param srcMemClass the source memory class
      * @return the resultant {@link Operand operands}

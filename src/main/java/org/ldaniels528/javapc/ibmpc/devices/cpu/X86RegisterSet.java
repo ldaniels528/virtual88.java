@@ -37,14 +37,10 @@ public class X86RegisterSet {
     public final X86Register16bit SS;            // 16-bit stack segment register
 
     // status and control registers
-    public final X86Flags FLAGS;                // 16-bit flags register
+    public final X86Flags FLAGS;                 // 16-bit flags register
 
     // instruction pointers
-    public final X86RegisterIP IP;                // 16-bit instruction pointer register
-
-    // 32-bit segment registers (386+)
-    public final X86Register16bit FS;            // 32-bit base pointer register
-    public final X86Register16bit GS;            // 32-bit stack pointer register
+    public final X86RegisterIP IP;               // 16-bit instruction pointer register
 
     // register collections
     private final X86Register[] REG16_SEGMENT;
@@ -64,8 +60,6 @@ public class X86RegisterSet {
         this.CS = new X86Register16bit("CS", 1);
         this.SS = new X86Register16bit("SS", 2);
         this.DS = new X86Register16bit("DS", 3);
-        this.FS = new X86Register16bit("FS", 4);
-        this.GS = new X86Register16bit("GS", 5);
 
         // initialize the 8-bit general purpose registers
         this.AL = new X86Register8bit("AL", 0);
@@ -79,9 +73,9 @@ public class X86RegisterSet {
 
         // initialize the 16-bit general purpose registers
         this.AX = new X86CompositeRegister16Bit("AX", AH, AL, 0);
-        this.BX = new X86CompositeRegister16Bit("BX", BH, BL, 3);
         this.CX = new X86CompositeRegister16Bit("CX", CH, CL, 1);
         this.DX = new X86CompositeRegister16Bit("DX", DH, DL, 2);
+        this.BX = new X86CompositeRegister16Bit("BX", BH, BL, 3);
         this.SI = new X86Register16bit("SI", 4);
         this.DI = new X86Register16bit("DI", 5);
         this.SP = new X86Register16bit("SP", 6);
@@ -103,7 +97,7 @@ public class X86RegisterSet {
 
         // define the segment registers
         this.REG16_SEGMENT = new X86Register[]{
-                ES, CS, SS, DS, FS, GS
+                ES, CS, SS, DS
         };
     }
 

@@ -6,6 +6,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.math;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.FlagsAffected;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system.INT;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
@@ -14,9 +15,8 @@ import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_16B
 import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_8BIT;
 
 /**
+ * <h4>Unsigned divide</h4>
  * <pre>
- * Unsigned divide.
- *
  * Algorithm:
  *
  * 	when operand is a byte:
@@ -33,9 +33,15 @@ import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_8BI
  * 	DIV BL        ; AL = 50 (32h), AH = 3
  * 	RET
  * </pre>
- *
+ * op8: 8-bit register or memory
+ * op16: 16-bit register or memory
+ * Action: If operand is op8, unsigned AL = AX / op8  and  AH = AX % op8
+ * If operand is op16, unsigned AX = DX::AX / op16  and  DX = DX::AX % op16
+ * Flags Affected: OF=?, SF=?, ZF=?, AF=?, PF=?, CF=?
+ * Notes: Performs both division and modulus operations in one instruction.
  * @author lawrence.daniels@gmail.com
  */
+@FlagsAffected({"AF", "CF", "OF", "PF", "SF", "ZF"})
 public class DIV extends AbstractOpCode {
     private final Operand operand;
 

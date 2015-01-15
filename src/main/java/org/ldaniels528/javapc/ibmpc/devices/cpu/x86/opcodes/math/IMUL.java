@@ -4,6 +4,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.math;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractSingleOperandOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.FlagsAffected;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -31,6 +32,7 @@ import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_8BI
  *
  * @author lawrence.daniels@gmail.com
  */
+@FlagsAffected({"AF", "CF", "OF", "PF", "SF", "ZF"})
 public class IMUL extends AbstractSingleOperandOpCode {
 
     /**

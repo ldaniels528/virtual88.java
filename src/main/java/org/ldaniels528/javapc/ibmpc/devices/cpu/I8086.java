@@ -26,6 +26,7 @@ public class I8086 extends X86RegisterSet {
 
     // internal fields
     private final Logger logger = Logger.getLogger(getClass());
+    private final X86MemoryProxy proxy;
     private final IbmPcRandomAccessMemory memory;
     private final DecodeProcessor decoder;
     private final X86Stack stack;
@@ -46,6 +47,7 @@ public class I8086 extends X86RegisterSet {
      */
     public I8086(final X86MemoryProxy proxy) {
         this.XDS = DS;
+        this.proxy = proxy;
         this.memory = proxy.getMemory();
         this.active = true;
         this.stack = new X86Stack(memory, this);
@@ -115,7 +117,7 @@ public class I8086 extends X86RegisterSet {
         updateSystemTimer(system);
 
         // display the instruction information
-        if(debugMode) {
+        if (debugMode) {
             logger.info(format("E [%04X:%04X] %10X[%d] %s", CS.get(), IP.get(), opCode.getInstructionCode(), opCode.getLength(), opCode));
         }
 
@@ -201,7 +203,7 @@ public class I8086 extends X86RegisterSet {
      */
     public int getByte(final int offset) {
         final int value = memory.getByte(XDS.get(), offset);
-        if(debugMode) {
+        if (debugMode) {
             logger.info(format("D [%04X:%04X] %13s %02X", XDS.get(), offset, "", value));
         }
         return value;
@@ -225,7 +227,7 @@ public class I8086 extends X86RegisterSet {
      */
     public int getWord(final int offset) {
         final int value = memory.getWord(XDS.get(), offset);
-        if(debugMode) {
+        if (debugMode) {
             logger.info(format("D [%04X:%04X] %13s data = %04X (%d)", XDS.get(), offset, "", value, value));
         }
         return value;
@@ -249,7 +251,7 @@ public class I8086 extends X86RegisterSet {
      */
     public int getDoubleWord(final int offset) {
         final int value = memory.getDoubleWord(XDS.get(), offset);
-        if(debugMode) {
+        if (debugMode) {
             logger.info(format("D [%04X:%04X] %08X", XDS.get(), offset, value));
         }
         return value;
@@ -288,7 +290,7 @@ public class I8086 extends X86RegisterSet {
             case SIZE_16BIT:
                 // save this position?
                 if (savePoint) {
-                    if(debugMode) {
+                    if (debugMode) {
                         logger.info(format("Storing IP as %04X", IP.get()));
                     }
                     stack.pushValue(IP.get() + opCode.getLength());
@@ -346,7 +348,7 @@ public class I8086 extends X86RegisterSet {
 
         // get the return offset
         final int offset = stack.popValue();
-        if(debugMode) {
+        if (debugMode) {
             logger.info(format("Returning NEAR to %04X:%04X", CS.get(), offset));
         }
 
@@ -378,7 +380,7 @@ public class I8086 extends X86RegisterSet {
         final int offset = stack.popValue();
         final int segment = stack.popValue();
 
-        if(debugMode) {
+        if (debugMode) {
             logger.info(format("Returning FAR to %04X:%04X", segment, offset));
         }
 
@@ -397,7 +399,7 @@ public class I8086 extends X86RegisterSet {
         // is it time to invoke the system timer?
         final long elapsedSinceUpdate = System.currentTimeMillis() - lastTimerUpdate;
         if ((elapsedSinceUpdate >= SYSTEM_TIMER_FREQ) && FLAGS.isIF()) {
-            if(debugMode) {
+            if (debugMode) {
                 logger.info(format("SYSTIMR timer last update %d msec ago", elapsedSinceUpdate));
             }
             INT.SYSTIMR.execute(system, this);

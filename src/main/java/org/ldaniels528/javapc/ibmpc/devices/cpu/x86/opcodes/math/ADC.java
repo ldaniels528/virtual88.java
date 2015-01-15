@@ -3,6 +3,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.math;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.FlagsAffected;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
 /**
@@ -17,6 +18,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
+@FlagsAffected({"AF", "CF", "OF", "PF", "SF", "ZF"})
 public class ADC extends AbstractDualOperandOpCode {
 
     /**

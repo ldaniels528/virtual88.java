@@ -469,14 +469,14 @@ public class X86Flags implements Operand {
     public String toString() {
         return String.format(
                 "%2s %2s %2s %2s %2s %2s %2s %2s %2s",
+                isAF() ? "AC" : "NA",
+                isCF() ? "CY" : "NC",
                 isOF() ? "OV" : "NV",
-                isDF() ? "DN" : "UP",
-                isIF() ? "EI" : "DI",
+                isPF() ? "PE" : "PO",
                 isSF() ? "NG" : "PL",
                 isZF() ? "ZR" : "NZ",
-                isAF() ? "AC" : "NA",
-                isPF() ? "PE" : "PO",
-                isCF() ? "CY" : "NC",
+                isDF() ? "DN" : "UP",
+                isIF() ? "EI" : "DI",
                 isTF() ? "ET" : "DT"
         );
     }

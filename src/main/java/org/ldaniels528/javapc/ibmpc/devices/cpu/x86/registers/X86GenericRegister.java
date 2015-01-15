@@ -1,5 +1,8 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers;
 
+import static org.ldaniels528.javapc.util.BitMaskGenerator.turnBitOffMask;
+import static org.ldaniels528.javapc.util.BitMaskGenerator.turnBitOnMask;
+
 /**
  * Represents a n-bit register
  *
@@ -56,12 +59,12 @@ public abstract class X86GenericRegister implements X86Register {
     public void setBit(int bitNum, boolean on) {
         // turn the bit on?
         if (on) {
-            final int mask = bitNum << 1;
+            final int mask = turnBitOnMask(bitNum);
             value |= mask;
         }
         // turn the bit off...
         else {
-            final int mask = 0xFFFF - (bitNum << 1);
+            final int mask = turnBitOffMask(size(), bitNum);
             value &= mask;
         }
     }

@@ -3,6 +3,9 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.string;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.FlagsAffected;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.RegistersUsed;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.StringFunctionOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -30,11 +33,14 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * </pre>
  *
  * @author lawrence.daniels@gmail.com
+ * @see CMPSW
  * @see REPZ
  * @see REPNZ
  */
-public class CMPSB extends AbstractOpCode {
-    private static CMPSB instance = new CMPSB();
+@FlagsAffected({"AF", "CF", "OF", "PF", "SF", "ZF"})
+@RegistersUsed({"DS", "SI", "ES", "DI"})
+public class CMPSB extends AbstractOpCode implements StringFunctionOpCode {
+    private static final CMPSB instance = new CMPSB();
 
     /**
      * Private constructor

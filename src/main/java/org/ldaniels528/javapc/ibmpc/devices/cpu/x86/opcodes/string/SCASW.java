@@ -2,6 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.string;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.StringFunctionOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -21,7 +22,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * prefixes.
  * </pre>
  */
-public class SCASW extends AbstractOpCode {
+public class SCASW extends AbstractOpCode implements StringFunctionOpCode {
     private static final SCASW instance = new SCASW();
 
     /**

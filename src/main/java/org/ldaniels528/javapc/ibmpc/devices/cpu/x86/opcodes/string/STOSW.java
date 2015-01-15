@@ -2,6 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.string;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.LoadStoreOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -28,7 +29,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @see REPZ
  * @see REPNZ
  */
-public class STOSW extends AbstractOpCode {
+public class STOSW extends AbstractOpCode implements LoadStoreOpCode {
     private static final STOSW instance = new STOSW();
 
     /**

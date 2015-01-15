@@ -96,7 +96,6 @@ public class X86Register16bitTest {
 
         logger.info(format("When SI = %04Xh and %dth bit is set", value, modifier + 1));
         rs.SI.setBit(modifier, true);
-        rs.SI.rshift(modifier);
         logger.info(format("SI should be %04X", expectedValue));
         assertEquals(rs.SI.get(), expectedValue);
     }

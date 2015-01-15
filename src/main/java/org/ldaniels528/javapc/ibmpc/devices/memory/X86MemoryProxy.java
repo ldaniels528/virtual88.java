@@ -217,4 +217,14 @@ public class X86MemoryProxy {
         offset += 2;
     }
 
+    /**
+     * Sets the code execution pointer
+     * @param codeSegment the given code segment
+     * @param codeOffset the given code offset
+     */
+    public void setPointer(final int codeSegment, final int codeOffset) {
+        this.segment = codeSegment;
+        this.offset = codeOffset;
+    }
+
 }

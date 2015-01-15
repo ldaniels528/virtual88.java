@@ -11,6 +11,7 @@ import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemInfo;
+import org.ldaniels528.javapc.msdos.services.MsDosSystemServices;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,9 +20,7 @@ import static java.lang.String.format;
 import static org.ldaniels528.javapc.ibmpc.devices.display.fonts.IbmPcFont8x8.FONTS_8X8;
 
 /**
- * Represents the memory resident portion of the
- * Basic Input/Output System (BIOS) for an
- * IBM PC/XT/AT Systems.
+ * Represents the memory resident portion of the Basic Input/Output System (BIOS) for an IBM PC/XT/AT Systems.
  * <pre>
  * Sets up the expected ROM values:
  * 	Address	   Size Contents
@@ -35,7 +34,7 @@ import static org.ldaniels528.javapc.ibmpc.devices.display.fonts.IbmPcFont8x8.FO
  *  0040:000C	2  	Port of LPT3
  *  0040:000E	2  	Port of LPT4
  *  0040:0010	2  	Equipment/hardware installed/active;
- *                {@link org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services.EquipmentListServices see Equipment List}
+ *                {@link EquipmentListServices see Equipment List}
  *  0040:0012   1  	Errors in PCjr infrared keyboard link
  *  0040:0013   2  	Total memory in K-bytes (same as obtained via INT 12H)
  *  0040:0015   2  	Scratch pad for manufacturing error tests
@@ -159,7 +158,7 @@ public class IbmPcBIOS {
      */
     public IbmPcBIOS(final IbmPcRandomAccessMemory memory) {
         this.memory = memory;
-        this.handlers = new HashMap<MemoryAddressFAR32, InterruptHandler>();
+        this.handlers = new HashMap<>();
 
         // update the vector table
         createVectorTable();
@@ -179,7 +178,11 @@ public class IbmPcBIOS {
         register(0x16, 0xF000, 0x002C, KeyboardSoftwareServices.getInstance());
         register(0x17, 0xF000, 0x0030, ParallelPortServices.getInstance());
         register(0x19, 0xF000, 0x0034, SystemRebootService.getInstance());
-        register(0x1A, 0xF000, 0x0038, RealTimeClockServices.getInstance());
+        register(0x1A, 0xF000, 0x0036, RealTimeClockServices.getInstance());
+
+        // register the MS-DOS system services
+        register(0x20, 0xF000, 0x0038, (IbmPcSystem system, I8086 cpu) -> cpu.halt());
+        register(0x21, 0xF000, 0x003A, MsDosSystemServices.getInstance());
 
         // setup the address of each interrupt
         //showVectorTable();
@@ -197,9 +200,9 @@ public class IbmPcBIOS {
     /**
      * Handles the given interrupt number
      *
-     * @param system    the given {@link org.ldaniels528.javapc.ibmpc.system.IbmPcSystem IBM PC system}
-     * @param cpu       the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.I8086 CPU} instance
-     * @param interrupt the given {@link org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system.INT interrupt opCode}
+     * @param system    the given {@link IbmPcSystem IBM PC system}
+     * @param cpu       the given {@link I8086 CPU} instance
+     * @param interrupt the given {@link INT interrupt opCode}
      */
     public void invoke(final IbmPcSystem system, final I8086 cpu, final INT interrupt) throws X86AssemblyException {
         // get the interrupt #

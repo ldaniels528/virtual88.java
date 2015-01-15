@@ -4,6 +4,7 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.X86Flags;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.StringFunctionOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers.X86Register;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
@@ -31,7 +32,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @see STOSB
  * @see STOSW
  */
-public class REPNZ extends AbstractOpCode {
+public class REPNZ extends AbstractOpCode  implements StringFunctionOpCode {
     private final OpCode opCode;
 
     /**

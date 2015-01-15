@@ -2,6 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.string;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.LoadStoreOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -26,7 +27,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @see REPNZ
  * @see REPZ
  */
-public class LODSW extends AbstractOpCode {
+public class LODSW extends AbstractOpCode implements LoadStoreOpCode {
     private static final LODSW instance = new LODSW();
 
     /**

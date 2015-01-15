@@ -2,12 +2,13 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.io;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.AbstractDualOperandOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.registers.X86Register;
 import org.ldaniels528.javapc.ibmpc.devices.ports.IbmPcHardwarePorts;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
-import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.*;
+import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_16BIT;
+import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_8BIT;
 
 /**
  * <pre>
@@ -27,9 +28,7 @@ import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.*;
  * @author lawrence.daniels@gmail.com
  * @see IN
  */
-public class OUT extends AbstractOpCode {
-    private final Operand accum;
-    private final Operand port;
+public class OUT extends AbstractDualOperandOpCode {
 
     /**
      * OUT port, accum
@@ -38,8 +37,7 @@ public class OUT extends AbstractOpCode {
      * @param accum the given {@link X86Register accumulator}
      */
     public OUT(final Operand port, final X86Register accum) {
-        this.port = port;
-        this.accum = accum;
+        super("OUT", port, accum);
     }
 
     /**
@@ -48,14 +46,14 @@ public class OUT extends AbstractOpCode {
     @Override
     public void execute(final IbmPcSystem system, final I8086 cpu) {
         // get the port number
-        final int portNum = port.get();
+        final int portNum = dest.get();
 
         // get the data value
-        final int value = accum.get();
+        final int value = src.get();
 
         // output the value to the port
         final IbmPcHardwarePorts ports = system.getHardwarePorts();
-        switch (accum.size()) {
+        switch (src.size()) {
             case SIZE_8BIT:
                 ports.out8(portNum, value);
                 break;
@@ -63,14 +61,6 @@ public class OUT extends AbstractOpCode {
                 ports.out16(portNum, value);
                 break;
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("OUT %s,%s", port, accum);
     }
 
 }
