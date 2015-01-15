@@ -25,7 +25,7 @@ import static org.ldaniels528.javapc.jbasic.common.JBasicDisplayModes.MODE0b;
  * @see org.ldaniels528.javapc.jbasic.gwbasic.program.GwBasicProgram
  */
 public class GwBasicEnvironment extends IbmPcSystemImpl {
-    public static final int PROGRAM_SEGEMENT = 0x13F0;
+    public static final int PROGRAM_SEGMENT = 0x13F0;
     private final JBasicDisplayWrapper displayWrapper;
     private final MemoryManager memoryManager;
     private final JBasicKeyLabels keyLabels;
@@ -37,16 +37,16 @@ public class GwBasicEnvironment extends IbmPcSystemImpl {
     ///////////////////////////////////////////////////////////////////
 
     /**
-     * Creates an instance of this {@link org.ldaniels528.javapc.ibmpc.system.IbmPcSystem environment}
+     * Creates a new IBM PC Jr instance with GWBASIC environment
      *
-     * @param frame the given {@link IbmPcDisplayFrame frane}
+     * @param frame the given {@link IbmPcDisplayFrame display frame}
      */
     public GwBasicEnvironment(final IbmPcDisplayFrame frame) {
         super(frame, IBM_PCjr);
         this.keyLabels = new JBasicKeyLabels();
         this.displayWrapper = new JBasicDisplayWrapper(display, MODE0b, keyLabels);
         this.program = new GwBasicProgram(this);
-        this.memoryManager = new JBasicMemoryManager(memory, PROGRAM_SEGEMENT);
+        this.memoryManager = new JBasicMemoryManager(memory, PROGRAM_SEGMENT);
         this.disk = new GwBasicStorageDevice();
     }
 

@@ -40,7 +40,7 @@ import static java.lang.String.format;
  */
 public class GwBasicCompiledCode implements JBasicCompiledCode, IbmPcKeyEventListener {
     // constants
-    private static final int PROGRAM_SEGEMENT = GwBasicEnvironment.PROGRAM_SEGEMENT;
+    private static final int PROGRAM_SEGEMENT = GwBasicEnvironment.PROGRAM_SEGMENT;
 
     // generic fields
     private final List<VariableTypeDefinition> typeDefs;
