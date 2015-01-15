@@ -10,7 +10,8 @@ import org.ldaniels528.javapc.ibmpc.devices.keyboard.IbmPcKeyboard;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryProxy;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
-import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemPCjr;
+import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
+import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +26,7 @@ import static org.ldaniels528.javapc.util.ResourceHelper.getBinaryContents;
  */
 public class IbmPcEmulator implements JavaPCConstants {
     private final IbmPcDisplayFrame frame;
-    private final IbmPcSystemPCjr system;
+    private final IbmPcSystem system;
     private final IbmPcRandomAccessMemory memory;
     private final X86MemoryProxy proxy;
     private final IbmPcDisplay display;
@@ -37,7 +38,7 @@ public class IbmPcEmulator implements JavaPCConstants {
      */
     public IbmPcEmulator() {
         this.frame = new IbmPcDisplayFrame(String.format("JavaPC - IBM PC Emulation Mode v%s", VERSION));
-        this.system = new IbmPcSystemPCjr(frame);
+        this.system = IbmPcSystemFactory.getIBMPCjr(frame);
 
         // get references to all devices
         this.cpu = system.getCPU();

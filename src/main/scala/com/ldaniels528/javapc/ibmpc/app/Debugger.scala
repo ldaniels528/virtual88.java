@@ -3,6 +3,7 @@ package com.ldaniels528.javapc.ibmpc.app
 import java.io._
 
 import com.ldaniels528.javapc.ibmpc.app.CommandParser.UnixLikeArgs
+import com.ldaniels528.javapc.ibmpc.app.Debugger._
 import org.ldaniels528.javapc.JavaPCConstants
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryPointer
@@ -12,7 +13,7 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flags.AbstractFlagUp
 import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.{AbstractDualOperandOpCode, AbstractSingleOperandOpCode, StackModifyingOpCode}
 import org.ldaniels528.javapc.ibmpc.devices.cpu.{OpCode, X86CompositeRegister16Bit, X86Register16bit, X86Register8bit}
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplayFrame
-import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemPCjr
+import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemFactory
 import org.ldaniels528.javapc.util.ResourceHelper
 
 import scala.util.{Failure, Success, Try}
@@ -28,7 +29,7 @@ class Debugger() {
   private var alive: Boolean = false
 
   // create a PC instance
-  val system = new IbmPcSystemPCjr(new IbmPcDisplayFrame(String.format("JavaPC/Debugger v%s", JavaPCConstants.VERSION)))
+  val system = IbmPcSystemFactory.getIBMPCjr(new IbmPcDisplayFrame(s"JavaPC/Debugger v${JavaPCConstants.VERSION}"))
   val cpu = system.getCPU
   val memory = system.getRandomAccessMemory
   val display = system.getDisplay
@@ -187,22 +188,22 @@ class Debugger() {
   private def inspect(opCode: OpCode): String = {
     opCode match {
       case op: AbstractDualOperandOpCode =>
-        Seq(inspect(op.src), inspect(op.dest), inspectForSP(op)).flatten.mkString(", ")
+        Seq(expand(op.src), expand(op.dest), expandSP(op)).formatCode
       case op: DataSegmentOverride =>
-        Seq(inspect(op.register).getOrElse(""), inspect(op.instruction)).filter(_.nonEmpty).mkString(", ")
+        Seq(expand(op.register).getOrElse(""), inspect(op.instruction)).formatCode
       case op: AbstractFlagUpdateOpCode =>
         s"FL = ${cpu.FLAGS}"
       case op: AbstractSingleOperandOpCode =>
-        Seq(inspect(op.operand), inspectForSP(op)).flatten.mkString(", ")
+        Seq(expand(op.operand), expandSP(op)).formatCode
       case op: StackModifyingOpCode =>
-        inspect(cpu.SP).getOrElse("")
+        expand(cpu.SP).getOrElse("")
       case op: FlowControlCallBackOpCode =>
         inspect(op.opCode)
       case _ => ""
     }
   }
 
-  private def inspect(operand: Operand): Option[String] = {
+  private def expand(operand: Operand): Option[String] = {
     operand match {
       case mp: MemoryPointer =>
         Some(f"[${mp.getMemoryReference.getOffset}%04X] = ${mp.get}%04X")
@@ -217,9 +218,9 @@ class Debugger() {
     }
   }
 
-  private def inspectForSP(opCode: OpCode): Option[String] = {
+  private def expandSP(opCode: OpCode): Option[String] = {
     opCode match {
-      case op: StackModifyingOpCode => inspect(cpu.SP)
+      case op: StackModifyingOpCode => expand(cpu.SP)
       case _ => None
     }
   }
@@ -334,6 +335,26 @@ object Debugger {
       case _ =>
     }
     app.run()
+  }
+
+  /**
+   * Instruction Formatter (Type A)
+   * @param tokens the given instruction tokens
+   */
+  implicit class InstructionFormatterA(tokens: Seq[Option[String]]) {
+
+    def formatCode: String = tokens.flatten mkString ", "
+
+  }
+
+  /**
+   * Instruction Formatter (Type B)
+   * @param tokens the given instruction tokens
+   */
+  implicit class InstructionFormatterB(tokens: Seq[String]) {
+
+    def formatCode: String = tokens filter (_.nonEmpty) mkString ", "
+
   }
 
 }

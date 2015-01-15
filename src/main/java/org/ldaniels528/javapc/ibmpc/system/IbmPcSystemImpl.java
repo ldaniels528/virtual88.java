@@ -28,11 +28,11 @@ import java.util.List;
 import static org.ldaniels528.javapc.ibmpc.devices.display.modes.IbmPcDisplayModes.CGA_80X25X16;
 
 /**
- * Represents an IBM PCjr System which used an 4.77MHz Intel 8086 CPU.
+ * Represents an abstraction of IBM PC/XT System
  *
  * @author lawrence.daniels@gmail.com
  */
-public class IbmPcSystemPCjr implements IbmPcSystem, IbmPcKeyEventListener {
+public class IbmPcSystemImpl implements IbmPcSystem, IbmPcKeyEventListener {
     protected final IbmPcRandomAccessMemory memory;
     protected final X86MemoryProxy proxy;
     protected final IbmPcStorageSystem storageSystem;
@@ -45,12 +45,13 @@ public class IbmPcSystemPCjr implements IbmPcSystem, IbmPcKeyEventListener {
     protected final I8086 cpu;
 
     /**
-     * Creates an instance of this {@link org.ldaniels528.javapc.ibmpc.system.IbmPcSystem system}
+     * Creates an instance of an IBM PC/XT-compatible system
      *
      * @param frame the given {@link IbmPcDisplayFrame frame}
+     * @param systemType the given IBM PC-compatible system type
      */
-    public IbmPcSystemPCjr(final IbmPcDisplayFrame frame) {
-        this.systemInfo = new IbmPcSystemInfoXT();
+    public IbmPcSystemImpl(final IbmPcDisplayFrame frame, final int systemType) {
+        this.systemInfo = new IbmPcSystemInfoImpl();
         this.memory = new IbmPcRandomAccessMemory();
         this.proxy = new X86MemoryProxy(memory, 0, 0);
         this.bios = new IbmPcBIOS(memory);
@@ -62,7 +63,7 @@ public class IbmPcSystemPCjr implements IbmPcSystem, IbmPcKeyEventListener {
         this.mouse = new IbmPcMouse();
 
         // set the PC identifier byte at F000:FFFE
-        memory.setByte(0xF000, 0xFFFE, IBM_PCjr);
+        memory.setByte(0xF000, 0xFFFE, systemType);
 
         // initialize the virtual BIOS
         initializeBIOS(systemInfo);
@@ -207,12 +208,12 @@ public class IbmPcSystemPCjr implements IbmPcSystem, IbmPcKeyEventListener {
      *
      * @author lawrence.daniels@gmail.com
      */
-    private class IbmPcSystemInfoXT implements IbmPcSystemInfo {
+    private class IbmPcSystemInfoImpl implements IbmPcSystemInfo {
 
         /**
          * Default constructor
          */
-        public IbmPcSystemInfoXT() {
+        public IbmPcSystemInfoImpl() {
             super();
         }
 
