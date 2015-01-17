@@ -75,6 +75,9 @@ public class IbmPcSystemImpl implements IbmPcSystem, IbmPcKeyEventListener {
             keyboard.init(frame);
         }
 
+        // register video memory for updating the display
+        memory.add(0xB000, 0xBFFF, (fromAddress, toAddress) -> display.update());
+
         // register for specific key events
         keyboard.register(this);
     }

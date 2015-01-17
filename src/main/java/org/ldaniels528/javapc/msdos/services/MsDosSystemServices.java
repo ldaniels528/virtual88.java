@@ -1,9 +1,9 @@
 package org.ldaniels528.javapc.msdos.services;
 
 import org.apache.log4j.Logger;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.bios.IbmPcBIOS;
 import org.ldaniels528.javapc.ibmpc.devices.bios.services.InterruptHandler;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplay;
 import org.ldaniels528.javapc.ibmpc.devices.keyboard.IbmPcKeyboard;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
@@ -15,6 +15,7 @@ import org.ldaniels528.javapc.util.ByteConversion;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Calendar;
 import java.util.Scanner;
 
@@ -392,7 +393,7 @@ public class MsDosSystemServices implements InterruptHandler {
 
         // must be output of a character
         else {
-            // cache the charaacter and display page
+            // cache the character and display page
             final char character = (char) _DL;
             final int displayPage = display.getActivePage();
 
@@ -418,8 +419,14 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      */
     private void directConsoleInputWithoutEcho(final IbmPcSystem system, final I8086 cpu) {
-        // TODO Implement me!
-        throw new IllegalStateException("directConsoleInputWithoutEcho: Not Yet Implemented");
+        try {
+            final String character = system.getKeyboard().next(1);
+            if (character.length() > 0) {
+                cpu.AL.set(character.charAt(0));
+            }
+        } catch (InterruptedException e) {
+            throw new IllegalStateException("consoleInputWithEcho: interrupted");
+        }
     }
 
     /**
@@ -433,8 +440,15 @@ public class MsDosSystemServices implements InterruptHandler {
      * - if ~Ctrl-Break~ is detected, ~INT 23~ is executed
      */
     private void consoleInputWithEcho(final IbmPcSystem system, final I8086 cpu) {
-        // TODO Implement me!
-        throw new IllegalStateException("consoleInputWithEcho: Not Yet Implemented");
+        try {
+            final String character = system.getKeyboard().next(1);
+            if (character.length() > 0) {
+                system.getDisplay().write(character);
+                cpu.AL.set(character.charAt(0));
+            }
+        } catch (InterruptedException e) {
+            throw new IllegalStateException("consoleInputWithEcho: interrupted");
+        }
     }
 
     /**
@@ -503,9 +517,10 @@ public class MsDosSystemServices implements InterruptHandler {
      * AH = 0A
      * DS:DX = pointer to input buffer of the format:
      *
-     * | max | count | BUFFER (N bytes)
-     * | | +------ input buffer
-     * | +------------ number of characters returned (byte)
+     * max count BUFFER (N bytes)
+     * |    |      |
+     * |    |      +------ input buffer
+     * |    +------------ number of characters returned (byte)
      * +-------------- maximum number of characters to read (byte)
      * returns nothing
      * - since strings can be pre-loaded, it is recommended that the
@@ -520,8 +535,17 @@ public class MsDosSystemServices implements InterruptHandler {
      * </pre>
      */
     private void bufferedKeyboardInput(final IbmPcSystem system, final I8086 cpu) {
-        // TODO Implement me!
-        throw new IllegalStateException("Not yet implemented");
+        final String fakeInput = "Hello World\n"; // TODO finish me!
+
+        // create the data string
+        final ByteBuffer buf = ByteBuffer.allocate(255);
+        buf.put((byte) 0xFF);
+        buf.put((byte) fakeInput.length());
+        buf.put(fakeInput.getBytes());
+        final byte[] bytes = buf.array();
+
+        // write the data string to DS:DX
+        cpu.setBytes(cpu.DX.get(), bytes, bytes.length);
     }
 
     /**
@@ -1804,7 +1828,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * on return:
      * AX = error code if CF set (see ~DOS ERROR CODES~)
      * DX = device information (see tables below)
-     * <p/>
+     * <p>
      * DX Block Device Information
      * F E D C B A-8 7 6 5-0
      * | | | | | |   | | |
@@ -1817,7 +1841,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * | | +-------------- 1 = reserved
      * | +--------------- 1 = don't update file time or date (DOS 4.x+)
      * +---------------- 1 = file is remote (DOS 3.x+)
-     * <p/>
+     * <p>
      * DX Character Device Information
      * F E D C B A-8 7 6 5 4 3 2 1 0
      * | | | | | |   | | | | | | | |
@@ -1835,7 +1859,7 @@ public class MsDosSystemServices implements InterruptHandler {
      * | | +------ reserved
      * | +------ 1 = supports IOCTL, via functions 2 & 3
      * +------ reserved
-     * <p/>
+     * <p>
      * - BIT 7 of register DX can be used to detect if STDIN/STDOUT is
      * redirected to/from disk; if a call to this function has DX BIT 7
      * set it's not redirected from/to disk; if it's clear then it is

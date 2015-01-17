@@ -223,6 +223,16 @@ public class I8086 extends X86RegisterSet {
     }
 
     /**
+     * Sets the byte found at the given offset within the DS segment
+     *
+     * @param offset the given offset within the DS segment
+     * @param bytes  the given byte array to set
+     */
+    public void setBytes(final int offset, final byte[] bytes, final int length) {
+        memory.setBytes(XDS.get(), offset, bytes, length);
+    }
+
+    /**
      * Retrieves a word from [DS:offset] in memory
      *
      * @param offset the given offset

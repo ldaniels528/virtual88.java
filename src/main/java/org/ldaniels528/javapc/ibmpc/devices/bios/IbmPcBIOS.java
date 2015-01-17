@@ -1,10 +1,10 @@
 package org.ldaniels528.javapc.ibmpc.devices.bios;
 
 import org.apache.log4j.Logger;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryAddressFAR32;
 import org.ldaniels528.javapc.ibmpc.devices.bios.services.*;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.system.INT;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryAddressFAR32;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplayContext;
 import org.ldaniels528.javapc.ibmpc.devices.display.modes.IbmPcDisplayMode;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
@@ -306,13 +306,13 @@ public class IbmPcBIOS {
         memory.setByte(0x0040, 0x0100, 0);
 
         // Phantom-floppy status: 01h=drive A is acting as drive B.
-        memory.setByte(0x0040, 0x0104, (byte) (systemInfo.getFloppyDrives() == 1 ? 1 : 0));
+        memory.setByte(0x0040, 0x0104, systemInfo.getFloppyDrives() == 1 ? 1 : 0);
 
         // ROM-BIOS release date in ASCII
         memory.setBytes(0xF000, 0xFFF5, ROM_DATE, ROM_DATE.length);
 
         // set the computer code
-        memory.setByte(0xF000, 0xFFFE, (byte) systemInfo.getSystemType());
+        memory.setByte(0xF000, 0xFFFE, systemInfo.getSystemType());
     }
 
     /**
@@ -323,10 +323,10 @@ public class IbmPcBIOS {
      */
     public void updateVideoInfo(final IbmPcDisplayMode mode, final IbmPcDisplayContext dc) {
         // set the current active video mode.
-        memory.setByte(0x0040, 0x0049, (byte) mode.getVideoMode());
+        memory.setByte(0x0040, 0x0049, mode.getVideoMode());
 
         // set the column width in memory
-        memory.setByte(0x0040, 0x004A, (byte) mode.getColumns());
+        memory.setByte(0x0040, 0x004A, mode.getColumns());
 
         // set the offset from video segment of active video memory page
         memory.setWord(0x0040, 0x004E, dc.activePage * mode.getPageSize());
@@ -338,7 +338,7 @@ public class IbmPcBIOS {
         memory.setWord(0x0040, 0x0060, 0x0607); // TODO Fix this!
 
         // set the current active video page number
-        memory.setByte(0x0040, 0x0062, (byte) dc.activePage);
+        memory.setByte(0x0040, 0x0062, dc.activePage);
 
         // set the port address for 6845 video controller chip
         memory.setWord(0x0040, 0x0063, 0x03D4); // TODO Fix this!
