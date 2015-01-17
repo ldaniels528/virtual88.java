@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 
 import static java.lang.String.format;
+import static org.ldaniels528.javapc.util.BitMaskGenerator.isBitSet;
 
 /**
  * Acts as a proxy to the random access memory (RAM) instance
@@ -117,6 +118,19 @@ public class X86MemoryProxy {
     }
 
     /**
+     * Returns the next signed byte from memory advancing the
+     * pointer by 1 byte.
+     *
+     * @return the next signed byte
+     */
+    public int nextSignedByte() {
+        final int value = memory.getByte(segment, offset++);
+        final boolean negative = isBitSet(value, 7);
+        final int unsignedValue = value & 0x7F;
+        return negative ? -unsignedValue : unsignedValue;
+    }
+
+    /**
      * Returns the next specified number of bytes from memory advancing the
      * pointer by the number of bytes retrieved.
      *
@@ -138,6 +152,20 @@ public class X86MemoryProxy {
         final int word = memory.getWord(segment, offset);
         offset += 2;
         return word;
+    }
+
+    /**
+     * Returns the next word (little endian) from memory advancing the
+     * pointer by 2 bytes.
+     *
+     * @return the next word
+     */
+    public int nextSignedWord() {
+        final int value = memory.getWord(segment, offset);
+        offset += 2;
+        final boolean negative = isBitSet(value, 15);
+        final int unsignedValue = value & 0x7FFF;
+        return negative ? -unsignedValue : unsignedValue;
     }
 
     /**

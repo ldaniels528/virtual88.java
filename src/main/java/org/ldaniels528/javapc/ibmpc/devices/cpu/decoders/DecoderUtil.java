@@ -501,14 +501,11 @@ public class DecoderUtil {
      */
     public static OperandValue nextAddressNear(final X86MemoryProxy proxy) {
         // compute the "real" offset
-        final int relOffset = proxy.nextWord();
+        final int relOffset = proxy.nextSignedWord();
         final int curOffset = proxy.getOffset();
-        final int offset = (relOffset < 0x8000)
-                ? curOffset + relOffset
-                : curOffset - (0x10000 - relOffset);
 
         // return a near address
-        return new WordValue(offset);
+        return new WordValue(curOffset + relOffset);
     }
 
     /**
@@ -519,14 +516,11 @@ public class DecoderUtil {
      */
     public static OperandValue nextAddressShort(final X86MemoryProxy proxy) {
         // compute the "real" offset
-        final int relOffset = proxy.nextByte();
+        final int relOffset = proxy.nextSignedByte();
         final int curOffset = proxy.getOffset();
-        final int offset = (relOffset < 0x80)
-                ? curOffset + relOffset
-                : curOffset - (0x100 - relOffset);
 
         // return a near address
-        return new WordValue(offset);
+        return new WordValue(curOffset + relOffset);
     }
 
     /**

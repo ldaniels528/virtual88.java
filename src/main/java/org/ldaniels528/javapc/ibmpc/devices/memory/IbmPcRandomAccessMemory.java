@@ -38,7 +38,7 @@ public class IbmPcRandomAccessMemory {
         this.systemMemory = new byte[SYSTEM_MEMORY_SIZE];
 
         // randomize the bytes in memory
-        new Random(System.currentTimeMillis()).nextBytes(systemMemory);
+        //new Random(System.currentTimeMillis()).nextBytes(systemMemory);
     }
 
     /**
