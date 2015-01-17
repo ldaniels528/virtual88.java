@@ -1,4 +1,4 @@
-package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services;
+package org.ldaniels528.javapc.ibmpc.devices.bios.services;
 
 import org.apache.log4j.Logger;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;

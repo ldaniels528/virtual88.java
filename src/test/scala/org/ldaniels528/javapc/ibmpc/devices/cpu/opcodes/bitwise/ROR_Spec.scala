@@ -50,7 +50,7 @@ class ROR_Spec() extends FunSpec with Matchers {
       // create a re-usable ROR instruction
       val opCode = new ROR(cpu.AL, 1.db)
 
-      // perform the ROL 10 times
+      // perform the ROL 8 times
       for (n <- 1 to 8) {
         cpu.execute(system, opCode)
         val bits = format("%8s", Integer.toBinaryString(cpu.AL.get)).replace(' ', '0')

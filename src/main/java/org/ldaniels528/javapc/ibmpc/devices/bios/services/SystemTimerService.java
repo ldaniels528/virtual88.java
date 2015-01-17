@@ -1,4 +1,4 @@
-package org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services;
+package org.ldaniels528.javapc.ibmpc.devices.bios.services;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
@@ -65,7 +65,7 @@ public class SystemTimerService implements InterruptHandler {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.services.InterruptHandler#process(org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86)
+	 * @see org.ldaniels528.javapc.ibmpc.devices.bios.services.InterruptHandler#process(org.ldaniels528.javapc.ibmpc.devices.cpu.Intel80x86)
 	 */
 	public void process(IbmPcSystem system, final I8086 cpu)
 	throws X86AssemblyException {

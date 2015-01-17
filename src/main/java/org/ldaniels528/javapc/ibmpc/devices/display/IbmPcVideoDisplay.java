@@ -1,6 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.display;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.bios.IbmPcBIOS;
+import org.ldaniels528.javapc.ibmpc.devices.bios.IbmPcBIOS;
 import org.ldaniels528.javapc.ibmpc.devices.display.modes.IbmPcDisplayMode;
 
 import java.awt.*;
