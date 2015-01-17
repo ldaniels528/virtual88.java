@@ -46,16 +46,16 @@ public interface OpCode {
     void setLength(int length);
 
     /**
-     * Returns the 80x86 instruction code
+     * Returns the 8086 instruction code
      *
-     * @return the 80x86 instruction code
+     * @return the 8086 instruction code
      */
     long getInstructionCode();
 
     /**
-     * Sets the 80x86 instruction code
+     * Sets the 8086 instruction code
      *
-     * @param instructionCode the 80x86 instruction code
+     * @param instructionCode the 8086 instruction code
      */
     void setInstructionCode(long instructionCode);
 

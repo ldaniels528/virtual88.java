@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import static java.lang.String.format;
 
 /**
- * Represents an 80x86 program stack
+ * Represents an 8086 program stack
  *
  * @author lawrence.daniels@gmail.com
  */
@@ -22,7 +22,7 @@ public class X86Stack implements Operand {
      * Creates a new program stack
      *
      * @param memory the given {@link IbmPcRandomAccessMemory memory} instance
-     * @param cpu    the given {@link I8086 80x86 CPU} instance
+     * @param cpu    the given {@link I8086 8086 CPU} instance
      */
     public X86Stack(final IbmPcRandomAccessMemory memory, final I8086 cpu) {
         this.memory = memory;

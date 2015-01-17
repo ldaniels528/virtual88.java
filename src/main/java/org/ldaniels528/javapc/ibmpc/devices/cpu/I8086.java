@@ -3,9 +3,11 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu;
 import org.apache.log4j.Logger;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryAddressFAR32;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecodeProcessor;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecodeProcessorImpl;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system.INT;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.registers.X86Register16bit;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.registers.X86RegisterSet;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.decoders.DecodeProcessor;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.decoders.DecodeProcessorImpl;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.system.INT;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryProxy;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
@@ -13,6 +15,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
 import static java.lang.String.format;
 import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_16BIT;
+import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_32BIT;
 import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand.SIZE_8BIT;
 
 /**
@@ -75,7 +78,7 @@ public class I8086 extends X86RegisterSet {
      * Executes the given compiled code
      *
      * @param system  the given {@link IbmPcSystem IBM PC system}
-     * @param context the given {@link ProgramContext 80x86 execution context}
+     * @param context the given {@link ProgramContext 8086 execution context}
      */
     public void execute(final IbmPcSystem system, final ProgramContext context) throws X86AssemblyException {
         // setup the segments
@@ -86,7 +89,7 @@ public class I8086 extends X86RegisterSet {
 
         // setup the instruction and stack pointers
         IP.set(context.getCodeOffset());
-        SP.set(0xFFFE);
+        SP.set(0xF000);
 
         // push the arguments onto the stack
         final ProgramArguments[] args = context.getArguments();
@@ -133,7 +136,7 @@ public class I8086 extends X86RegisterSet {
     }
 
     /**
-     * Retrieves the next 80x86 opCode from the decoder
+     * Retrieves the next 8086 opCode from the decoder
      *
      * @return an {@link OpCode opCode}
      */
@@ -299,9 +302,24 @@ public class I8086 extends X86RegisterSet {
                 // jump to the offset in memory
                 IP.set(pointer);
                 break;
+            case SIZE_32BIT:
+                /*
+                // save this position?
+                if (savePoint) {
+                    if (debugMode) {
+                        logger.info(format("Storing CS:IP as %04X:%04X", CS.get(), IP.get()));
+                    }
+                    stack.pushValue(CS.get());
+                    stack.pushValue(IP.get() + opCode.getLength());
+                }
+
+                // jump to the offset in memory
+                IP.set(pointer);
+                break;*/
 
             default:
-                throw new IllegalArgumentException(format("%d-bit memory operands are not supported", destination.size()));
+                throw new IllegalArgumentException(format("%d-bit memory operands are not supported [%s]",
+                        destination.size(), destination));
         }
     }
 

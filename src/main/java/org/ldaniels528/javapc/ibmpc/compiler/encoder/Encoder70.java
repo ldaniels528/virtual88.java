@@ -92,7 +92,7 @@ public class Encoder70 implements InstructionEncoder {
 
 	/**
 	 * Determines whether the given instruction can be encoded
-	 * as 80x86 machine code.
+	 * as 8086 machine code.
 	 * @param instruction the given {@link X86Instruction instruction}
 	 * @return true, if the instruction is a PUSH or POP instruction
 	 * with a general purpose 16-bit register as it's only parameter.

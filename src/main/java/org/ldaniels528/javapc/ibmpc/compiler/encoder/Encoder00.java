@@ -1,9 +1,9 @@
 package org.ldaniels528.javapc.ibmpc.compiler.encoder;
 
-import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.MEM_CLASS_16BIT;
-import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.MEM_CLASS_8BIT;
-import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.SRC_CODE_PRIMARY;
-import static org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.DecoderUtil.SRC_CODE_SECONDARY;
+import static org.ldaniels528.javapc.ibmpc.devices.cpu.decoders.DecoderUtil.MEM_CLASS_16BIT;
+import static org.ldaniels528.javapc.ibmpc.devices.cpu.decoders.DecoderUtil.MEM_CLASS_8BIT;
+import static org.ldaniels528.javapc.ibmpc.devices.cpu.decoders.DecoderUtil.SRC_CODE_PRIMARY;
+import static org.ldaniels528.javapc.ibmpc.devices.cpu.decoders.DecoderUtil.SRC_CODE_SECONDARY;
 import static org.ldaniels528.javapc.ibmpc.compiler.encoder.X86AssemblyUtil.generateReferenceCode;
 import static org.ldaniels528.javapc.ibmpc.compiler.encoder.X86AssemblyUtil.getElementOrder;
 import static org.ldaniels528.javapc.ibmpc.compiler.encoder.X86AssemblyUtil.is8Bit;

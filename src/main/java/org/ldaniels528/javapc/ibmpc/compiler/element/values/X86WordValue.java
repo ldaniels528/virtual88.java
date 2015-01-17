@@ -10,7 +10,7 @@ import org.ldaniels528.javapc.jbasic.gwbasic.values.GwBasicValues;
 public class X86WordValue extends X86NumericValue {
 	
 	/**
-	 * Creates a new 16-bit 80x86 value
+	 * Creates a new 16-bit 8086 value
 	 * @param value the given 16-bit value
 	 */
 	public X86WordValue( final int value ) {
@@ -18,7 +18,7 @@ public class X86WordValue extends X86NumericValue {
 	}
 	
 	/**
-	 * Creates a new 16-bit 80x86 value
+	 * Creates a new 16-bit 8086 value
 	 * @param value the given 16-bit value
 	 */
 	public X86WordValue( final String value ) {

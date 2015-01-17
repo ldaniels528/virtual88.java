@@ -1,7 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu;
 
 /**
- * 80x86 Addressable Operand
+ * 8086 Addressable Operand
  * @author lawrence.daniels@gmail.com
  */
 public interface ProgramArguments {

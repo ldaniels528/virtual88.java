@@ -7,12 +7,13 @@ import com.ldaniels528.javapc.ibmpc.app.Debugger._
 import com.ldaniels528.javapc.ibmpc.app.util.OptionHelper._
 import org.ldaniels528.javapc.JavaPCConstants
 import org.ldaniels528.javapc.ibmpc.devices.cpu._
+import org.ldaniels528.javapc.ibmpc.devices.cpu.decoders.{DecodeProcessorImpl, FlowControlCallBackOpCode}
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes._
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.addressing.DataSegmentOverride
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.flags.AbstractFlagUpdateOpCode
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.{MemoryAddressNEAR16, MemoryPointer}
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.decoder.{DecodeProcessorImpl, FlowControlCallBackOpCode}
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes._
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.addressing.DataSegmentOverride
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.flags.AbstractFlagUpdateOpCode
+import org.ldaniels528.javapc.ibmpc.devices.cpu.registers.{X86CompositeRegister16Bit, X86Flags, X86Register16bit, X86Register8bit}
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplayFrame
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemFactory
 import org.ldaniels528.javapc.util.ResourceHelper
@@ -186,7 +187,7 @@ class Debugger() {
    */
   private def executeCode(params: UnixLikeArgs) {
     // extract the parameters
-    val limit = params("-n") map (_.toInt) getOrElse 100
+    val limit = if (params.contains("-a")) Int.MaxValue else params("-n").map(_.toInt).getOrElse(100)
     val (segment, offset) = params.args match {
       case aSegment :: aOffset :: Nil => (aSegment.toInt, aOffset.toInt)
       case aOffset :: Nil => (proxy.getSegment, aOffset.toInt)
@@ -194,6 +195,8 @@ class Debugger() {
       case _ =>
         throw new IllegalArgumentException("Syntax: g[o] [[segment]:offset] [-n count]")
     }
+
+    out.println(s"Executing $limit instructions")
 
     // execute the code
     var count = 0

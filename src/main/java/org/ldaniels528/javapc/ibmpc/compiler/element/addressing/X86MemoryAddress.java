@@ -4,7 +4,7 @@ import org.ldaniels528.javapc.ibmpc.compiler.element.X86DataElement;
 import org.ldaniels528.javapc.ibmpc.compiler.element.registers.X86RegisterRef;
 
 /**
- * Represents an 80x86 Memory Address
+ * Represents an 8086 Memory Address
  * @author lawrence.daniels@gmail.com
  */
 public abstract class X86MemoryAddress implements X86DataElement {

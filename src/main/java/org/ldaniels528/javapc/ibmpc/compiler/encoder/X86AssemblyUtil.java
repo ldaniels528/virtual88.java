@@ -13,7 +13,7 @@ import org.ldaniels528.javapc.ibmpc.compiler.X86InvalidNumberOfParametersExcepti
 import org.ldaniels528.javapc.ibmpc.compiler.X86MalformedInstructionException;
 
 /**
- * 80x86 Instruction Encode Utility
+ * 8086 Instruction Encode Utility
  * @author lawrence.daniels@gmail.com
  */
 public class X86AssemblyUtil {

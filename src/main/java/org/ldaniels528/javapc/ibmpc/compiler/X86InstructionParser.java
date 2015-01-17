@@ -20,7 +20,7 @@ import static org.ldaniels528.javapc.ibmpc.util.X86CompilerUtil.mandateElement;
 import static org.ldaniels528.javapc.ibmpc.util.X86CompilerUtil.nextElement;
 
 /**
- * Represents a 80x86 assembly language instruction parser
+ * Represents a 8086 assembly language instruction parser
  *
  * @author lawrence.daniels@gmail.com
  */

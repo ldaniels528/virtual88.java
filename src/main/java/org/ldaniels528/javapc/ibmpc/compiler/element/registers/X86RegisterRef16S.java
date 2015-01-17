@@ -1,7 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.compiler.element.registers;
 
 /**
- * Represents a 16-bit 80x86 Segment Register Descriptors
+ * Represents a 16-bit 8086 Segment Register Descriptors
  * @author lawrence.daniels@gmail.com
  */
 public class X86RegisterRef16S extends X86RegisterRef16 {

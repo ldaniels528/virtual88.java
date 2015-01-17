@@ -23,7 +23,7 @@ import org.ldaniels528.javapc.jbasic.common.tokenizer.Tokenizer;
 import org.ldaniels528.javapc.jbasic.common.tokenizer.TokenizerContext;
 
 /**
- * 80x86 "Referenced" Address Parser (e.g. "[BX+SI]")
+ * 8086 "Referenced" Address Parser (e.g. "[BX+SI]")
  * @author lawrence.daniels@gmail.com
 */
 public class X86ReferencedAddressParser {

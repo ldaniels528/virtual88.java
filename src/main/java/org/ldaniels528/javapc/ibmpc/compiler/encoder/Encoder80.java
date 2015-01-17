@@ -145,7 +145,7 @@ public class Encoder80 implements InstructionEncoder {
 	/**
 	 * Encodes a Type 1 MOV instructions (e.g. 'mov al,cl', 'mov [bx],al', 'mov ax,[bx]')
 	 * @param codebuf the given {@link X86CodeBuffer code buffer}
-	 * @param instruction the given {@link X86Instruction 80x86 instruction}
+	 * @param instruction the given {@link X86Instruction 8086 instruction}
 	 * @throws X86MalformedInstructionException 
 	 */
 	private boolean assembleType1( final X86CodeBuffer codebuf, final X86DataElement elem1, X86DataElement elem2 ) 
@@ -208,7 +208,7 @@ public class Encoder80 implements InstructionEncoder {
 	/**
 	 * Encodes a Type 3 MOV instructions (e.g. 'mov al,12', 'mov ax,1234')
 	 * @param codebuf the given {@link X86CodeBuffer code buffer}
-	 * @param instruction the given {@link X86Instruction 80x86 instruction}
+	 * @param instruction the given {@link X86Instruction 8086 instruction}
 	 * @throws X86MalformedInstructionException 
 	 */
 	private boolean assembleType3( final X86CodeBuffer codebuf, final X86DataElement elem1, X86DataElement elem2 ) 

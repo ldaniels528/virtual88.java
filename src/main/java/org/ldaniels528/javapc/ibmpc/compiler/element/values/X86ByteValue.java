@@ -11,7 +11,7 @@ public class X86ByteValue extends X86NumericValue {
 	public static final X86ByteValue ONE = new X86ByteValue( 1 );
 	
 	/**
-	 * Creates a new 8-bit 80x86 value
+	 * Creates a new 8-bit 8086 value
 	 * @param value the given 8-bit value
 	 */
 	public X86ByteValue( final int value ) {
@@ -19,7 +19,7 @@ public class X86ByteValue extends X86NumericValue {
 	}
 	
 	/**
-	 * Creates a new 8-bit 80x86 value
+	 * Creates a new 8-bit 8086 value
 	 * @param value the given 8-bit value
 	 */
 	public X86ByteValue( final String value ) {

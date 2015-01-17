@@ -23,14 +23,14 @@ public class IbmPcAssemblyLanguageCompiler {
      * Encodes the given assembly language statement into x86 machine code
      *
      * @param lines the given assembly language statement(s)
-     * @return the resultant 80x86 machine code
+     * @return the resultant 8086 machine code
      * @throws X86AssemblyException
      */
     public static byte[] encode(final String... lines) throws X86AssemblyException {
         // create an encoding context for this session
         final X86CodeBuffer codeBuffer = new X86CodeBuffer(0xFFFF);
 
-        // create an 80x86 encoder instance
+        // create an 8086 encoder instance
         final X86Assembler encoder = new X86Assembler(codeBuffer);
 
         // encode each instruction

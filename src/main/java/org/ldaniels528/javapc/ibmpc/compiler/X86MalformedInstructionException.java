@@ -8,7 +8,7 @@ import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 
 /**
  * Represents the error that occurs when the compiler encounters
- * or invalid or malformed 80x86 instruction.
+ * or invalid or malformed 8086 instruction.
  * @author lawrence.daniels@gmail.com
  */
 @SuppressWarnings("serial")

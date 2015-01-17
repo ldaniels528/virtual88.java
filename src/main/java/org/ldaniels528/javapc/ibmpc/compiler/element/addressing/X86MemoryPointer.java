@@ -1,14 +1,14 @@
 package org.ldaniels528.javapc.ibmpc.compiler.element.addressing;
 
 /**
- * Represents an 80x86 memory pointer (e.g. 'byte ptr [bx]')
+ * Represents an 8086 memory pointer (e.g. 'byte ptr [bx]')
  * @author lawrence.daniels@gmail.com
  */
 public abstract class X86MemoryPointer extends X86MemoryAddress {
 	protected final X86ReferencedAddress reference;
 	
 	/**
-	 * Creates a new 80x86 memory pointer
+	 * Creates a new 8086 memory pointer
 	 * @param reference the given {@link X86ReferencedAddress referenced address}
 	 */
 	public X86MemoryPointer( final X86ReferencedAddress reference ) {

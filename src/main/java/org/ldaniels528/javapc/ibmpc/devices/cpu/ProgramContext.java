@@ -1,7 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu;
 
 /**
- * Represents a context for executing an 80x86 memory resident program.
+ * Represents a context for executing an 8086 memory resident program.
  * @author lawrence.daniels@gmail.com
  */
 public class ProgramContext {

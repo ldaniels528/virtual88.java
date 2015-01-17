@@ -6,7 +6,7 @@ import org.ldaniels528.javapc.ibmpc.compiler.X86Instruction;
 
 /**
  * Represents the error that occurs when the compiler encounters
- * or invalid or malformed 80x86 instruction.
+ * or invalid or malformed 8086 instruction.
  * @author lawrence.daniels@gmail.com
  */
 @SuppressWarnings("serial")

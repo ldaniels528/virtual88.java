@@ -8,7 +8,7 @@ import org.ldaniels528.javapc.ibmpc.compiler.element.values.X86WordValue;
 import static org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryReference.*;
 
 /**
- * Represents an 80x86 "Referenced" Address (e.g. "[bx+si]")
+ * Represents an 8086 "Referenced" Address (e.g. "[bx+si]")
  *
  * @author lawrence.daniels@gmail.com
  */

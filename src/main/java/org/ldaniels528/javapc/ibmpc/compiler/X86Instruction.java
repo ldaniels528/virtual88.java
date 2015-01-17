@@ -6,7 +6,7 @@ import org.ldaniels528.javapc.ibmpc.compiler.element.X86DataElement;
 import java.util.List;
 
 /**
- * Represents an 80x86 instruction
+ * Represents an 8086 instruction
  *
  * @author lawrence.daniels@gmail.com
  */

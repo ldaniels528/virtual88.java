@@ -1,7 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.X86RegisterSet;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.registers.X86RegisterSet;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryProxy;
@@ -10,10 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents an 80x86 Memory Reference.  References of this type are
+ * Represents an 8086 Memory Reference.  References of this type are
  * not {@link Operand operands}, but are merely memory locations.
  * <pre>
- * 80x86 Memory Address Reference Types
+ * 8086 Memory Address Reference Types
  *
  * Reference	Code	tt xxx mmm
  * ---------	----	----------

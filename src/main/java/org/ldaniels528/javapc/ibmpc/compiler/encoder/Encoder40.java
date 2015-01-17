@@ -92,7 +92,7 @@ public class Encoder40 implements InstructionEncoder {
 		//  7654 3210 (8 bits)
 		//  iiii irrr 
 		
-		// create the 8-bit 80x86 byte code
+		// create the 8-bit 8086 byte code
 		final int code = ( insCode << 3 ) | regCode;
 				
 		// encode the instruction
@@ -102,7 +102,7 @@ public class Encoder40 implements InstructionEncoder {
 	
 	/**
 	 * Determines whether the given instruction can be encoded
-	 * as 80x86 machine code.
+	 * as 8086 machine code.
 	 * @param instruction the given {@link X86Instruction instruction}
 	 * @return true, if the instruction is a INC or DEC instruction
 	 * with a general purpose 16-bit register as it's only parameter.

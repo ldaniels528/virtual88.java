@@ -6,14 +6,14 @@ package org.ldaniels528.javapc.ibmpc.compiler.element.values;
 
 
 /**
- * Represents an 80x86 Byte or Word value
+ * Represents an 8086 Byte or Word value
  * @author lawrence.daniels@gmail.com
  */
 public abstract class X86NumericValue extends X86Value {
 	protected final int value;
 	
 	/**
-	 * Creates a new 8/16-bit 80x86 value
+	 * Creates a new 8/16-bit 8086 value
 	 * @param value the given 8/16-bit value
 	 */
 	public X86NumericValue( final int value ) {

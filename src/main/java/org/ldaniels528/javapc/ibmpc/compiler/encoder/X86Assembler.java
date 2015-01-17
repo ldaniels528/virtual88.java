@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * 80x86 Machine Code Assembler
+ * 8086 Machine Code Assembler
  *
  * @author lawrence.daniels@gmail.com
  */

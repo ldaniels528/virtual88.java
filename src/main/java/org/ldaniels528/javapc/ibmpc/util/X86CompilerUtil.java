@@ -10,7 +10,7 @@ import org.ldaniels528.javapc.jbasic.common.exceptions.IllegalNumberFormat;
 import static org.ldaniels528.javapc.jbasic.gwbasic.values.GwBasicValues.*;
 
 /**
- * 80x86 Compiler Utilities
+ * 8086 Compiler Utilities
  *
  * @author lawrence.daniels@gmail.com
  */

@@ -3,7 +3,7 @@ package org.ldaniels528.javapc.ibmpc.compiler.element.addressing;
 import static org.ldaniels528.javapc.ibmpc.util.X86CompilerUtil.isNumber;
 
 /**
- * 80x86 Memory Address Parser
+ * 8086 Memory Address Parser
  * @author lawrence.daniels@gmail.com
  */
 public class X86MemoryAddressParser {

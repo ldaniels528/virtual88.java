@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * 80x86 Compiler Utilities Test Suite
+ * 8086 Compiler Utilities Test Suite
  *
  * @author lawrence.daniels@gmail.com
  */

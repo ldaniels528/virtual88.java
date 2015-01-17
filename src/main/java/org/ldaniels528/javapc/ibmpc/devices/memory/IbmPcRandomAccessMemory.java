@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.ByteValue;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.WordValue;
+import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.util.ByteConversion;
 
 import java.io.ByteArrayOutputStream;
@@ -207,6 +208,9 @@ public class IbmPcRandomAccessMemory {
     public int getWord(final int segment, final int offset) {
         // compute the physical address
         final int physicalAddress = computePhysicalAddress(segment, offset);
+        if(physicalAddress >= systemMemory.length) {
+            throw new IllegalStateException(format("Memory reference out of bounds %08X", physicalAddress));
+        }
 
         // get the high and low order bytes
         int loByte = systemMemory[physicalAddress];

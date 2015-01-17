@@ -5,7 +5,7 @@ import org.ldaniels528.javapc.ibmpc.compiler.element.X86DataElement;
 import org.ldaniels528.javapc.jbasic.gwbasic.values.GwBasicValues;
 
 /**
- * Represents a numeric value for use with 80x86 instructions
+ * Represents a numeric value for use with 8086 instructions
  * @author lawrence.daniels@gmail.com
  */
 public abstract class X86Value implements X86DataElement {

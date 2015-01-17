@@ -11,7 +11,7 @@ import java.io.IOException;
 import static java.lang.String.format;
 
 /**
- * This class represents a 80x86 Instruction Set Encoder
+ * This class represents a 8086 Instruction Set Encoder
  * @author lawrence.daniels@gmail.com
  */
 public class X86CodeBuffer {

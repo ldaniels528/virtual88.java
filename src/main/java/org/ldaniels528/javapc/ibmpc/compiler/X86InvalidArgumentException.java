@@ -6,7 +6,7 @@ package org.ldaniels528.javapc.ibmpc.compiler;
 import org.ldaniels528.javapc.ibmpc.compiler.element.X86DataElement;
 
 /**
- * 80x86 Malformed Instruction Exception - Invalid Argument
+ * 8086 Malformed Instruction Exception - Invalid Argument
  * @author lawrence.daniels@gmail.com
  */
 @SuppressWarnings("serial")

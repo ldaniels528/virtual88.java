@@ -1,13 +1,13 @@
 package org.ldaniels528.javapc.ibmpc.compiler.element.registers;
 
 /**
- * Represents a 16-bit 80x86 (General Purpose or Segment) Register Descriptor
+ * Represents a 16-bit 8086 (General Purpose or Segment) Register Descriptor
  * @author lawrence.daniels@gmail.com
  */
 public abstract class X86RegisterRef16 extends X86RegisterRef {
 
 	/**
-	 * Creates a new 16-bit 80x86 (general purpose or segment) register descriptor
+	 * Creates a new 16-bit 8086 (general purpose or segment) register descriptor
 	 * @param name the name of the register
 	 * @param id the register's ID
 	 * @param index the given index

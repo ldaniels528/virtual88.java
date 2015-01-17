@@ -1,7 +1,7 @@
 package org.ldaniels528.javapc.ibmpc.compiler.element.registers;
 
 /**
- * Represents an 8-bit 80x86 General Purpose Register Descriptors
+ * Represents an 8-bit 8086 General Purpose Register Descriptors
  *
  * @author lawrence.daniels@gmail.com
  */

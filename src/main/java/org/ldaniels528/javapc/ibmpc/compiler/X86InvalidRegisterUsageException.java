@@ -6,7 +6,7 @@ package org.ldaniels528.javapc.ibmpc.compiler;
 import org.ldaniels528.javapc.ibmpc.compiler.element.registers.X86RegisterRef;
 
 /**
- * 80x86 Malformed Instruction Exception - Invalid register usage
+ * 8086 Malformed Instruction Exception - Invalid register usage
  * @author lawrence.daniels@gmail.com
  */
 @SuppressWarnings("serial")
@@ -23,7 +23,7 @@ public class X86InvalidRegisterUsageException extends X86MalformedInstructionExc
 	}
 
 	/**
-	 * @return the {@link X86RegisterRef 80x86 register}
+	 * @return the {@link X86RegisterRef 8086 register}
 	 */
 	public X86RegisterRef getRegister() {
 		return register;

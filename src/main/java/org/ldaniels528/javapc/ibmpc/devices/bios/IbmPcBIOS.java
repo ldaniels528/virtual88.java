@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryAddressFAR32;
 import org.ldaniels528.javapc.ibmpc.devices.bios.services.*;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.x86.opcodes.system.INT;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.system.INT;
 import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplayContext;
 import org.ldaniels528.javapc.ibmpc.devices.display.modes.IbmPcDisplayMode;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;

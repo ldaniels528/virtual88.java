@@ -3,7 +3,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.operands;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 
 /**
- * Represent an 80x86 operand to be evaluated within the execution of an {@link OpCode opCode}
+ * Represent an 8086 operand to be evaluated within the execution of an {@link OpCode opCode}
  *
  * @author lawrence.daniels@gmail.com
  */

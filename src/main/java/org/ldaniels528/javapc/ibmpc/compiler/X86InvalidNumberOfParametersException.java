@@ -4,7 +4,7 @@
 package org.ldaniels528.javapc.ibmpc.compiler;
 
 /**
- * 80x86 Malformed Instruction Exception - Invalid number of parameters 
+ * 8086 Malformed Instruction Exception - Invalid number of parameters
  * @author lawrence.daniels@gmail.com
  */
 @SuppressWarnings("serial")
