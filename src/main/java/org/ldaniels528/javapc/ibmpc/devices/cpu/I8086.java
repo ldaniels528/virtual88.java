@@ -89,7 +89,7 @@ public class I8086 extends X86RegisterSet {
 
         // setup the instruction and stack pointers
         IP.set(context.getCodeOffset());
-        SP.set(0xF000);
+        SP.set(0xFFFE);
 
         // push the arguments onto the stack
         final ProgramArguments[] args = context.getArguments();
