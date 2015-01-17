@@ -2,8 +2,9 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.stack;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.X86Stack;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.StackModifyingOpCode;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.flags.AbstractFlagUpdateOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.FlagsAffected;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.RegistersAffected;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -12,11 +13,11 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * POPF/POPFD -- Pop Stack into FLAGS or EFLAGS Register
  *
  * Description
- * POPF/POPFD pops the word or doubleword on the top of the
+ * POPF/POPFD pops the word or double-word on the top of the
  * stack and stores the value in the flags register. If the
  * operand-size attribute of the instruction is 16 bits,
  * then a word is popped and the value is stored in FLAGS.
- * If the operand-size attribute is 32 bits, then a doubleword
+ * If the operand-size attribute is 32 bits, then a double-word
  * is popped and the value is stored in EFLAGS.
  *
  * Refer to Chapter 2 and Chapter 4 for information about the
@@ -36,7 +37,9 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class POPF extends AbstractFlagUpdateOpCode implements StackModifyingOpCode {
+@FlagsAffected({"AF", "CF", "PF", "SF", "ZF"})
+@RegistersAffected({"SP"})
+public class POPF extends AbstractOpCode {
     private static final POPF instance = new POPF();
 
     /**

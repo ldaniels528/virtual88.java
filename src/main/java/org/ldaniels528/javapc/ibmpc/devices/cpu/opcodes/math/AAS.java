@@ -1,6 +1,8 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.math;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.FlagsAffected;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.RegistersAffected;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.registers.X86Flags;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.AbstractOpCode;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
@@ -30,6 +32,8 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
+@FlagsAffected({"AF", "CF", "OF", "PF", "SF", "ZF"})
+@RegistersAffected({"AL", "AH"})
 public class AAS extends AbstractOpCode {
     private static AAS instance = new AAS();
 

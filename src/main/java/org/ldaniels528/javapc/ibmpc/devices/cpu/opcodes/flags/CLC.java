@@ -4,6 +4,8 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.flags;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.FlagsAffected;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
 /**
@@ -18,7 +20,8 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class CLC extends AbstractFlagUpdateOpCode {
+@FlagsAffected({"CF"})
+public class CLC extends AbstractOpCode {
     private static final CLC instance = new CLC();
 
     /**

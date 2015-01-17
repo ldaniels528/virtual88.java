@@ -34,6 +34,8 @@ public class OR extends AbstractDualOperandOpCode {
     @Override
     public void execute(IbmPcSystem system, final I8086 cpu) {
         dest.set(cpu.FLAGS.updateOR(dest, src));
+        cpu.FLAGS.setCF(false);
+        cpu.FLAGS.setOF(false);
     }
 
 }

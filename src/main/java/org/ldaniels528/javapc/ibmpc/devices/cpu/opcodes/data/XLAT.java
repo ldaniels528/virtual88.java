@@ -18,7 +18,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @author lawrence.daniels@gmail.com
  */
 public class XLAT extends AbstractOpCode {
-    private static XLAT instance = new XLAT();
+    private static final XLAT instance = new XLAT();
 
     /**
      * Private constructor

@@ -2,7 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.addressing;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.AbstractDualOperandOpCode;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.RegistersUsed;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.RegistersAffected;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.OperandHelper;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.MemoryReference;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.registers.X86Register;
@@ -27,7 +27,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-@RegistersUsed({"DS"})
+@RegistersAffected({"DS"})
 public class LDS extends AbstractDualOperandOpCode {
 
     /**

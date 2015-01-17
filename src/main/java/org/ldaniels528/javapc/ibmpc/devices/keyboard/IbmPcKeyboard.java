@@ -134,7 +134,7 @@ public class IbmPcKeyboard implements KeyListener, IbmPcKeyConstants {
                 return ch;
             }
         }
-        throw new IllegalStateException("No keystrokes were waiting");
+        return -1;
     }
 
     /**

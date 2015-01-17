@@ -1,8 +1,8 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.string;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.LoadStoreOpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.RegistersAffected;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -29,7 +29,8 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @see REPZ
  * @see REPNZ
  */
-public class STOSB extends AbstractOpCode implements LoadStoreOpCode {
+@RegistersAffected({"ES", "DI"})
+public class STOSB extends AbstractOpCode {
     private static final STOSB instance = new STOSB();
 
     /**

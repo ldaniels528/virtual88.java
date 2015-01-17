@@ -3,7 +3,8 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.string;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.OpCode;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.AbstractOpCode;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.StringFunctionOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.FlagsAffected;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.RegistersAffected;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.registers.X86Flags;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.registers.X86Register;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
@@ -32,7 +33,9 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @see STOSB
  * @see STOSW
  */
-public class REPZ extends AbstractOpCode implements StringFunctionOpCode {
+@FlagsAffected({"ZF"})
+@RegistersAffected({"CX"})
+public class REPZ extends AbstractOpCode {
     private final OpCode opCode;
 
     /**

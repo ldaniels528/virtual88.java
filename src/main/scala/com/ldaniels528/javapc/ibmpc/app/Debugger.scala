@@ -10,7 +10,6 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu._
 import org.ldaniels528.javapc.ibmpc.devices.cpu.decoders.{DecodeProcessorImpl, FlowControlCallBackOpCode}
 import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes._
 import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.addressing.DataSegmentOverride
-import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.flags.AbstractFlagUpdateOpCode
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.{MemoryAddressNEAR16, MemoryPointer}
 import org.ldaniels528.javapc.ibmpc.devices.cpu.registers.{X86CompositeRegister16Bit, X86Flags, X86Register16bit, X86Register8bit}
@@ -72,7 +71,6 @@ class Debugger() {
       // interpret and execute the command, then update the PC's display
       Option(console.readLine) map (_.trim) foreach { line =>
         interpret(line)
-        display.update()
       }
     }
   }
@@ -114,7 +112,7 @@ class Debugger() {
       match {
         case Success(_) =>
         case Failure(e) =>
-          System.err.println(s"Run-time error: ${e.getMessage}")
+          System.err.println(s"${e.getMessage}")
       }
     }
   }
@@ -220,7 +218,7 @@ class Debugger() {
     executeOpCodes(segment, offset, limit = 1)
   }
 
-  private def executeOpCodes(segment: Int, offset: Int, limit: Int = 1) {
+  private def executeOpCodes(segment: Int, offset: Int, limit: Int) {
     out.println(f"Executing $limit instruction(s) at $segment%04X:$offset%04X")
     try {
       // execute the code
@@ -249,27 +247,25 @@ class Debugger() {
       .map(_.value().toSeq)
       .map(_ flatMap flags.get)
       .map(_ mkString " ")
-      .map(s => f"FL = $s%-26s")
+      .map(s => f"FL: $s%-26s")
 
-    (myFlags ?? expand(cpu.FLAGS) :: expand(opCode).reverse).formatCode
+    val myRegs = Option(opCode.getClass.getAnnotation(classOf[RegistersAffected]))
+      .map(_.value().toSeq)
+      .map(_ flatMap registers.get)
+      .map(_ map (r => s"$r: ${r.get}"))
+      .map(_ mkString " ")
+
+    (myFlags ?? expand(cpu.FLAGS) :: myRegs :: expand(opCode).reverse).formatCode
   }
 
   private def expand(opCode: OpCode): List[Option[String]] = {
     opCode match {
-      case op: LoadStoreOpCode =>
-        List(cpu.DS, cpu.SI, cpu.ES, cpu.DI).reverse map expand
-      case op: StringFunctionOpCode =>
-        List(cpu.DS, cpu.SI, cpu.ES, cpu.DI).reverse map expand
       case op: AbstractDualOperandOpCode =>
-        expand(op.src) :: expand(op.dest) :: expandSP(op) :: Nil
+        expand(op.src) :: expand(op.dest) :: Nil
       case op: DataSegmentOverride =>
         expand(op.register) :: expand(op.instruction)
-      case op: AbstractFlagUpdateOpCode =>
-        expand(cpu.SP) :: Nil
       case op: AbstractSingleOperandOpCode =>
-        expand(op.operand) :: expandSP(op) :: Nil
-      case op: StackModifyingOpCode =>
-        expand(cpu.SP) :: Nil
+        expand(op.operand) :: Nil
       case op: FlowControlCallBackOpCode =>
         expand(op.opCode)
       case _ =>
@@ -280,27 +276,20 @@ class Debugger() {
   private def expand(operand: Operand): Option[String] = {
     operand match {
       case m: MemoryAddressNEAR16 =>
-        Some(f"$m = ${m.get}%04X")
+        Some(f"$m: ${m.get}%04X")
       case m: MemoryPointer =>
-        Some(f"[${m.getMemoryReference.getOffset}%04X] = ${m.get}%04X")
+        Some(f"[${m.getMemoryReference.getOffset}%04X]: ${m.get}%04X")
       case r: X86Register8bit =>
-        Some(f"${r.name} =   ${r.get}%02X")
+        Some(f"${r.name}:   ${r.get}%02X")
       case r: X86Register16bit =>
-        Some(f"$r = ${r.get}%04X")
+        Some(f"$r: ${r.get}%04X")
       case r: X86CompositeRegister16Bit =>
-        Some(f"$r = ${r.get}%04X")
+        Some(f"$r: ${r.get}%04X")
       case f: X86Flags =>
-        Some(s"FL = ${cpu.FLAGS}")
+        Some(s"FL: ${cpu.FLAGS}")
       case o =>
         //System.err.println(s"opr = $o, class = ${o.getClass.getName}")
         None
-    }
-  }
-
-  private def expandSP(opCode: OpCode): Option[String] = {
-    opCode match {
-      case op: StackModifyingOpCode => expand(cpu.SP)
-      case _ => None
     }
   }
 

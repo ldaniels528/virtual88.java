@@ -142,9 +142,9 @@ public class X86RegisterSet {
     public String toString() {
         return String.format(
                 "AX = %04X CX = %04X DX = %04X BX = %04X\n" +
-                        "SI = %04X DI = %04X SP = %04X BP = %04X\n" +
-                        "CS = %04X DS = %04X ES = %04X SS = %04X\n" +
-                        "IP = %04X %s\n",
+                "SI = %04X DI = %04X SP = %04X BP = %04X\n" +
+                "CS = %04X DS = %04X ES = %04X SS = %04X\n" +
+                "IP = %04X %s\n",
                 AX.get(), CX.get(), DX.get(), BX.get(),
                 SI.get(), DI.get(), SP.get(), BP.get(),
                 CS.get(), DS.get(), ES.get(), SS.get(),

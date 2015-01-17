@@ -4,14 +4,14 @@ import org.apache.log4j.Logger;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.ByteValue;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.WordValue;
-import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.util.ByteConversion;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Random;
+import java.util.LinkedList;
+import java.util.List;
 
 import static java.lang.String.format;
 import static org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryUtil.computePhysicalAddress;
@@ -24,6 +24,7 @@ import static org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryUtil.computeP
 public class IbmPcRandomAccessMemory {
     private static final int SYSTEM_MEMORY_SIZE = 0x100000;
     private final Logger logger = Logger.getLogger(getClass());
+    private final List<RegisteredSegment> registeredSegments;
     private final byte[] systemMemory;
 
     ///////////////////////////////////////////////////////
@@ -36,9 +37,16 @@ public class IbmPcRandomAccessMemory {
     public IbmPcRandomAccessMemory() {
         // create the linear memory array
         this.systemMemory = new byte[SYSTEM_MEMORY_SIZE];
+        this.registeredSegments = new LinkedList<>();
 
         // randomize the bytes in memory
         //new Random(System.currentTimeMillis()).nextBytes(systemMemory);
+    }
+
+    public void add(final int addressStart,
+                    final int addressEnd,
+                    final MemorySegmentListener listener) {
+        registeredSegments.add(new RegisteredSegment(addressStart, addressEnd, listener));
     }
 
     /**
@@ -63,6 +71,7 @@ public class IbmPcRandomAccessMemory {
                           final int destinationAddress,
                           final int count) {
         System.arraycopy(systemMemory, sourceAddress, systemMemory, destinationAddress, count);
+        updateSegmentObservers(destinationAddress, destinationAddress + count);
     }
 
     /**
@@ -85,6 +94,7 @@ public class IbmPcRandomAccessMemory {
 
         // copy the data
         System.arraycopy(systemMemory, srcPos, systemMemory, destPos, count);
+        updateSegmentObservers(destPos, destPos + count);
     }
 
     /**
@@ -208,7 +218,7 @@ public class IbmPcRandomAccessMemory {
     public int getWord(final int segment, final int offset) {
         // compute the physical address
         final int physicalAddress = computePhysicalAddress(segment, offset);
-        if(physicalAddress >= systemMemory.length) {
+        if (physicalAddress >= systemMemory.length) {
             throw new IllegalStateException(format("Memory reference out of bounds %08X", physicalAddress));
         }
 
@@ -255,6 +265,7 @@ public class IbmPcRandomAccessMemory {
         // AND the byte in memory
         systemMemory[physicalAddress] &= (0xFF - mask);
         systemMemory[physicalAddress] |= mask;
+        updateSegmentObservers(physicalAddress, physicalAddress);
     }
 
     /**
@@ -270,6 +281,7 @@ public class IbmPcRandomAccessMemory {
 
         // set the byte
         systemMemory[physicalAddress] = (byte) b;
+        updateSegmentObservers(physicalAddress, physicalAddress);
     }
 
     /**
@@ -287,6 +299,7 @@ public class IbmPcRandomAccessMemory {
 
         // copy the contents of the memory block to physical memory
         System.arraycopy(block, 0, systemMemory, physicalAddress, length);
+        updateSegmentObservers(physicalAddress, physicalAddress + length);
     }
 
     /**
@@ -303,6 +316,7 @@ public class IbmPcRandomAccessMemory {
 
         // copy the contents of the memory block to physical memory
         setBytes(physicalAddress, block, length);
+        updateSegmentObservers(physicalAddress, physicalAddress + length);
     }
 
     /**
@@ -323,16 +337,20 @@ public class IbmPcRandomAccessMemory {
         // set the pointer offset
         systemMemory[physicalAddress] = loByte;
         systemMemory[physicalAddress + 1] = hiByte;
+        updateSegmentObservers(physicalAddress, physicalAddress + 1);
     }
 
     /**
-     * Writes a word (two bytes) to memory at the given segment and offset
+     * Writes a double word (four bytes) to memory at the given segment and offset
      *
      * @param segment the segment of the memory location
      * @param offset  the offset of the memory location
      * @param value   the given word
      */
     public void setDoubleWord(int segment, int offset, int value) {
+        // compute the physical address
+        final int physicalAddress = computePhysicalAddress(segment, offset);
+
         // determine high and low bytes of the word
         final int hiWord = ((value & 0xFFFF0000) >> 16);
         final int loWord = (value & 0x0000FFFF);
@@ -340,6 +358,7 @@ public class IbmPcRandomAccessMemory {
         // place the words into memory
         setWord(segment, offset, loWord);
         setWord(segment, offset + 2, hiWord);
+        updateSegmentObservers(physicalAddress, physicalAddress + 4);
     }
 
     /**
@@ -354,6 +373,7 @@ public class IbmPcRandomAccessMemory {
 
         // fill memory from the start to end indices
         Arrays.fill(systemMemory, fromIndex, toIndex, filler);
+        updateSegmentObservers(fromIndex, toIndex);
     }
 
     /**
@@ -370,6 +390,7 @@ public class IbmPcRandomAccessMemory {
 
         // AND the byte in memory
         systemMemory[physicalAddress] &= mask;
+        updateSegmentObservers(physicalAddress, physicalAddress + 1);
     }
 
     /**
@@ -386,6 +407,7 @@ public class IbmPcRandomAccessMemory {
 
         // AND the byte in memory
         systemMemory[physicalAddress] |= mask;
+        updateSegmentObservers(physicalAddress, physicalAddress + 1);
     }
 
     /**
@@ -410,6 +432,36 @@ public class IbmPcRandomAccessMemory {
 
         // returns the bytes
         return baos.toByteArray();
+    }
+
+    private void updateSegmentObservers(final int startAddress, final int endAddress) {
+        registeredSegments.stream()
+                .filter(rs -> startAddress >= rs.startAddress && endAddress <= rs.endAddress)
+                .forEach(rs -> rs.listener.segmentUpdated(startAddress, endAddress));
+    }
+
+    /**
+     * Represents a registered segment
+     */
+    private static class RegisteredSegment {
+        private MemorySegmentListener listener;
+        private final int startAddress;
+        private final int endAddress;
+
+        public RegisteredSegment(int startAddress, int endAddress, MemorySegmentListener listener) {
+            this.listener = listener;
+            this.startAddress = startAddress;
+            this.endAddress = endAddress;
+        }
+    }
+
+    /**
+     * Represents a memory segment observer
+     */
+    public static interface MemorySegmentListener {
+
+        void segmentUpdated(int fromAddress, int toAddress);
+
     }
 
 }

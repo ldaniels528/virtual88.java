@@ -2,8 +2,9 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.stack;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.X86Stack;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.StackModifyingOpCode;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.flags.AbstractFlagUpdateOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.FlagsAffected;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.RegistersAffected;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -26,7 +27,9 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @author lawrence.daniels@gmail.com
  * @see PUSHF
  */
-public class PUSHF extends AbstractFlagUpdateOpCode implements StackModifyingOpCode {
+@FlagsAffected({"AF", "CF", "PF", "SF", "ZF"})
+@RegistersAffected({"SP"})
+public class PUSHF extends AbstractOpCode {
     private static final PUSHF instance = new PUSHF();
 
     /**

@@ -2,6 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.data;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.RegistersAffected;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
 /**
@@ -31,6 +32,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
+@RegistersAffected({"DX", "AX"})
 public class CWD extends AbstractOpCode {
     private static CWD instance = new CWD();
 

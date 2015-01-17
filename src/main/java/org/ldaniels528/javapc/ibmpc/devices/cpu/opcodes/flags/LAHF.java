@@ -1,6 +1,9 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.flags;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.FlagsAffected;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.RegistersAffected;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
 /**
@@ -20,7 +23,9 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
-public class LAHF extends AbstractFlagUpdateOpCode {
+@FlagsAffected({"AF", "CF", "PF", "SF", "ZF"})
+@RegistersAffected({"AH"})
+public class LAHF extends AbstractOpCode {
     private static final LAHF instance = new LAHF();
 
     /**

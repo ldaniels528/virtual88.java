@@ -1,8 +1,8 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.flow.callret;
 
-import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.StackModifyingOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.RegistersAffected;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.flow.AbstractForcedRedirectOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 
 /**
  * <pre>
@@ -16,7 +16,8 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.flow.AbstractForcedRedir
  *
  * @author lawrence.daniels@gmail.com
  */
-public class CALL extends AbstractForcedRedirectOpCode implements StackModifyingOpCode {
+@RegistersAffected({"SP"})
+public class CALL extends AbstractForcedRedirectOpCode {
 
     /**
      * Creates a new CALL opCode

@@ -1,7 +1,6 @@
 package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.string;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.StringFunctionOpCode;
 
 /**
  * Represents an opCode that is capable of being used
@@ -10,7 +9,7 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.StringFunctionOpCode;
  *
  * @author ldaniels
  */
-public interface MassDataOpCode extends StringFunctionOpCode {
+public interface MassDataOpCode {
 
     /**
      * Executes the mass data opCode

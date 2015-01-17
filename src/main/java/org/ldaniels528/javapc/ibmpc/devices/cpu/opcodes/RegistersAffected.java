@@ -6,12 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates which registers are used by the host opCode
+ * Indicates which registers are affected by the host opCode
  *
  * @author lawrence.daniels@gmail.com
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface RegistersUsed {
+public @interface RegistersAffected {
     String[] value();
 }

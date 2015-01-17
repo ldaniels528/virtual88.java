@@ -2,6 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.data;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.AbstractDualOperandOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.FlagsAffected;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -47,6 +48,7 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  *
  * @author lawrence.daniels@gmail.com
  */
+@FlagsAffected({"AF", "CF", "OF", "PF", "SF", "ZF"})
 public class MOV extends AbstractDualOperandOpCode {
 
     /**

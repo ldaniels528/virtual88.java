@@ -5,7 +5,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.flow.callret;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.AbstractOpCode;
-import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.StackModifyingOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.RegistersAffected;
 import org.ldaniels528.javapc.ibmpc.exceptions.X86AssemblyException;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -29,7 +29,8 @@ import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
  * @see RETF
  * @see RETFn
  */
-public class RETF extends AbstractOpCode implements StackModifyingOpCode {
+@RegistersAffected({"SP"})
+public class RETF extends AbstractOpCode {
     private static RETF instance = new RETF();
 
     /**

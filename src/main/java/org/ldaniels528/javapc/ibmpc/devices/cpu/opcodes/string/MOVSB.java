@@ -2,6 +2,7 @@ package org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.string;
 
 import org.ldaniels528.javapc.ibmpc.devices.cpu.I8086;
 import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.AbstractOpCode;
+import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.RegistersAffected;
 import org.ldaniels528.javapc.ibmpc.devices.memory.IbmPcRandomAccessMemory;
 import org.ldaniels528.javapc.ibmpc.system.IbmPcSystem;
 
@@ -21,6 +22,7 @@ import static org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryUtil.reverseB
  * @see REPZ
  * @see REPNZ
  */
+@RegistersAffected({"DS", "SI", "ES", "SI"})
 public class MOVSB extends AbstractOpCode implements MassDataOpCode {
     private static MOVSB instance = new MOVSB();
 
