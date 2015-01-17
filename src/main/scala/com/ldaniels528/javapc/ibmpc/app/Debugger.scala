@@ -96,7 +96,7 @@ class Debugger() {
   private def interpret(line: String) {
     if (line.nonEmpty) {
       val tokens = CommandParser.parseTokens(line)
-      val (command, params) = (tokens.head.toLowerCase.toLowerCase, CommandParser.parse(tokens.tail))
+      val (command, params) = (tokens.head.toLowerCase.toLowerCase, CommandParser.parse(tokens))
 
       Try {
         command match {
@@ -181,6 +181,7 @@ class Debugger() {
 
   /**
    * Executes a sequence of instructions
+   * <p/>Syntax1: g[o] [offset] [-a]
    * <p/>Syntax1: g[o] [offset] [-n count]
    * <p/>Syntax2: g[o] [segment] [offset] [-n count]
    * @param params the given [[UnixLikeArgs]]
@@ -193,24 +194,11 @@ class Debugger() {
       case aOffset :: Nil => (proxy.getSegment, aOffset.toInt)
       case Nil => getLastExecutePointer
       case _ =>
-        throw new IllegalArgumentException("Syntax: g[o] [[segment]:offset] [-n count]")
+        throw new IllegalArgumentException("Syntax: g[o] [[segment]:offset] [-a] [-n count]")
     }
 
-    out.println(s"Executing $limit instructions")
-
-    // execute the code
-    var count = 0
-    proxy.setPointer(segment, offset)
-
-    while (count < limit && cpu.isActive) {
-      val opCode: OpCode = decoder.decodeNext
-      out.println("[%04X:%04X] %12X[%d] %-28s | %s".format(cpu.CS.get, cpu.IP.get, opCode.getInstructionCode, opCode.getLength, opCode, inspect(opCode)))
-      cpu.execute(system, opCode)
-      count += 1
-    }
-
-    // update the last execution offset
-    lastExecutePtr = (cpu.CS.get, cpu.IP.get)
+    // execute the instructions
+    executeOpCodes(segment, offset, limit)
   }
 
   /**
@@ -228,15 +216,27 @@ class Debugger() {
         throw new IllegalArgumentException("Syntax: n[ext] [[segment] offset]")
     }
 
-    // execute the code
-    proxy.setPointer(segment, offset)
+    // execute the instructions
+    executeOpCodes(segment, offset, limit = 1)
+  }
 
-    val opCode = decoder.decodeNext()
-    out.println("[%04X:%04X] %12X[%d] %-28s | %s".format(cpu.CS.get, cpu.IP.get, opCode.getInstructionCode, opCode.getLength, opCode, inspect(opCode)))
-    cpu.execute(system, opCode)
+  private def executeOpCodes(segment: Int, offset: Int, limit: Int = 1) {
+    out.println(f"Executing $limit instruction(s) at $segment%04X:$offset%04X")
+    try {
+      // execute the code
+      var count = 0
+      proxy.setPointer(segment, offset)
 
-    // update the last execution offset
-    lastExecutePtr = (cpu.CS.get, cpu.IP.get)
+      while (count < limit && cpu.isActive) {
+        val opCode: OpCode = decoder.decodeNext
+        out.println("[%04X:%04X] %12X[%d] %-28s | %s".format(cpu.CS.get, cpu.IP.get, opCode.getInstructionCode, opCode.getLength, opCode, inspect(opCode)))
+        cpu.execute(system, opCode)
+        count += 1
+      }
+    } finally {
+      // update the last execution offset
+      lastExecutePtr = (cpu.CS.get, cpu.IP.get)
+    }
   }
 
   private def getLastExecutePointer = {
