@@ -6,7 +6,7 @@ IBM PC emulator and GWBASIC interpreter implemented in Java and Scala (Java2D, S
 
 My first programming language was GWBASIC. As such, BASIC remains my first love; thus, I have fond memories of
 programming in the little language that could, and quite a few old programs that I can no longer run because I've 
-switched to Mac OS X. I started JavaPC in 2004 (as a hobby project) to be able to run those old programs on via the JVM.
+switched to Mac OS X. I started JavaPC in 2004 (as a hobby project) to be able to run those old programs via the JVM.
 
 I've recently decided to update this project to Java 8 (with a few components moved to Scala), and improve its
 8086 compatibility and performance in the process.
@@ -14,8 +14,8 @@ I've recently decided to update this project to Java 8 (with a few components mo
 ### Build Requirements
 
 * Java 8 SDK
-* Scala 2.11.x
-* SBT 13.x
+* Scala 2.13.x
+* SBT 1.3.10
 
 ### Building the code
 

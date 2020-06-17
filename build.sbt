@@ -1,49 +1,38 @@
 import sbt.Keys._
 import sbt._
-import sbtassembly.Plugin.AssemblyKeys._
-import sbtassembly.Plugin._
 
-assemblySettings
+val scalaJvmVersion = "2.13.1"
+val scalaTestVersion = "3.3.0-SNAP2"
+val slf4jVersion = "1.7.30"
 
-name := "javapc"
+lazy val root = (project in file("."))
+  .settings(
+    name := "javapc",
+    organization := "com.github.ldaniels528",
+    description := "IBM PC/DOS Emulator",
+    version := "0.431",
+    scalaVersion := scalaJvmVersion,
+    scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-value-discard", "-Xlint"),
+    javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars"),
+    autoCompilerPlugins := true,
+    mainClass in assembly := Some("org.ldaniels528.javapc.jbasic.app.BasicEmulator"),
+    test in assembly := {},
+    assemblyJarName in assembly := s"${name.value}-${version.value}.fat.jar",
+    assemblyMergeStrategy in assembly := {
+      case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+      case PathList("org", "apache", xs @ _*) => MergeStrategy.last
+      case "reference.conf" => MergeStrategy.concat
+      case _ => MergeStrategy.first
+    },
+    libraryDependencies ++= Seq(
+      // General Dependencies
+      "commons-io" % "commons-io" % "2.4",
+      "log4j" % "log4j" % "1.2.17",
+      "org.slf4j" % "slf4j-api" % slf4jVersion,
+      "org.slf4j" % "slf4j-log4j12" % slf4jVersion,
 
-organization := "com.ldaniels528"
+      // Testing Dependencies
+      "junit" % "junit" % "4.11" % "test",
+      "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
+    ))
 
-version := "0.431"
-
-scalaVersion := "2.11.4"
-
-scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked",
-  "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint")
-
-javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars")
-
-mainClass in assembly := Some("org.ldaniels528.javapc.jbasic.app.BasicEmulator")
-
-test in assembly := {}
-
-// General Dependencies
-libraryDependencies ++= Seq(
-  "commons-io" % "commons-io" % "2.4",
-  "log4j" % "log4j" % "1.2.17"
-  //"org.slf4j" % "slf4j-api" % "1.7.7",
-  //"org.slf4j" % "slf4j-log4j12" % "1.7.7"
-)
-
-// Testing Dependencies
-libraryDependencies ++= Seq(
-  "junit" % "junit" % "4.11" % "test",
-  "org.mockito" % "mockito-all" % "1.9.5" % "test",
-  "org.scalatest" %% "scalatest" % "2.2.2" % "test"
-)
-
-// define the resolvers
-resolvers ++= Seq(
-  "Java Net" at "http://download.java.net/maven/2/",
-  "Maven Central Server" at "http://repo1.maven.org/maven2",
-  "Sonatype Repository" at "http://oss.sonatype.org/content/repositories/releases/",
-  "Typesafe Releases Repository" at "http://repo.typesafe.com/typesafe/releases/",
-  "Typesafe Snapshots Repository" at "http://repo.typesafe.com/typesafe/snapshots/"
-)
-
-resolvers += Resolver.url("artifactory", url("http://scalasbt.artifactoryonline.com/scalasbt/sbt-plugin-releases"))(Resolver.ivyStylePatterns)
