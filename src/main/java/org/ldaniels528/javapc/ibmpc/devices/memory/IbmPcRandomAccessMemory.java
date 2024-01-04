@@ -18,7 +18,6 @@ import static org.ldaniels528.javapc.ibmpc.devices.memory.X86MemoryUtil.computeP
 
 /**
  * Represents IBM PC-style segmented random access memory.
- *
  * @author lawrence.daniels@gmail.com
  */
 public class IbmPcRandomAccessMemory {
@@ -51,7 +50,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Returns the size of memory (in kilobytes)
-     *
      * @return the size of memory
      */
     public int sizeInKilobytes() {
@@ -62,7 +60,6 @@ public class IbmPcRandomAccessMemory {
      * Copies the specified number of bytes from the
      * given absolute source address to the given
      * absolute destination address within memory.
-     *
      * @param sourceAddress      the given absolute source address
      * @param destinationAddress the given absolute destination address
      * @param count              the specified number of bytes
@@ -78,7 +75,6 @@ public class IbmPcRandomAccessMemory {
      * Copies the specified number of bytes from the
      * given source segment and offset to the given
      * destination segment and offset within memory.
-     *
      * @param srcSegment the given source segment
      * @param srcOffset  the given source offset
      * @param dstSegment the given destination segment
@@ -99,7 +95,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Retrieves a byte from memory at the given segment and offset
-     *
      * @param segment the segment of the memory location
      * @param offset  the offset of the memory location
      * @return the {@link ByteValue byte} read from memory
@@ -110,7 +105,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Retrieves a word from memory at the given segment and offset
-     *
      * @param segment the segment of the memory location
      * @param offset  the offset of the memory location
      * @return the {@link WordValue word} read from memory
@@ -121,7 +115,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Retrieves a single byte from memory at the given segment and offset
-     *
      * @param segment the segment of the memory location
      * @param offset  the offset of the memory location
      * @return the byte read from memory
@@ -136,7 +129,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Retrieves a block of memory at the given offset
-     *
      * @param physicalAddress the physical address of the memory block
      * @param length          the length of the memory block
      * @return a block of memory at the given offset
@@ -154,7 +146,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Retrieves a block of memory at the given offset
-     *
      * @param segment the segment of the memory block
      * @param offset  the offset of the memory block
      * @param length  the length of the memory block
@@ -170,7 +161,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Retrieves a block of memory at the given offset
-     *
      * @param segment the segment of the memory block
      * @param offset  the initial offset of the memory block
      * @param length  the length of the memory block
@@ -194,7 +184,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Retrieves a block of memory at the given offset
-     *
      * @param segment the segment of the memory block
      * @param offset  the offset of the memory block
      * @param block   the block of binary data
@@ -210,7 +199,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Retrieves a word (two bytes) from memory at the given segment and offset
-     *
      * @param segment the segment of the memory location
      * @param offset  the offset of the memory location
      * @return the word read from memory
@@ -236,7 +224,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Retrieves a double word (two words) from memory at the given segment and offset
-     *
      * @param segment the segment of the memory location
      * @param offset  the offset of the memory location
      * @return the word read from memory
@@ -251,9 +238,8 @@ public class IbmPcRandomAccessMemory {
     }
 
     /**
-     * Guarantees that the each set bit within the mask sets the
+     * Guarantees that each bit within the mask sets the
      * corresponding bit within the referenced byte of memory.
-     *
      * @param segment the segment of the memory location
      * @param offset  the offset of the memory location
      * @param mask    the given bit mask
@@ -263,14 +249,13 @@ public class IbmPcRandomAccessMemory {
         final int physicalAddress = computePhysicalAddress(segment, offset);
 
         // AND the byte in memory
-        systemMemory[physicalAddress] &= (0xFF - mask);
-        systemMemory[physicalAddress] |= mask;
+        systemMemory[physicalAddress] &= (byte) (0xFF - mask);
+        systemMemory[physicalAddress] |= (byte) mask;
         updateSegmentObservers(physicalAddress, physicalAddress);
     }
 
     /**
      * Writes a single byte to memory at the given segment and offset
-     *
      * @param segment the segment of the memory location
      * @param offset  the offset of the memory location
      * @param b       the given byte
@@ -286,7 +271,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Writes a block of binary data to memory at the given segment and offset
-     *
      * @param physicalAddress the physical memory address
      * @param block           the block of binary data
      * @param length          the length of the memory block
@@ -304,7 +288,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Writes a block of binary data to memory at the given segment and offset
-     *
      * @param segment the segment of the memory block
      * @param offset  the offset of the memory block
      * @param block   the block of binary data
@@ -321,7 +304,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Writes a word (two bytes) to memory at the given segment and offset
-     *
      * @param segment the segment of the memory location
      * @param offset  the offset of the memory location
      * @param word    the given word
@@ -342,7 +324,6 @@ public class IbmPcRandomAccessMemory {
 
     /**
      * Writes a double word (four bytes) to memory at the given segment and offset
-     *
      * @param segment the segment of the memory location
      * @param offset  the offset of the memory location
      * @param value   the given word
@@ -379,7 +360,6 @@ public class IbmPcRandomAccessMemory {
     /**
      * Performs a bitwise AND on the given located at
      * the given segment and offset in memory.
-     *
      * @param segment the segment of the memory location
      * @param offset  the offset of the memory location
      * @param mask    the given bit mask
@@ -389,14 +369,13 @@ public class IbmPcRandomAccessMemory {
         final int physicalAddress = computePhysicalAddress(segment, offset);
 
         // AND the byte in memory
-        systemMemory[physicalAddress] &= mask;
+        systemMemory[physicalAddress] &= (byte) mask;
         updateSegmentObservers(physicalAddress, physicalAddress + 1);
     }
 
     /**
      * Performs a bitwise OR on the given located at
      * the given segment and offset in memory.
-     *
      * @param segment the segment of the memory location
      * @param offset  the offset of the memory location
      * @param mask    the given bit mask
@@ -406,13 +385,12 @@ public class IbmPcRandomAccessMemory {
         final int physicalAddress = computePhysicalAddress(segment, offset);
 
         // AND the byte in memory
-        systemMemory[physicalAddress] |= mask;
+        systemMemory[physicalAddress] |= (byte) mask;
         updateSegmentObservers(physicalAddress, physicalAddress + 1);
     }
 
     /**
      * Retrieves all available bytes from the given stream
-     *
      * @param is the given {@link InputStream input stream}
      * @return all available bytes from the given stream
      * @throws IOException

@@ -293,7 +293,7 @@ public class IbmPcBIOS {
     }
 
     /**
-     * Updates the the system information area of BIOS memory
+     * Updates the system information area of BIOS memory
      *
      * @param systemInfo the {@link IbmPcSystemInfo system information}
      * @see IbmPcSystem
