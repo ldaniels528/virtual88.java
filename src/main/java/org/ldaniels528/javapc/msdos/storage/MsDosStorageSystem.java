@@ -82,15 +82,14 @@ public class MsDosStorageSystem implements IbmPcStorageSystem {
      * {@inheritDoc}
      */
     @Override
-    public boolean setCurrentDirectory(final File directory) throws IbmPcException {
+    public void setCurrentDirectory(final File directory) {
         // if the directory doesn't exist, error
         if (!directory.exists()) {
-            return false;
+            return;
         }
 
         // set the new working directory
         this.workingDirectory = directory;
-        return true;
     }
 
     /**

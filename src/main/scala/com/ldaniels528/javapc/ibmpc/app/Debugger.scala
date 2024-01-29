@@ -1,7 +1,6 @@
 package com.ldaniels528.javapc.ibmpc.app
 
 import java.io._
-
 import com.ldaniels528.javapc.ibmpc.app.CommandParser.UnixLikeArgs
 import com.ldaniels528.javapc.ibmpc.app.Debugger._
 import com.ldaniels528.javapc.ibmpc.app.util.OptionHelper._
@@ -12,9 +11,10 @@ import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes._
 import org.ldaniels528.javapc.ibmpc.devices.cpu.opcodes.addressing.DataSegmentOverride
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.Operand
 import org.ldaniels528.javapc.ibmpc.devices.cpu.operands.memory.{MemoryAddressNEAR16, MemoryPointer}
-import org.ldaniels528.javapc.ibmpc.devices.cpu.registers.{X86CompositeRegister16Bit, X86Flags, X86Register16bit, X86Register8bit}
-import org.ldaniels528.javapc.ibmpc.devices.display.IbmPcDisplayFrame
-import org.ldaniels528.javapc.ibmpc.system.IbmPcSystemFactory
+import org.ldaniels528.javapc.ibmpc.devices.cpu.registers.{X86CompositeRegister16Bit, X86Flags, X86Register, X86Register16bit, X86Register8bit}
+import org.ldaniels528.javapc.ibmpc.devices.display.{IbmPcDisplay, IbmPcDisplayFrame}
+import org.ldaniels528.javapc.ibmpc.devices.memory.{IbmPcRandomAccessMemory, X86MemoryProxy}
+import org.ldaniels528.javapc.ibmpc.system.{IbmPcSystem, IbmPcSystemFactory}
 import org.ldaniels528.javapc.util.ResourceHelper
 
 import scala.util.{Failure, Success, Try}
@@ -29,25 +29,25 @@ class Debugger() {
   private var alive: Boolean = false
 
   // create a PC instance
-  val system = IbmPcSystemFactory.getIBMPCjr(new IbmPcDisplayFrame(s"JavaPC/Debugger v${JavaPCConstants.VERSION}"))
-  val cpu = system.getCPU
-  val memory = system.getRandomAccessMemory
-  val display = system.getDisplay
+  val system: IbmPcSystem = IbmPcSystemFactory.getIBMPCjr(new IbmPcDisplayFrame(s"JavaPC/Debugger v${JavaPCConstants.VERSION}"))
+  val cpu: I8086 = system.getCPU
+  val memory: IbmPcRandomAccessMemory = system.getRandomAccessMemory
+  val display: IbmPcDisplay = system.getDisplay
 
-  val registers = Map(
+  val registers: Map[String, X86Register] = Map(
     "AX" -> cpu.AX, "BX" -> cpu.BX, "CX" -> cpu.CX, "DX" -> cpu.DX,
     "SI" -> cpu.SI, "DI" -> cpu.DI, "BP" -> cpu.BP, "SP" -> cpu.SP,
     "CS" -> cpu.CS, "DS" -> cpu.DS, "ES" -> cpu.ES, "SS" -> cpu.SS
   )
 
-  val flags = Map(
+  val flags: Map[String, String] = Map(
     "AF" -> cpu.FLAGS.AF, "CF" -> cpu.FLAGS.CF, "DF" -> cpu.FLAGS.DF,
     "IF" -> cpu.FLAGS.IF, "OF" -> cpu.FLAGS.OF, "PF" -> cpu.FLAGS.PF,
     "SF" -> cpu.FLAGS.SF, "TF" -> cpu.FLAGS.TF, "ZF" -> cpu.FLAGS.ZF
   )
 
   // create debug helper objects
-  val proxy = system.getMemoryProxy
+  val proxy: X86MemoryProxy = system.getMemoryProxy
   val decoder = new DecodeProcessorImpl(cpu, proxy)
 
   // point the a stable segment and offset
@@ -56,7 +56,7 @@ class Debugger() {
   /**
    * Application entry point
    */
-  def run() {
+  def run(): Unit = {
     // initialize the display
     display.update()
 
@@ -91,7 +91,7 @@ class Debugger() {
    *
    * @param line the given line of input
    */
-  private def interpret(line: String) {
+  private def interpret(line: String): Unit = {
     if (line.nonEmpty) {
       val tokens = CommandParser.parseTokens(line)
       val (command, params) = (tokens.head.toLowerCase.toLowerCase, CommandParser.parse(tokens))
@@ -122,7 +122,7 @@ class Debugger() {
    *
    * @param params the given parameters
    */
-  private def dumpAssembly(params: UnixLikeArgs) {
+  private def dumpAssembly(params: UnixLikeArgs): Unit = {
     // extract the parameters
     val count = params("-n") map (_.toInt) getOrElse 10
     val (segment0, offset0) = params.args match {
@@ -152,7 +152,7 @@ class Debugger() {
    * <p/>Syntax2: d[ump] [segment] [offset] [-n count] [-c columns]
    * @param params the given parameters
    */
-  private def dumpData(params: UnixLikeArgs) {
+  private def dumpData(params: UnixLikeArgs): Unit = {
     val DUMP_LENGTH = 16
 
     // extract the parameters
@@ -184,7 +184,7 @@ class Debugger() {
    * <p/>Syntax2: g[o] [segment] [offset] [-n count]
    * @param params the given [[UnixLikeArgs]]
    */
-  private def executeCode(params: UnixLikeArgs) {
+  private def executeCode(params: UnixLikeArgs): Unit = {
     // extract the parameters
     val limit = if (params.contains("-a")) Int.MaxValue else params("-n").map(_.toInt).getOrElse(100)
     val (segment, offset) = params.args match {
@@ -204,7 +204,7 @@ class Debugger() {
    * <p/>Syntax1: n[ext] [offset]
    * <p/>Syntax2: n[ext] [segment] [offset]
    */
-  private def executeNext(params: UnixLikeArgs) {
+  private def executeNext(params: UnixLikeArgs): Unit = {
     // extract the parameters
     val (segment, offset) = params.args match {
       case aSegment :: aOffset :: Nil => (aSegment.toInt, aOffset.toInt)
@@ -218,7 +218,7 @@ class Debugger() {
     executeOpCodes(segment, offset, limit = 1)
   }
 
-  private def executeOpCodes(segment: Int, offset: Int, limit: Int) {
+  private def executeOpCodes(segment: Int, offset: Int, limit: Int): Unit = {
     out.println(f"Executing $limit instruction(s) at $segment%04X:$offset%04X")
     try {
       // execute the code
@@ -237,7 +237,7 @@ class Debugger() {
     }
   }
 
-  private def getLastExecutePointer = {
+  private def getLastExecutePointer: (Int, Int) = {
     val (segment, offset) = (cpu.CS.get, cpu.IP.get)
     if (segment == proxy.getSegment) (segment, offset) else (proxy.getSegment, proxy.getOffset)
   }
@@ -285,9 +285,9 @@ class Debugger() {
         Some(f"$r: ${r.get}%04X")
       case r: X86CompositeRegister16Bit =>
         Some(f"$r: ${r.get}%04X")
-      case f: X86Flags =>
+      case _: X86Flags =>
         Some(s"FL: ${cpu.FLAGS}")
-      case o =>
+      case _ =>
         //System.err.println(s"opr = $o, class = ${o.getClass.getName}")
         None
     }
@@ -298,7 +298,7 @@ class Debugger() {
    * <p/>Syntax: load FROGGER.COM
    * @param params the given parameter
    */
-  private def loadFile(params: UnixLikeArgs) {
+  private def loadFile(params: UnixLikeArgs): Unit = {
     // get the file name
     val filename = params.args match {
       case aFilename :: Nil => aFilename
@@ -315,7 +315,7 @@ class Debugger() {
    *
    * @param filename the given file name (e.g. 'load FROGGER.COM')
    */
-  private def injectExecutable(filename: String) {
+  private def injectExecutable(filename: String): Unit = {
     // load the executable into memory
     try {
       val code = ResourceHelper.getBinaryContents(new File(filename))
@@ -334,7 +334,7 @@ class Debugger() {
       out.println(f"Loaded $filename: ${code.length}%d bytes")
     }
     catch {
-      case e: IOException =>
+      case _: IOException =>
         out.println(s"Unable to load '$filename'")
     }
   }
@@ -342,7 +342,7 @@ class Debugger() {
   /**
    * Stops the debugger
    */
-  private def stop() = sys.exit(0)
+  private def stop(): Nothing = sys.exit(0)
 
   /**
    * Creates a byte string
@@ -371,7 +371,7 @@ object Debugger {
    * For standalone operation
    * @param args the given commandline arguments
    */
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     System.out.println(s"JavaPC/Debugger v${JavaPCConstants.VERSION}")
     System.out.println("")
 
@@ -394,38 +394,28 @@ object Debugger {
   }
 
   /**
-   * Instruction Formatter (Type B)
-   * @param tokens the given instruction tokens
-   */
-  implicit class InstructionFormatterB(val tokens: Seq[String]) extends AnyVal {
-
-    def formatCode: String = tokens.distinct filter (_.nonEmpty) mkString " - "
-
-  }
-
-  /**
    * 8086 Flags Enrichment
    * @param flags the given [[X86Flags]]
    */
   implicit class FlagEnrichment(val flags: X86Flags) extends AnyVal {
 
-    def AF = if (flags.isAF) "AC" else "NA"
+    def AF: String = if (flags.isAF) "AC" else "NA"
 
-    def CF = if (flags.isCF) "CY" else "NC"
+    def CF: String = if (flags.isCF) "CY" else "NC"
 
-    def DF = if (flags.isDF) "DN" else "UP"
+    def DF: String = if (flags.isDF) "DN" else "UP"
 
-    def IF = if (flags.isIF) "EI" else "DI"
+    def IF: String = if (flags.isIF) "EI" else "DI"
 
-    def OF = if (flags.isPF) "OV" else "NV"
+    def OF: String = if (flags.isPF) "OV" else "NV"
 
-    def PF = if (flags.isPF) "PE" else "PO"
+    def PF: String = if (flags.isPF) "PE" else "PO"
 
-    def SF = if (flags.isSF) "NG" else "PL"
+    def SF: String = if (flags.isSF) "NG" else "PL"
 
-    def TF = if (flags.isTF) "ET" else "DT"
+    def TF: String = if (flags.isTF) "ET" else "DT"
 
-    def ZF = if (flags.isZF) "ZR" else "NZ"
+    def ZF: String = if (flags.isZF) "ZR" else "NZ"
 
   }
 
